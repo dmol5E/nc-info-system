@@ -1,7 +1,8 @@
-package com.nc.unc.model;
+package com.nc.unc.repositories;
+
+import com.nc.unc.model.BaseEntity;
 
 import java.io.IOException;
-import java.util.Map;
 
 public interface DataSource<K, V extends BaseEntity<K>> {
 

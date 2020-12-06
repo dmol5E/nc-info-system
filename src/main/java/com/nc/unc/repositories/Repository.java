@@ -1,4 +1,6 @@
-package com.nc.unc.model;
+package com.nc.unc.repositories;
+
+import com.nc.unc.model.BaseEntity;
 
 import java.io.*;
 import java.util.Collection;
@@ -7,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class Repository<K, V extends  BaseEntity<K>> implements DataSource<K, V> {
+public abstract class Repository<K, V extends BaseEntity<K>> implements DataSource<K, V> {
 
     protected Map<K, V> entities = new HashMap<>();
 
@@ -16,12 +18,13 @@ public abstract class Repository<K, V extends  BaseEntity<K>> implements DataSou
 
     protected Logger logger = null;
 
-    protected Repository(String fileName, Class<Repository<K,V>> className)
-            throws IOException {
+    protected Repository(String fileName, Class<? extends Repository<K,V>> className) {
         try {
             logger = Logger.getLogger(className.getName());
-            read = new ObjectInputStream(new FileInputStream(fileName));
             write = new ObjectOutputStream(new FileOutputStream(fileName));
+            read = new ObjectInputStream(new FileInputStream(fileName));
+
+            logger.log(Level.INFO, className.getName() + " construct");
         } catch (IOException e){
             logger.log(Level.WARNING, className.getName() + " wasn't created " , e);
         }
@@ -40,12 +43,16 @@ public abstract class Repository<K, V extends  BaseEntity<K>> implements DataSou
         return this.entities.values();
     }
 
-    public void updateEntity(K key, V entity){
+    public void update(K key, V entity){
+        if(!entities.containsKey(key)) {
+            logger.log(Level.WARNING, "Key is already contains" + key);
+            throw new IllegalArgumentException();
+        }
         this.entities.replace(key, entity);
     }
 
     public void put(V newEntity) {
-        this.entities.put(newEntity.key, newEntity);
+        this.entities.put(newEntity.getKey(), newEntity);
     }
 
     public int sizeEntities() {
@@ -57,9 +64,9 @@ public abstract class Repository<K, V extends  BaseEntity<K>> implements DataSou
     public void deSerialize() {
         try {
             this.entities = (Map<K, V>) read.readObject();
-            logger.log(Level.INFO, logger.getName() + "deSerialize");
+            logger.log(Level.INFO, logger.getName() + " deSerialize");
         } catch (IOException| ClassNotFoundException ex) {
-            logger.log(Level.WARNING, "Entities wasn't deserialize" , ex);
+            logger.log(Level.WARNING, " Entities wasn't deserialize" , ex);
         }
     }
 
@@ -67,9 +74,9 @@ public abstract class Repository<K, V extends  BaseEntity<K>> implements DataSou
     public void serialize() {
         try {
             write.writeObject(entities);
-            logger.log(Level.INFO, logger.getName() + "Serialize");
+            logger.log(Level.INFO, logger.getName() + " Serialize");
         } catch (IOException io) {
-            logger.log(Level.WARNING, "Entities wasn't deserialize" , io);
+            logger.log(Level.WARNING, " Entities wasn't deserialize" , io);
         }
     }
 }
