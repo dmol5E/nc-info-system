@@ -1,12 +1,12 @@
 package com.nc.unc;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.Group;
-import javafx.scene.text.Text;
-
-import java.util.HashMap;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 /**
  * Hello world!
@@ -14,26 +14,31 @@ import java.util.HashMap;
  */
 public class App extends Application
 {
-
-    public static void main(String[] args) {
-
-        Application.launch(args);
+    public static void main( String[] args )
+    {
+        launch(args);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(App.class.getResource("CreateOrder1.fxml"));
+        Scene scene = new Scene(root);
 
-        // установка надписи
-        Text text = new Text("Hello from JavaFX!");
-        text.setLayoutY(80);    // установка положения надписи по оси Y
-        text.setLayoutX(100);   // установка положения надписи по оси X
-        Group group = new Group(text);
+        primaryStage.setScene(scene);
+        //Pane pane = new Pane();
+        //pane.setPrefSize(300,250);
 
-        Scene scene = new Scene(group);
-        stage.setScene(scene);
-        stage.setTitle("First Application");
-        stage.setWidth(300);
-        stage.setHeight(250);
-        stage.show();
+        //Button button1 = new Button("Добавить нового клиента");
+        //Button button2 = new Button("Сформировать заказ");
+        //Button button3 = new Button("Добавить товар");
+        //Button button4 = new Button("Пополнить товар");
+        //Button button5 = new Button("Статистика");
+
+        //StackPane stackPane=new StackPane();
+        //stackPane.getChildren().add(button1);
+        //Scene scene=new Scene(stackPane,300,250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
 }
