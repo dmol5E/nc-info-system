@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CreateOrder">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.CreateOrder">
    <children>
       <Button layoutX="20.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" text="Назад" />
       <Button layoutX="453.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="131.0" text="Сформировать заказ" />
@@ -37,7 +36,7 @@
       <Button layoutX="271.0" layoutY="14.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="125.0" text="Добавление товара" wrapText="true" />
       <Button layoutX="397.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="114.0" text="Пополнить товар" wrapText="true" />
       <Button layoutX="510.0" layoutY="16.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="79.0" text="Статистика" textAlignment="CENTER" wrapText="true" />
-      <ProgressBar layoutX="106.0" layoutY="364.0" prefWidth="200.0" progress="1.0" />
+      <ProgressBar layoutX="106.0" layoutY="364.0" prefWidth="200.0" progress="0.66" />
       <TableView layoutX="303.0" layoutY="77.0" prefHeight="279.0" prefWidth="282.0">
         <columns>
           <TableColumn prefWidth="75.0" text="Товар" />
