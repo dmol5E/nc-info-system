@@ -6,4 +6,5 @@ public class OrderRepository extends Repository<Long, Order> {
     protected OrderRepository(String fileName) {
         super(fileName, OrderRepository.class);
     }
+
 }
