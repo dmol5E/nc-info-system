@@ -1,8 +1,6 @@
 package com.nc.unc.model;
 
-import java.io.Serializable;
-
-public class BaseEntity<K> implements Serializable {
+public class BaseEntity<K> {
     protected K key;
 
     public BaseEntity(K key){

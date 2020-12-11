@@ -1,6 +1,7 @@
 package com.nc.unc.model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Customer extends BaseEntity<Long> {
     private String firstName;
@@ -46,5 +47,21 @@ public class Customer extends BaseEntity<Long> {
                 ", phoneNumber='" + this.phoneNumber + '\'' +
                 ", data=" + this.data +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return  Objects.equals(firstName, customer.firstName) &&
+                Objects.equals(lastName, customer.lastName) &&
+                Objects.equals(phoneNumber, customer.phoneNumber) &&
+                Objects.equals(data, customer.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, phoneNumber, data);
     }
 }

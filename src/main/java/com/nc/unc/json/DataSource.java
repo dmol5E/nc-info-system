@@ -1,4 +1,4 @@
-package com.nc.unc.repositories;
+package com.nc.unc.json;
 
 import com.nc.unc.model.BaseEntity;
 

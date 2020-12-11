@@ -5,10 +5,10 @@ import com.nc.unc.model.Customer;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CustomerRepository extends Repository<Long, Customer> {
+public class CustomerRepository extends RepositoryEntity<Long, Customer> {
 
-    public CustomerRepository(String fileName) {
-        super(fileName, CustomerRepository.class);
+    public CustomerRepository() {
+        super(CustomerRepository.class);
     }
 
     public Map<Long, Customer> getCustomer(String search){

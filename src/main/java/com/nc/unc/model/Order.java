@@ -6,7 +6,6 @@ import java.util.List;
 public class Order extends BaseEntity<Long> {
     private final Customer customer;
     private final LocalDate createdWhen;
-    private final LocalDate DEFAULT_SENT_WHEN = null;
     private LocalDate sentWhen;
     private final double sum;
     private final List<OrderItem> products;
@@ -16,7 +15,6 @@ public class Order extends BaseEntity<Long> {
     private boolean imposed;
     private final Address recipient;
     private final Address sender;
-
 
     public Order(long key,
                  Customer customer,
@@ -29,7 +27,6 @@ public class Order extends BaseEntity<Long> {
         this.curStatus = DEFAULT_STATUS;
         this.customer = customer;
         this.createdWhen = createdWhen;
-        this.sentWhen = DEFAULT_SENT_WHEN;
         this.sum = sum;
         this.products = products;
         this.recipient = recipient;
@@ -61,7 +58,6 @@ public class Order extends BaseEntity<Long> {
         return "Order{" +
                 "customer=" + customer +
                 ", createdWhen=" + createdWhen +
-                ", DEFAULT_SENT_WHEN=" + DEFAULT_SENT_WHEN +
                 ", sentWhen=" + sentWhen +
                 ", sum=" + sum +
                 ", products=" + products +

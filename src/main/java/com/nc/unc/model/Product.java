@@ -1,18 +1,21 @@
 package com.nc.unc.model;
 
+
 public class Product extends BaseEntity<Long> {
     private String name;
     private double price;
-    private static int DEFAULT_COUNT = 0;
     private int count;
     public Product(long key,
                    String name,
                    double price) {
         super(key);
-        this.count = DEFAULT_COUNT;
+        this.count = 0;
         this.name = name;
         this.price = price;
     }
+
+    @Override
+    public Long getKey() { return super.getKey(); }
 
     public int getCount() { return this.count; }
 
