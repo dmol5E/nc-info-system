@@ -34,7 +34,7 @@ public class SerialisePoolRepository implements DataSource {
     @Override
     public void serialize()  {
         try {
-            FileWriter writer = new FileWriter("C:\\Users\\teter\\IdeaProjects\\nc-info-system\\src\\main\\resources\\file.json");
+            FileWriter writer = new FileWriter("file.json");
             for (var it: serialeseList){
                 gson.toJson(it, writer);
                 writer.flush();
@@ -49,7 +49,7 @@ public class SerialisePoolRepository implements DataSource {
     public List<Repository<Long,? extends BaseEntity<Long>>> deSerialize() {
         List<Repository<Long,? extends BaseEntity<Long>>> repositories = null;
         try {
-            FileReader reader = new FileReader("C:\\Users\\teter\\IdeaProjects\\nc-info-system\\src\\main\\resources\\file.json");
+            FileReader reader = new FileReader("file.json");
 
         }catch (IOException e){
             logger.log(Level.ERROR, "JSON reader Exception", e);
