@@ -25,18 +25,6 @@ public class App extends Application
         Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);
-        //Pane pane = new Pane();
-        //pane.setPrefSize(300,250);
-
-        //Button button1 = new Button("Добавить нового клиента");
-        //Button button2 = new Button("Сформировать заказ");
-        //Button button3 = new Button("Добавить товар");
-        //Button button4 = new Button("Пополнить товар");
-        //Button button5 = new Button("Статистика");
-
-        //StackPane stackPane=new StackPane();
-        //stackPane.getChildren().add(button1);
-        //Scene scene=new Scene(stackPane,300,250);
         primaryStage.setScene(scene);
         primaryStage.show();
 
