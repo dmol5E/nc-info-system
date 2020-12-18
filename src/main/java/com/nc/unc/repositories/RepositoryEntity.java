@@ -11,7 +11,7 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
 
     protected Map<K, V> entities = new HashMap<>();
 
-    protected Logger logger = null;
+    protected transient Logger logger;
 
     protected RepositoryEntity(Class<? extends RepositoryEntity<K,V>> className) {
         logger = LogManager.getLogger(className.getName());

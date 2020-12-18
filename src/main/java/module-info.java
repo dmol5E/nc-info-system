@@ -6,4 +6,5 @@ module infosystem {
 
     opens com.nc.unc to javafx.fxml;
     exports com.nc.unc;
+    exports com.nc.unc.controller;
 }

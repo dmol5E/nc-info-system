@@ -1,14 +1,21 @@
 package com.nc.unc;
 
+import com.nc.unc.json.SerialisePoolRepository;
 import com.nc.unc.model.*;
 import com.nc.unc.repositories.*;
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main  {
-    private static CustomerRepository  customerRepository = new CustomerRepository();
+    private static CustomerRepository customerRepository = new CustomerRepository();
     private static AddressRepository addressRepository = new AddressRepository();
     private static ProductRepository productRepository = new ProductRepository();
     private static OrderItemRepository orderItemRepository = new OrderItemRepository();
@@ -41,15 +48,35 @@ public class Main  {
         orderItemRepository.put(new OrderItem(3L, productRepository.getByKey(3L), 1));
     }
 
-    public static void main(String[] args){
+    private static void addOrRep() {
+        orderRepository.put(new Order(1L,customerRepository.getByKey(0L),LocalDate.of(2017, Month.NOVEMBER,30),
+                4000.0,Stream.of(orderItemRepository.getByKey(0L),orderItemRepository.getByKey(1L)).collect(Collectors.toList()),
+                addressRepository.getByKey(0L), addressRepository.getByKey(1L)));
+
+        orderRepository.put(new Order(2L,customerRepository.getByKey(1L),LocalDate.of(2020, Month.NOVEMBER,30),
+                1000.0,Stream.of(orderItemRepository.getByKey(0L),orderItemRepository.getByKey(1L)).collect(Collectors.toList()),
+                addressRepository.getByKey(1L), addressRepository.getByKey(2L)));
+    }
+
+    public static void main(String[] args) throws IOException {
         addCust();
         addAdd();
         addPr();
         addItRep();
         Gson gson = new Gson();
+        List<Repository<Long,? extends BaseEntity<Long>>> repositories
+                = Stream.of(customerRepository, addressRepository, productRepository,orderItemRepository,orderRepository).collect(Collectors.toList());
+        SerialisePoolRepository serialisePoolRepository = new SerialisePoolRepository(repositories);
+        serialisePoolRepository.serialize();
+        var result = serialisePoolRepository.deSerialize();
+        for (var it : result){
+            System.out.println(it.getEntities().toString());
+        }
+        repositories.add(customerRepository);
         Repository<Long, Address> repository = new AddressRepository();
         BaseEntity<Long> baseEntity = new Address(1L, "32", 32);
-        String str = gson.toJson(repository);
-        System.out.println(str);
+        String str = gson.toJson(customerRepository);
+        CustomerRepository customerRepository2 = gson.fromJson(str ,CustomerRepository.class);
+        System.out.println(customerRepository2.toString());
     }
 }
