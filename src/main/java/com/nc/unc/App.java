@@ -1,5 +1,13 @@
 package com.nc.unc;
 
+import com.nc.unc.model.Customer;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,21 +20,23 @@ import javafx.stage.Stage;
  * Hello world!
  *
  */
-public class App extends Application
+public class App
 {
-    public static void main( String[] args )
-    {
-        launch(args);
+
+    private static List<String> list1 = Stream.of("3One","One Two","gf","321423fs","sda")
+            .collect(Collectors.toList());
+    public static List<String> getCustomer(String string) {
+        return list1.stream()
+                .filter((a) -> a.toLowerCase().contains(string.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(App.class.getResource("CreateOrder1.fxml"));
-        Scene scene = new Scene(root);
+    public static void main( String[] args ) {
+        System.out.println(getCustomer("one").toString());
+        String a = "dsafF D S";
+        System.out.println(a.toLowerCase().contains("aff"));
 
-        primaryStage.setScene(scene);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
+        //List<Customer> list = Stream.of(new Customer(1, "1","23",new Date(321312)))
+        //        .collect(Collectors.toList());
     }
 }
