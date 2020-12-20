@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="423.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.form.CreateOrder">
+   <children>
+      <TabPane layoutX="7.0" layoutY="8.0" prefHeight="415.0" prefWidth="739.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Добавление нового клиента">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="358.0" prefWidth="725.0">
+                     <children>
+
+                     </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Сформировать заказ">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="358.0" prefWidth="725.0">
+                    <children>
+                        <Button fx:id="back" layoutX="14.0" layoutY="350.0" mnemonicParsing="false" onAction="#returnBack" prefHeight="26.0" prefWidth="70.0" text="Назад" visible="true" />
+                        <Button fx:id="next" layoutX="660.0" layoutY="350.0" mnemonicParsing="false" onAction="#goNext" prefHeight="26.0" prefWidth="70.0" text="Далее" />
+                        <ProgressBar fx:id="progress" layoutX="107.0" layoutY="354.0" prefHeight="18.0" prefWidth="308.0" progress="0.0" />
+                        <Button fx:id="add_customer" layoutX="462.0" layoutY="350.0" mnemonicParsing="false" onAction="#createNewClient" text="Добавить нового клиента" />
+                        <TextFlow fx:id="output_all_customer" layoutX="16.0" layoutY="61.0" prefHeight="277.0" prefWidth="718.0" />
+                        <Label fx:id="label_customer" layoutX="17.0" layoutY="21.0" text="Клиенты" />
+                        <TextField fx:id="input_customer" layoutX="524.0" layoutY="18.0" prefHeight="26.0" prefWidth="208.0" />
+                        <TextField fx:id="input_adress" layoutX="55.0" layoutY="125.0" prefHeight="26.0" prefWidth="150.0" visible="false" />
+                        <TextFlow fx:id="output_customer" accessibleText="" layoutX="14.0" layoutY="20.0" lineSpacing="5.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="280.0" textAlignment="CENTER" visible="false" />
+
+                        <Button fx:id="search" layoutX="444.0" layoutY="17.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="68.0" text="Поиск" />
+                        <TableView fx:id="table2" layoutX="292.0" layoutY="30.0" prefHeight="280.0" prefWidth="440.0" visible="false">
+                            <columns>
+                                <TableColumn prefWidth="75" text="Товар" />
+                                <TableColumn minWidth="20" prefWidth="56.20001220703125" text="Цена" />
+                                <TableColumn prefWidth="122" text="Кол-во на складе" />
+                                <TableColumn minWidth="0" prefWidth="113" text="Желаемое кол-во" />
+                                <TableColumn id="table2" minWidth="0.0" prefWidth="69.4000244140625" />
+                            </columns>
+                        </TableView>
+                        <TableView fx:id="table1" layoutX="15.0" layoutY="30.0" prefHeight="280.0" prefWidth="270.0" visible="false">
+                            <columns>
+                                <TableColumn prefWidth="81" sortType="DESCENDING" text="Товар" />
+                                <TableColumn prefWidth="70" text="Цена" />
+                                <TableColumn prefWidth="75" text="Кол-во" />
+                                <TableColumn prefWidth="75.0" />
+                            </columns>
+                        </TableView>
+                        <TableView fx:id="table3" layoutX="303.0" layoutY="20.0" prefHeight="279.0" prefWidth="282.0" visible="false">
+                            <columns>
+                                <TableColumn prefWidth="75.0" text="Товар" />
+                                <TableColumn prefWidth="75.0" text="Цена" />
+                                <TableColumn prefWidth="75.0" text="Количество" />
+                                <TableColumn prefWidth="75.0" />
+                            </columns>
+                        </TableView>
+
+                    </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Добавление товара">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="358.0" prefWidth="725.0">
+                    <children>
+
+                    </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Пополнить товар">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="358.0" prefWidth="725.0">
+                    <children>
+
+                    </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Статистика">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="358.0" prefWidth="725.0">
+                        <children>
+
+                        </children></AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
