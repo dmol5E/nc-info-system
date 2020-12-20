@@ -1,0 +1,281 @@
+Index: src/main/java/com/nc/unc/model/Product.java
+===================================================================
+--- src/main/java/com/nc/unc/model/Product.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/Product.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,40 +0,0 @@
+-package com.nc.unc.model;
+-
+-
+-public class Product extends BaseEntity<Long> {
+-    private String name;
+-    private double price;
+-    private int count;
+-    public Product(long key,
+-                   String name,
+-                   double price) {
+-        super(key);
+-        this.count = 0;
+-        this.name = name;
+-        this.price = price;
+-    }
+-
+-    @Override
+-    public Long getKey() { return super.getKey(); }
+-
+-    public int getCount() { return this.count; }
+-
+-    public double getPrice() { return this.price; }
+-
+-    public String getName() { return this.name; }
+-
+-    public void setCount(int count) { this.count = count; }
+-
+-    public void setName(String name) { this.name = name; }
+-
+-    public void setPrice(double price) { this.price = price; }
+-
+-    @Override
+-    public String toString() {
+-        return "Product{" +
+-                "name='" + name + '\'' +
+-                ", price=" + price +
+-                ", count=" + count +
+-                '}';
+-    }
+-}
+Index: src/main/java/com/nc/unc/model/OrderItem.java
+===================================================================
+--- src/main/java/com/nc/unc/model/OrderItem.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/OrderItem.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,30 +0,0 @@
+-package com.nc.unc.model;
+-
+-public class OrderItem extends BaseEntity<Long> {
+-    private Product product;
+-    private int count;
+-
+-    public OrderItem(Long key,
+-                     Product product,
+-                     int count) {
+-        super(key);
+-        this.product = product;
+-        this.count = count;
+-    }
+-
+-    public void setCount(int count) { this.count = count; }
+-
+-    public void setProduct(Product product) { this.product = product; }
+-
+-    public int getCount() { return this.count; }
+-
+-    public Product getProduct() { return this.product; }
+-
+-    @Override
+-    public String toString() {
+-        return "OrderItem{" +
+-                "product=" + product +
+-                ", count=" + count +
+-                '}';
+-    }
+-}
+Index: src/main/java/com/nc/unc/model/Address.java
+===================================================================
+--- src/main/java/com/nc/unc/model/Address.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/Address.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,19 +0,0 @@
+-package com.nc.unc.model;
+-
+-public class Address extends BaseEntity<Long> {
+-    private String address;
+-    private int zipCode;
+-    public Address(Long key, String address, int zipCode) {
+-        super(key);
+-        this.address = address;
+-        this.zipCode = zipCode;
+-    }
+-
+-    public int getZipCode() { return this.zipCode; }
+-
+-    public String getAddress() { return this.address; }
+-
+-    public void setAddress(String address) { this.address = address; }
+-
+-    public void setZipCode(int zipCode) { this.zipCode = zipCode; }
+-}
+Index: src/main/java/com/nc/unc/model/Customer.java
+===================================================================
+--- src/main/java/com/nc/unc/model/Customer.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/Customer.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,70 +0,0 @@
+-package com.nc.unc.model;
+-
+-import java.time.LocalDate;
+-import java.util.Collection;
+-import java.util.Objects;
+-
+-public class Customer extends BaseEntity<Long> {
+-    private String firstName;
+-    private String lastName;
+-    private String phoneNumber;
+-    private LocalDate data;
+-
+-    public Customer(long id,
+-                    String firstName,
+-                    String lastName,
+-                    String phoneNumber,
+-                    LocalDate data)
+-    {
+-        super(id);
+-        this.data = data;
+-        this.firstName = firstName;
+-        this.lastName = lastName;
+-        this.phoneNumber = phoneNumber;
+-    }
+-
+-    public void setFirstName(String firstName) { this.firstName = firstName; }
+-
+-    public void setLastName(String lastName) { this.lastName = lastName; }
+-
+-    public void setData(LocalDate data) { this.data = data; }
+-
+-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+-
+-    public String getFirstName() { return this.firstName; }
+-
+-    public String getLastName() { return this.lastName; }
+-
+-    public String getPhoneNumber() { return this.phoneNumber; }
+-
+-    public LocalDate getData() { return this.data; }
+-
+-    @Override
+-    public String toString() {
+-        return "Customer{" +
+-                "id=" + super.key +
+-                ", firstName='" + this.firstName + '\'' +
+-                ", lastName='" + this.lastName + '\'' +
+-                ", phoneNumber='" + this.phoneNumber + '\'' +
+-                ", data=" + this.data +
+-                '}';
+-    }
+-
+-    @Override
+-    public boolean equals(Object o) {
+-        if (this == o) return true;
+-        if (o == null || getClass() != o.getClass()) return false;
+-        Customer customer = (Customer) o;
+-        return  Objects.equals(firstName, customer.firstName) &&
+-                Objects.equals(lastName, customer.lastName) &&
+-                Objects.equals(phoneNumber, customer.phoneNumber) &&
+-                Objects.equals(data, customer.data);
+-    }
+-
+-    @Override
+-    public int hashCode() {
+-        return Objects.hash(firstName, lastName, phoneNumber, data);
+-    }
+-
+-
+-}
+Index: src/main/java/com/nc/unc/model/Status.java
+===================================================================
+--- src/main/java/com/nc/unc/model/Status.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/Status.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,5 +0,0 @@
+-package com.nc.unc.model;
+-
+-public enum Status {
+-    CREATED, CANCELED, SENT, DELIVERED
+-}
+Index: src/main/java/com/nc/unc/model/BaseEntity.java
+===================================================================
+--- src/main/java/com/nc/unc/model/BaseEntity.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/BaseEntity.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,12 +0,0 @@
+-package com.nc.unc.model;
+-
+-public class BaseEntity<K> {
+-    protected K key;
+-
+-    public BaseEntity(K key){
+-        this.key = key;
+-    }
+-
+-    public K getKey() { return this.key; }
+-
+-}
+Index: src/main/java/com/nc/unc/model/Order.java
+===================================================================
+--- src/main/java/com/nc/unc/model/Order.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
++++ src/main/java/com/nc/unc/model/Order.java	(revision 0abe806ce3ecbb035bae68f15850d053384d5c70)
+@@ -1,70 +0,0 @@
+-package com.nc.unc.model;
+-
+-import java.time.LocalDate;
+-import java.util.List;
+-
+-public class Order extends BaseEntity<Long> {
+-    private final Customer customer;
+-    private final LocalDate createdWhen;
+-    private LocalDate sentWhen;
+-    private final double sum;
+-    private final List<OrderItem> products;
+-
+-    private static final Status DEFAULT_STATUS = Status.CREATED;
+-    private Status curStatus;
+-    private boolean imposed;
+-    private final Address recipient;
+-    private final Address sender;
+-
+-    public Order(long key,
+-                 Customer customer,
+-                 LocalDate createdWhen,
+-                 double sum,
+-                 List<OrderItem> products,
+-                 Address recipient,
+-                 Address sender) {
+-        super(key);
+-        this.curStatus = DEFAULT_STATUS;
+-        this.customer = customer;
+-        this.createdWhen = createdWhen;
+-        this.sum = sum;
+-        this.products = products;
+-        this.recipient = recipient;
+-        this.sender = sender;
+-    }
+-
+-    public void setCurStatus(Status curStatus) { this.curStatus = curStatus; }
+-
+-    public void setSentWhen(LocalDate sentWhen) { this.sentWhen = sentWhen; }
+-
+-    public Address getRecipient() { return this.recipient; }
+-
+-    public Customer getCustomer() { return this.customer; }
+-
+-    public List<OrderItem> getProducts() { return this.products; }
+-
+-    public double getSum() { return this.sum; }
+-
+-    public Address getSender() { return this.sender; }
+-
+-    public LocalDate getCreatedWhen() { return this.createdWhen; }
+-
+-    public LocalDate getSentWhen() { return this.sentWhen; }
+-
+-    public Status getCurStatus() { return this.curStatus; }
+-
+-    @Override
+-    public String toString() {
+-        return "Order{" +
+-                "customer=" + customer +
+-                ", createdWhen=" + createdWhen +
+-                ", sentWhen=" + sentWhen +
+-                ", sum=" + sum +
+-                ", products=" + products +
+-                ", curStatus=" + curStatus +
+-                ", imposed=" + imposed +
+-                ", recipient=" + recipient +
+-                ", sender=" + sender +
+-                '}';
+-    }
+-}
