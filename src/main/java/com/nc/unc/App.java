@@ -41,8 +41,8 @@ public class App
         Customer customer1=new Customer(1,name1_1,name1_2,phone1,date1);
         Customer customer2=new Customer(2,name2_1,name2_2,phone2,date2);
 
-        com.nc.unc.model.CustomerRepository list=new com.nc.unc.model.CustomerRepository();
-        list.addCustomer(customer1);
-        list.addCustomer(customer2);
+        //com.nc.unc.model.CustomerRepository list=new com.nc.unc.model.CustomerRepository();
+        //list.addCustomer(customer1);
+        //list.addCustomer(customer2);
     }
 }

@@ -27,25 +27,24 @@
                         <TextFlow fx:id="output_all_customer" layoutX="16.0" layoutY="61.0" prefHeight="277.0" prefWidth="718.0" />
                         <Label fx:id="label_customer" layoutX="17.0" layoutY="21.0" text="Клиенты" />
                         <TextField fx:id="input_customer" layoutX="524.0" layoutY="18.0" prefHeight="26.0" prefWidth="208.0" />
-                        <TextField fx:id="input_adress" layoutX="55.0" layoutY="125.0" prefHeight="26.0" prefWidth="150.0" visible="false" />
+                        <TextField fx:id="input_address" layoutX="55.0" layoutY="125.0" prefHeight="26.0" prefWidth="150.0" visible="false" />
                         <TextFlow fx:id="output_customer" accessibleText="" layoutX="14.0" layoutY="20.0" lineSpacing="5.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="280.0" textAlignment="CENTER" visible="false" />
-
                         <Button fx:id="search" layoutX="444.0" layoutY="17.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="68.0" text="Поиск" />
-                        <TableView fx:id="table2" layoutX="292.0" layoutY="30.0" prefHeight="280.0" prefWidth="440.0" visible="false">
-                            <columns>
-                                <TableColumn prefWidth="75" text="Товар" />
-                                <TableColumn minWidth="20" prefWidth="56.20001220703125" text="Цена" />
-                                <TableColumn prefWidth="122" text="Кол-во на складе" />
-                                <TableColumn minWidth="0" prefWidth="113" text="Желаемое кол-во" />
-                                <TableColumn id="table2" minWidth="0.0" prefWidth="69.4000244140625" />
-                            </columns>
-                        </TableView>
                         <TableView fx:id="table1" layoutX="15.0" layoutY="30.0" prefHeight="280.0" prefWidth="270.0" visible="false">
                             <columns>
-                                <TableColumn prefWidth="81" sortType="DESCENDING" text="Товар" />
-                                <TableColumn prefWidth="70" text="Цена" />
-                                <TableColumn prefWidth="75" text="Кол-во" />
+                                <TableColumn fx:id="table1_name" prefWidth="81" sortType="DESCENDING" text="Товар" />
+                                <TableColumn fx:id="table1_price" prefWidth="70" text="Цена" />
+                                <TableColumn fx:id="table1_count" prefWidth="75" text="Кол-во" />
                                 <TableColumn prefWidth="75.0" />
+                            </columns>
+                        </TableView>
+                        <TableView fx:id="table2" layoutX="292.0" layoutY="30.0" prefHeight="280.0" prefWidth="440.0" visible="false">
+                            <columns>
+                                <TableColumn fx:id="table2_name" prefWidth="75" text="Товар" />
+                                <TableColumn fx:id="table2_price" minWidth="20" prefWidth="56.20001220703125" text="Цена" />
+                                <TableColumn fx:id="table2_count" prefWidth="122" text="Кол-во на складе" />
+                                <TableColumn fx:id="table2_select" minWidth="0" prefWidth="113" text="Выбор" />
+                                <TableColumn id="table2" minWidth="0.0" prefWidth="69.4000244140625" />
                             </columns>
                         </TableView>
                         <TableView fx:id="table3" layoutX="303.0" layoutY="20.0" prefHeight="279.0" prefWidth="282.0" visible="false">
@@ -56,7 +55,7 @@
                                 <TableColumn prefWidth="75.0" />
                             </columns>
                         </TableView>
-
+                        <Button layoutX="124.0" layoutY="19.0" mnemonicParsing="false" text="Button" onAction="#Test"/>
                     </children></AnchorPane>
                 </content>
             </Tab>
