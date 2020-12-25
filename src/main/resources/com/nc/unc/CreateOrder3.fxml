@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.*?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.CreateOrder">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.controller.CreateOrder">
    <children>
       <Button layoutX="20.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="68.0" text="Назад" />
       <Button layoutX="453.0" layoutY="361.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="131.0" text="Сформировать заказ" />

@@ -1,52 +1,67 @@
 package com.nc.unc.model;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Objects;
 
-public class Customer implements Serializable, Comparable<Customer> {
-    private final long id;
-    private String FIO;
+public class Customer extends BaseEntity<Long> {
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
-    private Date data;
+    private LocalDate data;
 
     public Customer(long id,
+                    String firstName,
+                    String lastName,
                     String phoneNumber,
-                    String FIO,
-                    Date data)
+                    LocalDate data)
     {
-        this.id = id;
+        super(id);
         this.data = data;
-        this.FIO = FIO;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-
     }
 
-    public void setFIO(String FIO) { this.FIO = FIO; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public void setData(Date data) { this.data = data; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public void setData(LocalDate data) { this.data = data; }
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public long getId() { return this.id; }
+    public String getFirstName() { return this.firstName; }
 
-    public String getFIO() { return this.FIO; }
+    public String getLastName() { return this.lastName; }
 
     public String getPhoneNumber() { return this.phoneNumber; }
 
-    public Date getData() { return this.data; }
+    public LocalDate getData() { return this.data; }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + this.id +
-                ", FIO='" + this.FIO + '\'' +
+                "id=" + super.key +
+                ", firstName='" + this.firstName + '\'' +
+                ", lastName='" + this.lastName + '\'' +
                 ", phoneNumber='" + this.phoneNumber + '\'' +
                 ", data=" + this.data +
                 '}';
     }
 
     @Override
-    public int compareTo(Customer o) {
-        return this.FIO.compareTo(o.FIO);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return  Objects.equals(firstName, customer.firstName) &&
+                Objects.equals(lastName, customer.lastName) &&
+                Objects.equals(phoneNumber, customer.phoneNumber) &&
+                Objects.equals(data, customer.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, phoneNumber, data);
     }
 }
