@@ -1,7 +1,6 @@
 package com.nc.unc.model;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Objects;
 
 public class Customer extends BaseEntity<Long> {
@@ -65,6 +64,4 @@ public class Customer extends BaseEntity<Long> {
     public int hashCode() {
         return Objects.hash(firstName, lastName, phoneNumber, data);
     }
-
-
 }

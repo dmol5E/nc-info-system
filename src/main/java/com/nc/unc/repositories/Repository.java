@@ -1,6 +1,5 @@
 package com.nc.unc.repositories;
 
-import java.util.Collection;
 import java.util.Map;
 
 public interface Repository<K, V> {

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/info-system.iml" filepath="$PROJECT_DIR$/info-system.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/nc-info-system.iml" filepath="$PROJECT_DIR$/.idea/nc-info-system.iml" />
     </modules>
   </component>
 </project>
