@@ -1,5 +1,7 @@
 package com.nc.unc.model;
 
+import com.nc.unc.enums.StatusOrder;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,8 +12,8 @@ public class Order extends BaseEntity<Long> {
     private final double sum;
     private final List<OrderItem> products;
 
-    private static final Status DEFAULT_STATUS = Status.CREATED;
-    private Status curStatus;
+    private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
+    private StatusOrder curStatusOrder;
     private boolean imposed;
     private final Address recipient;
     private final Address sender;
@@ -24,7 +26,7 @@ public class Order extends BaseEntity<Long> {
                  Address recipient,
                  Address sender) {
         super(key);
-        this.curStatus = DEFAULT_STATUS;
+        this.curStatusOrder = DEFAULT_STATUS;
         this.customer = customer;
         this.createdWhen = createdWhen;
         this.sum = sum;
@@ -32,10 +34,17 @@ public class Order extends BaseEntity<Long> {
         this.recipient = recipient;
         this.sender = sender;
     }
+    public String getRecipientAddress(){ return this.recipient.getAddress(); }
 
-    public void setCurStatus(Status curStatus) { this.curStatus = curStatus; }
+    public String getSenderAddress(){ return this.sender.getAddress(); }
 
-    public void setSentWhen(LocalDate sentWhen) { this.sentWhen = sentWhen; }
+    public String getName(){ return this.customer.getFirstName(); }
+
+    public String getLastName(){ return this.customer.getLastName(); }
+
+    public Order setCurStatus(StatusOrder curStatusOrder) { this.curStatusOrder = curStatusOrder; return this;}
+
+    public Order setSentWhen(LocalDate sentWhen) { this.sentWhen = sentWhen; return this;}
 
     public Address getRecipient() { return this.recipient; }
 
@@ -51,7 +60,7 @@ public class Order extends BaseEntity<Long> {
 
     public LocalDate getSentWhen() { return this.sentWhen; }
 
-    public Status getCurStatus() { return this.curStatus; }
+    public StatusOrder getCurStatus() { return this.curStatusOrder; }
 
     @Override
     public String toString() {
@@ -61,7 +70,7 @@ public class Order extends BaseEntity<Long> {
                 ", sentWhen=" + sentWhen +
                 ", sum=" + sum +
                 ", products=" + products +
-                ", curStatus=" + curStatus +
+                ", curStatus=" + curStatusOrder +
                 ", imposed=" + imposed +
                 ", recipient=" + recipient +
                 ", sender=" + sender +

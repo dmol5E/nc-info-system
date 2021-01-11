@@ -42,8 +42,14 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
         this.entities.put(newEntity.getKey(), newEntity);
     }
 
-    public int sizeEntities() {
+    public int size() {
         return this.entities.size();
     }
 
+    @Override
+    public String toString() {
+        return "RepositoryEntity{" +
+                "entities=" + entities.toString() +
+                '}';
+    }
 }

@@ -2,7 +2,7 @@ package com.nc.unc.repositories;
 
 import com.nc.unc.model.Customer;
 import com.nc.unc.model.Order;
-import com.nc.unc.model.Status;
+import com.nc.unc.enums.StatusOrder;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,9 +18,9 @@ public class OrderRepository extends RepositoryEntity<Long, Order> {
                 .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
     }
 
-    public Map<Long, Order> getOrdersByCurStatus(Status status){
+    public Map<Long, Order> getOrdersByCurStatus(StatusOrder statusOrder){
         return this.entities.entrySet().stream()
-                .filter(entry -> entry.getValue().getCurStatus() == status)
+                .filter(entry -> entry.getValue().getCurStatus() == statusOrder)
                 .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
     }
 

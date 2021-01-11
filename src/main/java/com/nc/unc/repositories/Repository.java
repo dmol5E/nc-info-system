@@ -9,6 +9,6 @@ public interface Repository<K, V> {
 
     void put(V newEntity);
 
-    int sizeEntities();
+    int size();
 
 }

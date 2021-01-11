@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="795.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.controller.CreateOrder2">
+    <children>
+        <Button id="back" layoutX="16.0" layoutY="361.0" mnemonicParsing="false" onAction="#returnBack" prefHeight="26.0" prefWidth="72.0" text="Назад" />
+        <Button id="next" layoutX="592.0" layoutY="360.0" mnemonicParsing="false" onAction="#goNext" prefHeight="26.0" prefWidth="131.0" text="Далее" />
+        <Button id="button1" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="126.0" text="Добавление нового клиента" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+        <Button id="button2" layoutX="140.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" text="Сформировать заказ" wrapText="true" />
+        <Button id="button3" layoutX="271.0" layoutY="14.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="125.0" text="Добавление товара" wrapText="true" />
+        <Button id="button4" layoutX="397.0" layoutY="15.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="114.0" text="Пополнить товар" wrapText="true" />
+        <Button id="button5" layoutX="644.0" layoutY="16.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="79.0" text="Статистика" textAlignment="CENTER" wrapText="true" />
+        <ProgressBar layoutX="106.0" layoutY="364.0" prefWidth="200.0" progress="0.33" />
+        <TableView fx:id="table1" layoutX="292.0" layoutY="77.0" prefHeight="279.0" prefWidth="432.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Товар" />
+                <TableColumn minWidth="20.0" prefWidth="75.0" text="Цена" />
+                <TableColumn prefWidth="136.20001220703125" text="Количество на складе" />
+                <TableColumn minWidth="0.0" prefWidth="108.20001220703125" text="Желаемое количество" />
+                <TableColumn id="table2" minWidth="0.0" prefWidth="182.199951171875" />
+            </columns>
+        </TableView>
+        <TableView fx:id="table2" layoutX="15.0" layoutY="77.0" prefHeight="279.0" prefWidth="263.0">
+            <columns>
+                <TableColumn prefWidth="81.4000244140625" sortType="DESCENDING" text="Товар" />
+                <TableColumn prefWidth="69.79998779296875" text="Цена" />
+                <TableColumn prefWidth="75.0" text="Количество" />
+                <TableColumn id="table1" prefWidth="75.0" />
+                <TableColumn prefWidth="75.0" text="Товар" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

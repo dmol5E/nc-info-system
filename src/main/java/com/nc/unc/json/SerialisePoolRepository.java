@@ -2,40 +2,40 @@ package com.nc.unc.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
+
 import com.nc.unc.model.BaseEntity;
 import com.nc.unc.repositories.Repository;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SerialisePoolRepository implements DataSource {
 
-    private Logger logger = LogManager.getLogger("SerialisePoolRepository");
+    private final Logger logger = LogManager.getLogger(SerialisePoolRepository.class);
 
-    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    private List<Repository<Long,? extends BaseEntity<Long>>> serialeseList = new ArrayList<>();
+    private List<Repository<Long,? extends BaseEntity<Long>>> serializeList = new ArrayList<>();
 
-    public SerialisePoolRepository(){}
+    public SerialisePoolRepository() {}
 
 
     public SerialisePoolRepository(List<Repository<Long,? extends BaseEntity<Long>>> repositories) {
-        this.serialeseList = repositories;
+        this.serializeList = repositories;
     }
 
     @Override
     public void serialize()  {
         try {
             FileWriter writer = new FileWriter("file.json");
-            for (var it: serialeseList){
+            for (var it: serializeList){
                 gson.toJson(it, writer);
                 writer.flush();
             }

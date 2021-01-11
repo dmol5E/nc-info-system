@@ -7,9 +7,11 @@ import com.nc.unc.repositories.*;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +28,7 @@ public class Main  {
         customerRepository.put(new Customer(2L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1997, Month.APRIL, 2)));
         customerRepository.put(new Customer(3L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1995, Month.APRIL, 2)));
         customerRepository.put(new Customer(4L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1995, Month.APRIL, 2)));
-        System.out.println(customerRepository.sizeEntities());
+        System.out.println(customerRepository.size());
     }
 
     private static void addAdd(){
@@ -36,10 +38,10 @@ public class Main  {
     }
 
     private static void addPr(){
-        productRepository.put(new Product(1L,"Name1", 200.0));
-        productRepository.put(new Product(2L,"Name2", 200.0));
-        productRepository.put(new Product(3L,"Name3", 200.0));
-        productRepository.put(new Product(4L,"Name4", 200.0));
+        productRepository.put(new Product(1L,0,"Name1", 200.0));
+        productRepository.put(new Product(2L,0,"Name2", 200.0));
+        productRepository.put(new Product(3L,0,"Name3", 200.0));
+        productRepository.put(new Product(4L,0,"Name4", 200.0));
     }
 
     private static void addItRep(){
@@ -59,24 +61,29 @@ public class Main  {
     }
 
     public static void main(String[] args) throws IOException {
-        addCust();
-        addAdd();
-        addPr();
-        addItRep();
-        Gson gson = new Gson();
-        List<Repository<Long,? extends BaseEntity<Long>>> repositories
-                = Stream.of(customerRepository, addressRepository, productRepository,orderItemRepository,orderRepository).collect(Collectors.toList());
-        SerialisePoolRepository serialisePoolRepository = new SerialisePoolRepository(repositories);
-        serialisePoolRepository.serialize();
-        var result = serialisePoolRepository.deSerialize();
-        for (var it : result){
-            System.out.println(it.getEntities().toString());
-        }
-        repositories.add(customerRepository);
-        Repository<Long, Address> repository = new AddressRepository();
-        BaseEntity<Long> baseEntity = new Address(1L, "32", 32);
-        String str = gson.toJson(customerRepository);
-        CustomerRepository customerRepository2 = gson.fromJson(str ,CustomerRepository.class);
-        System.out.println(customerRepository2.toString());
+        String s = "2021-10-01";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(s,dateTimeFormatter);
+        System.out.println(date);
+        //addCust();
+        //addAdd();
+        //addPr();
+        //addItRep();
+        //Gson gson = new Gson();
+        //List<Repository<Long,? extends BaseEntity<Long>>> repositories
+        //        = Stream.of(customerRepository, addressRepository, productRepository,orderItemRepository,orderRepository).collect(Collectors.toList());
+        //SerialisePoolRepository serialisePoolRepository = new SerialisePoolRepository(repositories);
+        //serialisePoolRepository.serialize();
+        //var result = serialisePoolRepository.deSerialize();
+        //for (var it : result){
+        //    System.out.println(it.getEntities().toString());
+        //}
+        //repositories.add(customerRepository);
+        //Repository<Long, Address> repository = new AddressRepository();
+        //BaseEntity<Long> baseEntity = new Address(1L, "32", 32);
+        //String str = gson.toJson(customerRepository);
+        //CustomerRepository customerRepository2 = gson.fromJson(str ,CustomerRepository.class);
+        //System.out.println(customerRepository2.toString());
     }
 }

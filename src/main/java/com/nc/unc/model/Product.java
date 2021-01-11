@@ -6,10 +6,11 @@ public class Product extends BaseEntity<Long> {
     private double price;
     private int count;
     public Product(long key,
+                   int count,
                    String name,
                    double price) {
         super(key);
-        this.count = 0;
+        this.count = count;
         this.name = name;
         this.price = price;
     }
