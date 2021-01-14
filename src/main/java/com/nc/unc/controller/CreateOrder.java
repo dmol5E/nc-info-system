@@ -1,9 +1,19 @@
 package com.nc.unc.controller;
 
 import com.nc.unc.enums.StatusOrder;
-import com.nc.unc.exception.InvalidCustomerInputDate;
-import com.nc.unc.repositories.*;
-import com.nc.unc.model.*;
+import com.nc.unc.exception.BadRequestException;
+import com.nc.unc.model.Customer;
+import com.nc.unc.model.Order;
+import com.nc.unc.model.OrderItem;
+import com.nc.unc.model.Product;
+import com.nc.unc.service.CustomerService;
+import com.nc.unc.service.OrderService;
+import com.nc.unc.service.StorageService;
+import com.nc.unc.service.StoreService;
+import com.nc.unc.service.impl.CustomerServiceImpl;
+import com.nc.unc.service.impl.OrderServiceImpl;
+import com.nc.unc.service.impl.StorageServiceImpl;
+import com.nc.unc.service.impl.StoreServiceImpl;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -24,20 +34,18 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class CreateOrder extends Application {
 
-    private final CustomerRepository customerRepository = new CustomerRepository();
-    private final AddressRepository addressRepository = new AddressRepository();
-    private final ProductRepository productRepository = new ProductRepository();
-    private final OrderItemRepository orderItemRepository = new OrderItemRepository();
-    private final OrderRepository orderRepository = new OrderRepository();
-
-
+    private final CustomerService customerService = new CustomerServiceImpl();
+    private final OrderService orderService = new OrderServiceImpl();
+    private final StorageService storageService = new StorageServiceImpl();
+    private final StoreService storeService = new StoreServiceImpl();
 
     /**
      * Create new Customer form
@@ -58,15 +66,7 @@ public class CreateOrder extends Application {
     private Button c_create_customer;
 
     public void createNewCustomer(ActionEvent actionEvent) {
-        String name, lastName, phone;
-        LocalDate localDate;
-        if(!(name = c_input_name.getText()).equals("") &&
-                !(lastName = c_input_lastname.getText()).equals("")&&
-                !(phone = c_input_phone.getText()).equals("")&&
-                !(localDate = c_input_date.getValue()).equals(""))
-            customerRepository.put(new Customer(customerRepository.size(), name, lastName, phone, localDate));
-        else
-            throw new InvalidCustomerInputDate();
+
     }
 
     /**
@@ -101,10 +101,6 @@ public class CreateOrder extends Application {
 
 
     public void createOrdersTable(Event event) {
-        this.orderRepository.put(new Order(0, customerRepository.getByKey(0L),LocalDate.now(),100,
-                List.of(new OrderItem(0L, productRepository.getByKey(0L), 1)),
-                new Address(0L, "Дом Пушкина", 2323),
-                new Address(1L, "Дом Пушкина", 2323)));
 
         sk_key.setCellValueFactory(new PropertyValueFactory<>("key"));
         sk_name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -121,13 +117,13 @@ public class CreateOrder extends Application {
             final MenuItem SENT = new MenuItem("SENT");
             final MenuItem DELIVERED = new MenuItem("DELIVERED");
             CANCELED.setOnAction(actionEvent -> {
-                Order order = sk_table.getItems().get(row.getIndex()).setCurStatus(StatusOrder.CANCELED);
-                orderRepository.getByKey(order.getKey()).setCurStatus(StatusOrder.CANCELED);
+                sk_table.getItems().get(row.getIndex()).setCurStatus(StatusOrder.CANCELED);
+                //order.getByKey(order.getKey()).setCurStatus(StatusOrder.CANCELED);
                 sk_table.refresh();
             });
             DELIVERED.setOnAction(actionEvent -> {
                 Order order = sk_table.getItems().get(row.getIndex()).setCurStatus(StatusOrder.DELIVERED);
-                orderRepository.getByKey(order.getKey()).setCurStatus(StatusOrder.DELIVERED);
+                //orderRepository.getByKey(order.getKey()).setCurStatus(StatusOrder.DELIVERED);
                 sk_table.refresh();
             });
             contextMenu.getItems().add(CANCELED);
@@ -164,13 +160,13 @@ public class CreateOrder extends Application {
                 }
             }
         }));
-        ObservableList<Order> products = FXCollections.observableArrayList(this.orderRepository.getEntities().values());
+        ObservableList<Order> products = FXCollections.observableArrayList(this.orderService.getAll().values());
         sk_table.setItems(products);
     }
 
     public void createDateSended(TableColumn.CellEditEvent<Order, LocalDate> orderLocalDateCellEditEvent) {
-        Order tmp = orderLocalDateCellEditEvent.getRowValue().setSentWhen(orderLocalDateCellEditEvent.getNewValue()).setCurStatus(StatusOrder.SENT);
-        orderRepository.getByKey(tmp.getKey()).setSentWhen(tmp.getSentWhen()).setCurStatus(StatusOrder.SENT);
+        orderLocalDateCellEditEvent.getRowValue().setSentWhen(orderLocalDateCellEditEvent.getNewValue()).setCurStatus(StatusOrder.SENT);
+        orderService.updateOrderStatus(orderLocalDateCellEditEvent.getRowValue().getKey(), orderLocalDateCellEditEvent.getNewValue());
         this.sk_table.edit(orderLocalDateCellEditEvent.getTablePosition().getRow(), orderLocalDateCellEditEvent.getTableColumn());
         this.sk_table.refresh();
     }
@@ -204,7 +200,7 @@ public class CreateOrder extends Application {
         io_count.setCellValueFactory(new PropertyValueFactory<>("count"));
         io_add_product.setEditable(true);
         stringConverterFromInteger(io_add_product);
-        ObservableList<Product> products = FXCollections.observableArrayList(this.productRepository.getEntities().values());
+        ObservableList<Product> products = FXCollections.observableArrayList(new ArrayList<>(this.storeService.getAll().values()));
         io_table.setItems(products);
     }
 
@@ -254,15 +250,13 @@ public class CreateOrder extends Application {
 
 
     public void createNewProduct(ActionEvent actionEvent) {
-        String name, count, price;
-        if(!(name = p_input_name.getText()).equals("") &&
-                !(count = p_input_price.getText()).equals("") &&
-                !(price = p_input_count.getText()).equals(""))
-            productRepository.put(new Product(productRepository.size(),
-                    Integer.parseInt(count), name,
-                    Float.parseFloat(price)));
-        else
-            throw new InvalidCustomerInputDate();
+        try {
+            this.storeService.put(p_input_name.getText(), p_input_price.getText(), p_input_count.getText());
+        }catch (BadRequestException ex){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.showAndWait();
+        }
     }
     /**
      * CreateOrder form
@@ -354,7 +348,7 @@ public class CreateOrder extends Application {
             );
             return row;
         });
-        ObservableList<Customer> customers = FXCollections.observableArrayList(this.customerRepository.getEntities().values());
+        ObservableList<Customer> customers = FXCollections.observableArrayList(this.customerService.getAll().values());
         or_ct_table.setItems(customers);
 
         or_storage_name.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -382,26 +376,14 @@ public class CreateOrder extends Application {
         store_table_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         store_table_count.setCellValueFactory(new PropertyValueFactory<>("count"));
         stringConverterFromInteger(store_table_on_storage);
-        ObservableList<Product> products = FXCollections.observableArrayList(this.productRepository.getEntities().values());
+        ObservableList<Product> products = FXCollections.observableArrayList(this.storeService.getAll().values());
         store_table.setItems(products);
     }
 
     @FXML
     private void initialize() {
-        start();
 
     }
-
-    public void start(){
-
-        Customer customer1=new Customer(0,"Алексей","Афанасьев","0657650047", LocalDate.of(1999,5,25));
-        Customer customer2=new Customer(1,"Николай","Новиков","1237", LocalDate.of(1999,5,25));
-        Customer customer3=new Customer(2,"Роман","Романов","56476647", LocalDate.of(1999,5,25));
-        customerRepository.put(customer1);
-        customerRepository.put(customer2);
-        customerRepository.put(customer3);
-    }
-
 
     public void returnBack(ActionEvent actionEvent) {
         switch (phase) {
@@ -538,9 +520,9 @@ public class CreateOrder extends Application {
 
                 if (cheak){
                     //customerRepository.getEntities().size();
-                    Customer customer=new Customer(customerRepository.getEntities().size()+1,name1,name2,phone, LocalDate.of(1999,5,25));
-                    customerRepository.put(customer);
-                    Text text = new Text(customer.getFirstName() + " " + customer.getLastName()+"\n");
+                    //Customer customer=new Customer(customerRepository.getEntities().size()+1,name1,name2,phone, LocalDate.of(1999,5,25));
+                    //customerRepository.put(customer);
+                    //Text text = new Text(customer.getFirstName() + " " + customer.getLastName()+"\n");
                     //output_all_customer.getChildren().clear();
                     //for (Map.Entry<Long, Customer> i: customerRepository.getEntities().entrySet()) {
                     //    Text text = new Text(i.getValue().getFirstName() + " " + i.getValue().getLastName()+"\n");
@@ -590,17 +572,17 @@ public class CreateOrder extends Application {
                 Customer customer1=new Customer(0,"Алексей","Афанасьев","0657650047", LocalDate.of(1999,5,25));
                 Customer customer2=new Customer(1,"Николай","Новиков","1237", LocalDate.of(1999,5,25));
                 Customer customer3=new Customer(2,"Роман","Романов","56476647", LocalDate.of(1999,5,25));
-                customerRepository.put(customer1);
-                customerRepository.put(customer2);
-                customerRepository.put(customer3);
+                //customerRepository.put(customer1);
+                //customerRepository.put(customer2);
+                //customerRepository.put(customer3);
                 break;
             case 1:
                 Product product1=new Product(1,0,"Маска",7);
                 product1.setCount(50);
                 Product product2=new Product(2,0,"Респиратор",70);
                 product1.setCount(5);
-                productRepository.put(product1);
-                productRepository.put(product2);
+                //productRepository.put(product1);
+                //productRepository.put(product2);
                 ObservableList<Product> usersData = FXCollections.observableArrayList();
                 usersData.add(product1);
                 usersData.add(product2);

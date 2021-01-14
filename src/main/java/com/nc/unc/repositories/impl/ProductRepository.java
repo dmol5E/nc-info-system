@@ -1,10 +1,9 @@
-package com.nc.unc.repositories;
+package com.nc.unc.repositories.impl;
 
 import com.nc.unc.model.Product;
 
 import java.util.Map;
 
-import org.apache.logging.log4j.Level;
 import java.util.stream.Collectors;
 
 public class ProductRepository extends RepositoryEntity<Long, Product> {
@@ -12,13 +11,13 @@ public class ProductRepository extends RepositoryEntity<Long, Product> {
         super(ProductRepository.class);
     }
 
-    public void increaseCount(long id, int newCount) {
+    public Product increaseCount(long id, int newCount) {
         Product product;
         if((product = this.entities.get(id)) == null){
-            logger.log(Level.WARN, " Id is wasn't contains " + id);
+            logger.warn("Id is wasn't contains {}", id);
             throw new IllegalArgumentException();
         }
-        product.setCount(newCount);
+        return product.setCount(newCount);
     }
 
     public Map<Long, Product> getProduct(String nameProduct){

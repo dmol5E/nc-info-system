@@ -1,9 +1,14 @@
 package com.nc.unc.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
+import java.beans.ConstructorProperties;
+
 public class OrderItem extends BaseEntity<Long> {
     private Product product;
     private int count;
 
+    @ConstructorProperties({"key", "product", "count"})
     public OrderItem(Long key,
                      Product product,
                      int count) {
@@ -21,9 +26,16 @@ public class OrderItem extends BaseEntity<Long> {
     public Product getProduct() { return this.product; }
 
     @Override
+    @JsonGetter("id")
+    public Long getKey() {
+        return super.getKey();
+    }
+
+    @Override
     public String toString() {
         return "OrderItem{" +
-                "product=" + product +
+                "key=" + super.key +
+                ", product=" + product +
                 ", count=" + count +
                 '}';
     }

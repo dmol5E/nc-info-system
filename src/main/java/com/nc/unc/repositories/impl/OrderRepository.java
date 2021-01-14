@@ -1,4 +1,4 @@
-package com.nc.unc.repositories;
+package com.nc.unc.repositories.impl;
 
 import com.nc.unc.model.Customer;
 import com.nc.unc.model.Order;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OrderRepository extends RepositoryEntity<Long, Order> {
+
     public OrderRepository() {
         super(OrderRepository.class);
     }

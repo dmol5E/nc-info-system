@@ -1,15 +1,26 @@
 package com.nc.unc.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nc.unc.util.json.LocalDateDeserializer;
+import com.nc.unc.util.json.LocalDateSerializer;
+
+
 import java.time.LocalDate;
 import java.util.Objects;
+import java.beans.ConstructorProperties;
 
 public class Customer extends BaseEntity<Long> {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate data;
 
-    public Customer(long id,
+    @ConstructorProperties({"id","firstName","lastName","phoneNumber","data"})
+    public Customer (long id,
                     String firstName,
                     String lastName,
                     String phoneNumber,

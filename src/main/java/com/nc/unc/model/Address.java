@@ -1,11 +1,14 @@
 package com.nc.unc.model;
 
+import java.beans.ConstructorProperties;
+
 public class Address extends BaseEntity<Long> {
 
     private String address;
 
     private int zipCode;
 
+    @ConstructorProperties({"key", "address", "zipcode"})
     public Address(Long key, String address, int zipCode) {
         super(key);
         this.address = address;
@@ -19,4 +22,12 @@ public class Address extends BaseEntity<Long> {
     public void setAddress(String address) { this.address = address; }
 
     public void setZipCode(int zipCode) { this.zipCode = zipCode; }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "address='" + address + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.nc.unc.repositories;
+package com.nc.unc.repositories.impl;
 
 import com.nc.unc.model.OrderItem;
 

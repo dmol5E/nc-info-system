@@ -1,10 +1,12 @@
 package com.nc.unc.model;
 
+import java.beans.ConstructorProperties;
 
 public class Product extends BaseEntity<Long> {
     private String name;
     private double price;
     private int count;
+    @ConstructorProperties({"key", "count", "name", "price"})
     public Product(long key,
                    int count,
                    String name,
@@ -15,25 +17,23 @@ public class Product extends BaseEntity<Long> {
         this.price = price;
     }
 
-    @Override
-    public Long getKey() { return super.getKey(); }
-
     public int getCount() { return this.count; }
 
     public double getPrice() { return this.price; }
 
     public String getName() { return this.name; }
 
-    public void setCount(int count) { this.count = count; }
+    public Product setCount(int count) { this.count = count; return this;}
 
-    public void setName(String name) { this.name = name; }
+    public Product setName(String name) { this.name = name; return this;}
 
-    public void setPrice(double price) { this.price = price; }
+    public Product setPrice(double price) { this.price = price; return this;}
 
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
+                "key=" + super.key +
+                " name='" + name + '\'' +
                 ", price=" + price +
                 ", count=" + count +
                 '}';
