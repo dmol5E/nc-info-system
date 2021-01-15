@@ -26,8 +26,8 @@ public class Address extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Address{" +
-                "address='" + address + '\'' +
-                ", zipCode=" + zipCode +
+                "\n  address='" + address + '\'' +
+                "\n  zipCode=" + zipCode +
                 '}';
     }
 }

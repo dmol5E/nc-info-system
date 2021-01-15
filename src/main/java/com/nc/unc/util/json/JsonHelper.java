@@ -3,11 +3,22 @@ package com.nc.unc.util.json;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.nc.unc.model.BaseEntity;
+import com.nc.unc.repositories.impl.OrderRepository;
+import com.nc.unc.repositories.impl.RepositoryEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class JsonHelper {
 
@@ -15,17 +26,21 @@ public class JsonHelper {
 
     private static final ObjectMapper mapper;
 
+    private static final PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder().build();
+
     static {
         mapper = new ObjectMapper();
+        //mapper.activateDefaultTyping(ptv); // default to using DefaultTyping.OBJECT_AND_NON_CONCRETE
+        //mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.ANY);
+        mapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE);
     }
 
     public static String toJson(Object o) {
         try {
-            return mapper.writeValueAsString(o);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            log.error("Not Writing to Json");
+            log.error("Not Writing to Json", e);
             throw new RuntimeException();
         }
     }
@@ -39,7 +54,44 @@ public class JsonHelper {
         }
     }
 
+    public static <T> T fromJson(String json, TypeReference<T> type) {
+        try {
+            return mapper.readValue(json, type);
+        } catch (IOException e) {
+            log.error("Read from Json");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void jsonToFile(String filePath, String json) {
+        try {
+            mapper.writeValue(new File(filePath), json);
+        } catch (IOException io) {
+            log.error("Error to write into file {} ", filePath, io);
+            throw new RuntimeException();
+        }
+    }
+
+    public static <T> T fromJsonFile(String filePath, Class<T> type) {
+        try {
+            return mapper.readValue(new File(filePath), type);
+        } catch (IOException io){
+            log.error("Error to read into file {} ", filePath, io);
+            throw new RuntimeException();
+        }
+    }
+
+    public static <T> T fromJsonFile(String filePath, TypeReference<T> type) {
+        try {
+            return mapper.readValue(new File(filePath), type);
+        } catch (IOException io){
+            log.error("Error to read into file {} ", filePath, io);
+            throw new RuntimeException();
+        }
+    }
+
     private JsonHelper(){
 
     }
+
 }

@@ -2,6 +2,7 @@ package com.nc.unc.repositories.impl;
 
 import com.nc.unc.model.Product;
 
+import java.beans.ConstructorProperties;
 import java.util.Map;
 
 import java.util.stream.Collectors;
@@ -11,10 +12,13 @@ public class ProductRepository extends RepositoryEntity<Long, Product> {
         super(ProductRepository.class);
     }
 
+    @ConstructorProperties({"type"})
+    public ProductRepository(String className){super(className);}
+
     public Product increaseCount(long id, int newCount) {
         Product product;
         if((product = this.entities.get(id)) == null){
-            logger.warn("Id is wasn't contains {}", id);
+            log.warn("Id is wasn't contains {}", id);
             throw new IllegalArgumentException();
         }
         return product.setCount(newCount);

@@ -1,15 +1,21 @@
 package com.nc.unc;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.model.*;
+import com.nc.unc.path.PathResources;
+import com.nc.unc.repositories.Repository;
 import com.nc.unc.repositories.impl.*;
 import com.nc.unc.util.json.JsonHelper;
+import com.nc.unc.util.serialize.impl.DataSourceImpl;
 
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,10 +69,17 @@ public class Main  {
         addPr();
         addItRep();
         addOrRep();
-        String str = JsonHelper.toJson(orderRepository.getByKey(1L).setCurStatus(StatusOrder.CANCELED));
-        System.out.println(str);
-        Order products = JsonHelper.fromJson(str, Order.class);
-        System.out.println(products.toString());
+        List<RepositoryEntity<Long, ? extends BaseEntity<Long>>> repositories = new ArrayList<>();
+        repositories.add(addressRepository);
+        repositories.add(orderRepository);
+        repositories.add(productRepository);
+        repositories.add(customerRepository);
+        DataSourceImpl<RepositoryEntity<Long, ? extends BaseEntity<Long>>> dataSource = new DataSourceImpl<>(repositories);
+        dataSource.serialize();
+        String json = JsonHelper.toJson(repositories);
+        String str = JsonHelper.fromJsonFile(PathResources.path, String.class);
+        List<RepositoryEntity<Long, ? extends BaseEntity<Long>>> repos = dataSource.deSerialize(new TypeReference<>() {});
+        System.out.println(dataSource.search(CustomerRepository.class).toString());
 
     }
 }

@@ -15,9 +15,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    private final CustomerRepository customers = new CustomerRepository();
+    private final CustomerRepository customers;
 
-    public CustomerServiceImpl(){
+    public CustomerServiceImpl(CustomerRepository customers){
+        this.customers = customers;
         log.info("Customer Service Start");
     }
 

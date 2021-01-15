@@ -32,10 +32,10 @@ public class Product extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Product{" +
-                "key=" + super.key +
-                " name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
+                "\n  key=" + super.key +
+                "\n  name='" + name + '\'' +
+                "\n  price=" + price +
+                "\n  count=" + count +
                 '}';
     }
 }

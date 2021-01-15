@@ -34,9 +34,9 @@ public class OrderItem extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "OrderItem{" +
-                "key=" + super.key +
-                ", product=" + product +
-                ", count=" + count +
+                "\n  key=" + super.key +
+                "\n  product=" + product +
+                "\n  count=" + count +
                 '}';
     }
 }

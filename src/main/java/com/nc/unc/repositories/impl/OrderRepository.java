@@ -4,14 +4,19 @@ import com.nc.unc.model.Customer;
 import com.nc.unc.model.Order;
 import com.nc.unc.enums.StatusOrder;
 
+import java.beans.ConstructorProperties;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 public class OrderRepository extends RepositoryEntity<Long, Order> {
 
     public OrderRepository() {
         super(OrderRepository.class);
     }
+
+    @ConstructorProperties({"type"})
+    public OrderRepository(String className){super(className);}
 
     public Map<Long, Order> getOrdersByCustomer(Customer customer){
         return this.entities.entrySet().stream()

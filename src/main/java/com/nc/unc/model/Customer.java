@@ -52,11 +52,11 @@ public class Customer extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + super.key +
-                ", firstName='" + this.firstName + '\'' +
-                ", lastName='" + this.lastName + '\'' +
-                ", phoneNumber='" + this.phoneNumber + '\'' +
-                ", data=" + this.data +
+                "\n  id=" + super.key +
+                "\n  firstName='" + this.firstName + '\'' +
+                "\n  lastName='" + this.lastName + '\'' +
+                "\n  phoneNumber='" + this.phoneNumber + '\'' +
+                "\n  data=" + this.data +
                 '}';
     }
 

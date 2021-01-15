@@ -13,12 +13,14 @@ module infosystem {
     requires java.base;
 
     opens com.nc.unc to javafx.fxml, com.fasterxml.jackson.databind;
-
+    opens com.nc.unc.repositories.impl to com.fasterxml.jackson.databind;
     opens com.nc.unc.controller;
     opens com.nc.unc.repositories;
     opens com.nc.unc.model;
     opens com.nc.unc.enums;
     opens com.nc.unc.util.json;
+    opens com.nc.unc.util.serialize;
+
 
     exports com.nc.unc.util.json;
     exports com.nc.unc.controller;

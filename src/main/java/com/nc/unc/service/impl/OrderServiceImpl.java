@@ -22,11 +22,11 @@ public class OrderServiceImpl implements OrderService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    private final AddressRepository addressRepository = new AddressRepository();
-    private final CustomerService customerService = new CustomerServiceImpl();
+    private final AddressRepository addressRepository;
+    private final CustomerService customerService = //todo method;
     private final OrderItemRepository orderItemRepository = new OrderItemRepository();
-    private final ProductRepository productRepository = new ProductRepository();
-    private final OrderRepository orderRepository = new OrderRepository();
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
 
     private Customer customer;
@@ -36,8 +36,13 @@ public class OrderServiceImpl implements OrderService {
 
     StorageService storageService = new StorageServiceImpl();
 
-    public OrderServiceImpl() {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            ProductRepository productRepository,
+                            AddressRepository addressRepository) {
         log.info("Order Service Start");
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+        this.addressRepository = addressRepository;
     }
 
 

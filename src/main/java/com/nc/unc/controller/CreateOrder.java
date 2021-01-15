@@ -42,10 +42,10 @@ import java.util.ArrayList;
 
 public class CreateOrder extends Application {
 
-    private final CustomerService customerService = new CustomerServiceImpl();
-    private final OrderService orderService = new OrderServiceImpl();
-    private final StorageService storageService = new StorageServiceImpl();
-    private final StoreService storeService = new StoreServiceImpl();
+    private final CustomerService customerService;
+    private final OrderService orderService;
+    private final StorageService storageService;
+    private final StoreService storeService;
 
     /**
      * Create new Customer form

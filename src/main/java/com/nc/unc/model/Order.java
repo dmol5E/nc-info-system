@@ -20,7 +20,7 @@ public class Order extends BaseEntity<Long> {
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate sentWhen = LocalDate.now();
+    private LocalDate sentWhen;
     private final double sum;
 
     private final List<OrderItem> products;
@@ -102,14 +102,14 @@ public class Order extends BaseEntity<Long> {
     @Override
     public String toString() {
         return "Order{" +
-                "\n customer=" + customer +
-                "\n createdWhen=" + createdWhen +
-                "\n sentWhen=" + sentWhen +
-                "\n sum=" + sum +
-                "\n products=" + products +
-                "\n curStatus=" + curStatusOrder +
-                "\n recipient=" + recipient +
-                "\n sender=" + sender +
+                "\n  customer=" + customer +
+                "\n  createdWhen=" + createdWhen +
+                "\n  sentWhen=" + sentWhen +
+                "\n  sum=" + sum +
+                "\n  products=" + products +
+                "\n  curStatus=" + curStatusOrder +
+                "\n  recipient=" + recipient +
+                "\n  sender=" + sender +
                 "\n}";
     }
 }
