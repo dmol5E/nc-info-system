@@ -23,4 +23,11 @@ public class CustomerRepository extends RepositoryEntity<Long, Customer> {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+
+    @Override
+    public String toString() {
+        return "CustomerRepository{ " +
+                super.toString() + " \n}";
+    }
+
 }

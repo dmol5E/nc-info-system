@@ -13,8 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@JsonIgnoreProperties({"entities", "log"})
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonIgnoreProperties({"log"})
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
 @JsonSubTypes({
         @Type(value = AddressRepository.class, name = "AddressRepository"),
         @Type(value = CustomerRepository.class, name = "CustomerRepository"),
@@ -25,6 +28,7 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
 
     private final String type;
 
+    @JsonProperty("entities")
     protected Map<K, V> entities = new HashMap<>();
 
     protected Logger log;
@@ -77,16 +81,15 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
                 '}';
     }
 
-    @JsonAnyGetter
+    @Override
     public Map<K, V> getEntities() {
-        return this.entities;
+        return entities;
     }
 
-    @JsonAnySetter
-    public void setAddress(K key, V value) {
-        this.entities.put(key, value);
+    @JsonProperty("entities")
+    public void setEntities(Map<K, V> entities) {
+        this.entities = entities;
     }
-
 
     public String getType() {
         return type;

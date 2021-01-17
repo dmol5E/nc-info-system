@@ -7,11 +7,14 @@ import com.nc.unc.model.*;
 import com.nc.unc.path.PathResources;
 import com.nc.unc.repositories.Repository;
 import com.nc.unc.repositories.impl.*;
+import com.nc.unc.service.CustomerService;
+import com.nc.unc.service.impl.CustomerServiceImpl;
 import com.nc.unc.util.json.JsonHelper;
 import com.nc.unc.util.serialize.impl.DataSourceImpl;
 
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -63,7 +66,7 @@ public class Main  {
                 addressRepository.getByKey(1L), addressRepository.getByKey(2L)));
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         addCust();
         addAdd();
         addPr();
@@ -74,12 +77,16 @@ public class Main  {
         repositories.add(orderRepository);
         repositories.add(productRepository);
         repositories.add(customerRepository);
-        DataSourceImpl<RepositoryEntity<Long, ? extends BaseEntity<Long>>> dataSource = new DataSourceImpl<>(repositories);
+        DataSourceImpl<RepositoryEntity<Long, ? extends BaseEntity<Long>>> dataSource = new DataSourceImpl<RepositoryEntity<Long, ? extends BaseEntity<Long>>>(repositories);
         dataSource.serialize();
         String json = JsonHelper.toJson(repositories);
-        String str = JsonHelper.fromJsonFile(PathResources.path, String.class);
-        List<RepositoryEntity<Long, ? extends BaseEntity<Long>>> repos = dataSource.deSerialize(new TypeReference<>() {});
-        System.out.println(dataSource.search(CustomerRepository.class).toString());
+        List<RepositoryEntity<Long, ? extends BaseEntity<Long>>> repos = dataSource.deSerialize(new TypeReference<List<RepositoryEntity<Long,? extends BaseEntity<Long>>>>() {});
+
+
+        CustomerRepository c = (CustomerRepository) dataSource.search(CustomerRepository.class);
+        CustomerService customerService = new CustomerServiceImpl(c);
+        customerService.putCustomer("test","test", "test",LocalDate.now());
+        System.out.println(customerService.getAll());
 
     }
 }

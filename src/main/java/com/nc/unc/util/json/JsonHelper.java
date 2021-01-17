@@ -30,8 +30,6 @@ public class JsonHelper {
 
     static {
         mapper = new ObjectMapper();
-        //mapper.activateDefaultTyping(ptv); // default to using DefaultTyping.OBJECT_AND_NON_CONCRETE
-        //mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL);
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
         mapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE);
     }

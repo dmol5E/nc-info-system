@@ -11,13 +11,14 @@ import java.util.HashMap;
 
 public class StorageServiceImpl implements StorageService {
 
-    private Logger log = LoggerFactory.getLogger(StorageService.class);
+    private Logger log = LoggerFactory.getLogger(StorageService.class.getSimpleName());
 
-    private HashMap<Long, OrderItem> storage = new HashMap<>();
+    private final HashMap<Long, OrderItem> storage;
 
     private double price;
 
     public StorageServiceImpl(){
+        storage = new HashMap<>();
         log.info("Order Service Start");
     }
 

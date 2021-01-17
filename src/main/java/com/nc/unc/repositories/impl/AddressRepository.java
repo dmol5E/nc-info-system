@@ -1,9 +1,7 @@
 package com.nc.unc.repositories.impl;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.nc.unc.model.Address;
 
 import java.beans.ConstructorProperties;
@@ -27,4 +25,9 @@ public class AddressRepository extends RepositoryEntity<Long, Address> {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    @Override
+    public String toString() {
+        return "AddressRepository{ " +
+                super.toString() + " \n}";
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class.getSimpleName());
 
     private final CustomerRepository customers;
 
@@ -25,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void putCustomer(String name, String lastName,String phone, LocalDate localDate) throws BadRequestException {
         if(name.equals("") || lastName.equals("")
-                || phone.equals("") || localDate.equals("")) {
+                || phone.equals("") || localDate == null) {
             log.warn("Invalid Input Date Exception java request: name: {} lastname: {} phone: {} localDate: {}", name, lastName, phone, localDate);
             throw new BadRequestException();
         }

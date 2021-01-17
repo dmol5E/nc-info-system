@@ -6,6 +6,7 @@ import java.util.Map;
 
 public interface StoreService {
 
+
     Map<Long, Product> getAll();
 
     Product findById(Long id);

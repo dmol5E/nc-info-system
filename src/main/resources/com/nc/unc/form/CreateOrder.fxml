@@ -39,7 +39,6 @@
                                 <Button fx:id="back" layoutX="14.0" layoutY="427.0" mnemonicParsing="false" onAction="#returnBack" prefHeight="26.0" prefWidth="70.0" text="Назад" visible="true" />
                                 <Button fx:id="next" layoutX="789.0" layoutY="427.0" mnemonicParsing="false" onAction="#goNext" prefHeight="26.0" prefWidth="70.0" text="Далее" />
                                 <ProgressBar fx:id="progress" layoutX="114.0" layoutY="431.0" prefHeight="18.0" prefWidth="408.0" progress="0.0" />
-                                <Button fx:id="add_customer" layoutX="591.0" layoutY="427.0" mnemonicParsing="false" onAction="#createNewClient" text="Добавить нового клиента" />
                                 <Label fx:id="label_customer" layoutX="32.0" layoutY="30.0" text="Клиенты" />
                                 <TextField fx:id="input_customer" layoutX="605.0" layoutY="25.0" prefHeight="26.0" prefWidth="271.0" />
                                 <TextField fx:id="input_address" layoutX="55.0" layoutY="125.0" prefHeight="26.0" prefWidth="150.0" visible="false" />
@@ -57,7 +56,7 @@
                                         <TableColumn fx:id="store_table_name" prefWidth="107.0" text="Товар" />
                                         <TableColumn fx:id="store_table_price" minWidth="20" prefWidth="106.0" text="Цена" />
                                         <TableColumn fx:id="store_table_count" prefWidth="122.0" text="Кол-во на складе" />
-                                        <TableColumn fx:id="store_table_on_storage" editable="true" minWidth="0" prefWidth="147.0" text="В корзину" />
+                                        <TableColumn fx:id="store_table_on_storage" editable="true" minWidth="0" onEditCommit="#putToStorage" prefWidth="147.0" text="В корзину" />
                                     </columns>
                                 </TableView>
                         <TableView fx:id="or_ct_table" layoutX="31.0" layoutY="94.0" prefHeight="278.0" prefWidth="849.0">

@@ -17,6 +17,10 @@ public class OrderItem extends BaseEntity<Long> {
         this.count = count;
     }
 
+    public String getName(){ return product.getName(); }
+
+    public double getPrice(){ return product.getPrice(); }
+
     public void setCount(int count) { this.count = count; }
 
     public void setProduct(Product product) { this.product = product; }

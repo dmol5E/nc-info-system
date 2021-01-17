@@ -7,6 +7,8 @@ import java.util.Collection;
 
 public interface StorageService {
 
+
+
     int size();
 
     double getPrice();

@@ -9,7 +9,11 @@ import java.util.Map;
 
 public class StoreServiceImpl implements StoreService {
 
-    private final ProductRepository repository = new ProductRepository();
+    private final ProductRepository repository;
+
+    public StoreServiceImpl(ProductRepository repository){
+        this.repository = repository;
+    }
 
     @Override
     public Map<Long, Product> getAll() {
@@ -23,9 +27,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Product update(Long id, int count) throws BadRequestException {
-        if(id < 0 || count < 0)
+        if(id < 0|| (repository.getByKey(id).getCount() + count) < 0)
             throw new BadRequestException();
-        return repository.increaseCount(id, count);
+        return repository.increaseCount(id,repository.getByKey(id).getCount() + count);
     }
 
     @Override

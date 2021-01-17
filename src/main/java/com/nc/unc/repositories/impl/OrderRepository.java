@@ -30,5 +30,10 @@ public class OrderRepository extends RepositoryEntity<Long, Order> {
                 .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
     }
 
+    @Override
+    public String toString() {
+        return "OrderRepository{ " +
+                super.toString() + " \n}";
+    }
 
 }

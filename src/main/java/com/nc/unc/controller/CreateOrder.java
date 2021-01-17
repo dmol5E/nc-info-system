@@ -1,5 +1,6 @@
 package com.nc.unc.controller;
 
+import com.nc.unc.App;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.Customer;
@@ -10,10 +11,7 @@ import com.nc.unc.service.CustomerService;
 import com.nc.unc.service.OrderService;
 import com.nc.unc.service.StorageService;
 import com.nc.unc.service.StoreService;
-import com.nc.unc.service.impl.CustomerServiceImpl;
-import com.nc.unc.service.impl.OrderServiceImpl;
-import com.nc.unc.service.impl.StorageServiceImpl;
-import com.nc.unc.service.impl.StoreServiceImpl;
+import com.nc.unc.util.json.JsonHelper;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -34,18 +32,24 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class CreateOrder extends Application {
 
-    private final CustomerService customerService;
-    private final OrderService orderService;
-    private final StorageService storageService;
-    private final StoreService storeService;
+    private Logger log = LoggerFactory.getLogger(CreateOrder.class.getSimpleName());
+
+    private CustomerService customerService;
+    private OrderService orderService;
+    private StorageService storageService;
+    private StoreService storeService;
 
     /**
      * Create new Customer form
@@ -66,7 +70,18 @@ public class CreateOrder extends Application {
     private Button c_create_customer;
 
     public void createNewCustomer(ActionEvent actionEvent) {
-
+        try {
+            customerService.putCustomer(c_input_name.getText(),
+                    c_input_lastname.getText(),
+                    c_input_phone.getText(),
+                    c_input_date.getValue());
+            log.info("added new customer {} ", JsonHelper.toJson(customerService.getAll()));
+        } catch (BadRequestException e){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Invalid date new customer");
+            errorAlert.showAndWait();
+        }
     }
 
     /**
@@ -226,10 +241,19 @@ public class CreateOrder extends Application {
     }
 
     public void addNewProduct(TableColumn.CellEditEvent<Product, Integer> cellEditEvent) {
-        Product product = cellEditEvent.getRowValue();
-        cellEditEvent.getRowValue().setCount(product.getCount() + cellEditEvent.getNewValue());
-        io_table.edit(cellEditEvent.getTablePosition().getRow(), cellEditEvent.getTableColumn());
-        io_table.refresh();
+        try {
+            Product product = storeService.update(cellEditEvent.getRowValue().getKey(), cellEditEvent.getNewValue());
+            cellEditEvent.getRowValue().setCount(product.getCount());
+            io_table.edit(cellEditEvent.getTablePosition().getRow(), cellEditEvent.getTableColumn());
+            io_table.refresh();
+        } catch (BadRequestException e){
+            log.error("Increase product exception", e);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Increase product exception");
+            errorAlert.showAndWait();
+        }
+
     }
     /**
      * CreateOrderItem form
@@ -251,7 +275,7 @@ public class CreateOrder extends Application {
 
     public void createNewProduct(ActionEvent actionEvent) {
         try {
-            this.storeService.put(p_input_name.getText(), p_input_price.getText(), p_input_count.getText());
+            this.storeService.put(p_input_name.getText(), p_input_count.getText(), p_input_price.getText());
         }catch (BadRequestException ex){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
@@ -294,7 +318,6 @@ public class CreateOrder extends Application {
     private TableColumn<Product, Integer> store_table_on_storage;
 
 
-
     @FXML
     private TableView<Customer> or_ct_table;
     @FXML
@@ -308,6 +331,7 @@ public class CreateOrder extends Application {
 
 
 
+
     @FXML
     private TableView<OrderItem> or_storage_table;
     @FXML
@@ -318,6 +342,26 @@ public class CreateOrder extends Application {
     private TableColumn<OrderItem, Integer> or_storage_count;
     @FXML
     private Button createOrder;
+
+
+
+    public void putToStorage(TableColumn.CellEditEvent<Product, Integer> productIntegerCellEditEvent) {
+        try {
+            Product product = storeService.update(productIntegerCellEditEvent.getRowValue().getKey(),-1 * productIntegerCellEditEvent.getNewValue());
+            productIntegerCellEditEvent.getRowValue().setCount(product.getCount());
+            store_table.edit(productIntegerCellEditEvent.getTablePosition().getRow(), productIntegerCellEditEvent.getTableColumn());
+            orderService.putOrderItem(product, productIntegerCellEditEvent.getNewValue());
+            or_storage_table.setItems(FXCollections.observableList(orderService.getStorage().stream().collect(Collectors.toList())));
+            or_storage_table.refresh();
+            store_table.refresh();
+        } catch (BadRequestException e){
+            log.error("Increase product exception", e);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Increase product exception");
+            errorAlert.showAndWait();
+        }
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -338,7 +382,8 @@ public class CreateOrder extends Application {
             final ContextMenu contextMenu = new ContextMenu();
             final MenuItem SELECT = new MenuItem("SELECT");
             SELECT.setOnAction(actionEvent -> {
-                //toDo SERVICE CREATE NEW ORDER
+                orderService.addOrderCustomer(row.getItem());
+                goNext(new ActionEvent());
             });
             contextMenu.getItems().add(SELECT);
             row.contextMenuProperty().bind(
@@ -382,7 +427,10 @@ public class CreateOrder extends Application {
 
     @FXML
     private void initialize() {
-
+        this.orderService = App.orderService;
+        this.storeService = App.storeService;
+        this.customerService = App.customerService;
+        this.storageService = App.storageService;
     }
 
     public void returnBack(ActionEvent actionEvent) {
@@ -390,11 +438,11 @@ public class CreateOrder extends Application {
             case 1:
                 phase--;
                 progress.setProgress(phase*0.33);
-                add_customer.setVisible(true);
                 search.setVisible(true);
                 back.setVisible(false);
                 next.setVisible(true);
-                or_storage_table.setVisible(true);
+                or_ct_table.setVisible(true);
+                or_storage_table.setVisible(false);
                 store_table.setVisible(false);
                 input_customer.setVisible(true);
                 label_customer.setVisible(true);
@@ -418,7 +466,6 @@ public class CreateOrder extends Application {
             case 0:
                 phase++;
                 progress.setProgress(phase*0.33);
-                add_customer.setVisible(false);
                 search.setVisible(false);
                 back.setVisible(true);
                 or_ct_table.setVisible(false);
@@ -454,141 +501,4 @@ public class CreateOrder extends Application {
 
     }
 
-    public void createNewClient(ActionEvent actionEvent) {
-
-        Label label_first_name = new Label("Имя");
-        label_first_name.setLayoutX(10);
-        label_first_name.setLayoutY(15);
-        TextField input_first_name=new TextField();
-        input_first_name.setLayoutX(65);
-        input_first_name.setLayoutY(10);
-
-        Label label_second_name = new Label("Фамилия");
-        label_second_name.setLayoutX(10);
-        label_second_name.setLayoutY(55);
-        TextField input_second_name=new TextField();
-        input_second_name.setLayoutX(65);
-        input_second_name.setLayoutY(50);
-
-        Label label_phone = new Label("Телефон");
-        label_phone.setLayoutX(10);
-        label_phone.setLayoutY(95);
-        TextField input_phone=new TextField();
-        input_phone.setLayoutX(65);
-        input_phone.setLayoutY(90);
-
-        Label label_date = new Label("Дата рождения");
-        label_date.setLayoutX(10);
-        label_date.setLayoutY(125);
-
-        Button add_customer=new Button("Добавить");
-        add_customer.setLayoutX(10);
-        add_customer.setLayoutY(145);
-        add_customer.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                boolean cheak=true;
-                String name1="",name2="",phone="";
-
-                if (input_first_name.getText().trim().isEmpty()){
-                    //input_first_name.setText("Введите имя");
-                    input_first_name.setPromptText("Введите имя");
-                    cheak=false;
-                }
-                else {
-                    name1=input_first_name.getText();
-                }
-
-                if (input_second_name.getText().trim().isEmpty()){
-                    input_second_name.setPromptText("Введите фамилию");
-                    name2=input_second_name.getText();
-                    cheak=false;
-                }
-                else {
-                    name2=input_second_name.getText();
-                }
-
-                if (input_phone.getText().trim().isEmpty()){
-                    input_phone.setPromptText("Введите телефон");
-                    phone=input_phone.getText();
-                    cheak=false;
-                }
-                else {
-                    phone=input_phone.getText();
-                }
-
-                if (cheak){
-                    //customerRepository.getEntities().size();
-                    //Customer customer=new Customer(customerRepository.getEntities().size()+1,name1,name2,phone, LocalDate.of(1999,5,25));
-                    //customerRepository.put(customer);
-                    //Text text = new Text(customer.getFirstName() + " " + customer.getLastName()+"\n");
-                    //output_all_customer.getChildren().clear();
-                    //for (Map.Entry<Long, Customer> i: customerRepository.getEntities().entrySet()) {
-                    //    Text text = new Text(i.getValue().getFirstName() + " " + i.getValue().getLastName()+"\n");
-                    //    output_all_customer.getChildren().add(text);
-                    //    System.out.print("GF_");
-                    //}
-                    Stage stage = (Stage) add_customer.getScene().getWindow();
-                    stage.close();
-                }
-            }
-        });
-
-        Button close_add_customer=new Button("Закрыть");
-        close_add_customer.setLayoutX(150);
-        close_add_customer.setLayoutY(145);
-        close_add_customer.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Stage stage = (Stage) close_add_customer.getScene().getWindow();
-                stage.close();
-            }
-        });
-
-        AnchorPane secondaryLayout = new AnchorPane();
-        secondaryLayout.getChildren().add(label_first_name);
-        secondaryLayout.getChildren().add(input_first_name);
-        secondaryLayout.getChildren().add(label_second_name);
-        secondaryLayout.getChildren().add(input_second_name);
-        secondaryLayout.getChildren().add(label_phone);
-        secondaryLayout.getChildren().add(input_phone);
-        secondaryLayout.getChildren().add(label_date);
-        secondaryLayout.getChildren().add(add_customer);
-        secondaryLayout.getChildren().add(close_add_customer);
-
-        Scene secondScene = new Scene(secondaryLayout, 400, 300);
-
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Добавление нового клиента");
-        newWindow.setScene(secondScene);
-
-        newWindow.show();
-    }
-
-    public void Test(ActionEvent actionEvent) {
-        switch (phase){
-            case 0:
-                Customer customer1=new Customer(0,"Алексей","Афанасьев","0657650047", LocalDate.of(1999,5,25));
-                Customer customer2=new Customer(1,"Николай","Новиков","1237", LocalDate.of(1999,5,25));
-                Customer customer3=new Customer(2,"Роман","Романов","56476647", LocalDate.of(1999,5,25));
-                //customerRepository.put(customer1);
-                //customerRepository.put(customer2);
-                //customerRepository.put(customer3);
-                break;
-            case 1:
-                Product product1=new Product(1,0,"Маска",7);
-                product1.setCount(50);
-                Product product2=new Product(2,0,"Респиратор",70);
-                product1.setCount(5);
-                //productRepository.put(product1);
-                //productRepository.put(product2);
-                ObservableList<Product> usersData = FXCollections.observableArrayList();
-                usersData.add(product1);
-                usersData.add(product2);
-                store_table.setItems(usersData);
-                or_storage_table.setItems(null);
-                break;
-        }
-    }
 }

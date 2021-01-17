@@ -6,34 +6,37 @@ import com.nc.unc.util.json.JsonHelper;
 import com.nc.unc.util.serialize.DataSource;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class DataSourceImpl<T> implements DataSource<T> {
 
-    private List<T> repos;
+    private List<T> objects;
 
     public DataSourceImpl(List<T> list){
-        this.repos = list;
+        this.objects = list;
     }
+
+    public DataSourceImpl() {}
+
+    public void setRepos(List<T> repos) { this.objects = repos; }
 
     @Override
     public void serialize() {
-        JsonHelper.jsonToFile(PathResources.path, JsonHelper.toJson(repos));
+        JsonHelper.jsonToFile(PathResources.path, JsonHelper.toJson(objects));
     }
 
-    public List<T> search(Class<? extends T> type){
-        if(repos == null)
-            deSerialize(new TypeReference<>() {});
-        return repos.stream()
-                .filter(t -> t.getClass() == type)
-                .collect(Collectors.toList());
+    public T search(Class<? extends T> type) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        if(objects == null)
+            objects = deSerialize(new TypeReference<>() {});
+        return objects.stream()
+                .filter(t -> t.getClass() == type).findFirst().orElse(null);
     }
 
     @Override
     public List<T> deSerialize(TypeReference<List<T>> type) {
-        return repos = JsonHelper.fromJson(JsonHelper.fromJsonFile(PathResources.path, String.class), type);
+        return objects = JsonHelper.fromJson(JsonHelper.fromJsonFile(PathResources.path, String.class), type);
     }
 
 }
