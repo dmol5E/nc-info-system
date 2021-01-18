@@ -1,10 +1,10 @@
 package com.nc.unc.repositories.impl;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.nc.unc.model.Customer;
 import com.nc.unc.model.Order;
 import com.nc.unc.enums.StatusOrder;
 
-import java.beans.ConstructorProperties;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -15,8 +15,8 @@ public class OrderRepository extends RepositoryEntity<Long, Order> {
         super(OrderRepository.class);
     }
 
-    @ConstructorProperties({"type"})
-    public OrderRepository(String className){super(className);}
+    @JsonCreator
+    public OrderRepository(String className){super(OrderRepository.class.getSimpleName());}
 
     public Map<Long, Order> getOrdersByCustomer(Customer customer){
         return this.entities.entrySet().stream()

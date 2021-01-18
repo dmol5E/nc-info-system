@@ -1,8 +1,9 @@
 package com.nc.unc.repositories.impl;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.nc.unc.model.Customer;
 
-import java.beans.ConstructorProperties;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -13,8 +14,8 @@ public class CustomerRepository extends RepositoryEntity<Long, Customer> {
         super(CustomerRepository.class);
     }
 
-    @ConstructorProperties({"type"})
-    public CustomerRepository(String className){super(className);}
+    @JsonCreator
+    public CustomerRepository(String className){super(CustomerRepository.class.getSimpleName());}
 
     public Map<Long, Customer> getCustomer(String search){
         String sought = search.toLowerCase();

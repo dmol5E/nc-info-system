@@ -41,16 +41,9 @@
                                 <ProgressBar fx:id="progress" layoutX="114.0" layoutY="431.0" prefHeight="18.0" prefWidth="408.0" progress="0.0" />
                                 <Label fx:id="label_customer" layoutX="32.0" layoutY="30.0" text="Клиенты" />
                                 <TextField fx:id="input_customer" layoutX="605.0" layoutY="25.0" prefHeight="26.0" prefWidth="271.0" />
-                                <TextField fx:id="input_address" layoutX="55.0" layoutY="125.0" prefHeight="26.0" prefWidth="150.0" visible="false" />
-                                <TextFlow fx:id="output_customer" accessibleText="" layoutX="14.0" layoutY="20.0" lineSpacing="5.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="280.0" textAlignment="CENTER" visible="false" />
+                                <TextField fx:id="input_address" layoutX="610.0" layoutY="160.0" prefHeight="20.0" prefWidth="142.0" visible="false" />
+                                <TextFlow fx:id="output_customer" accessibleText="" layoutX="490.0" layoutY="60.0" lineSpacing="5.0" mouseTransparent="true" nodeOrientation="LEFT_TO_RIGHT" prefHeight="313.0" prefWidth="390.0" textAlignment="CENTER" visible="false" />
                                 <Button fx:id="search" layoutX="488.0" layoutY="25.0" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="68.0" text="Поиск" />
-                                <TableView fx:id="or_storage_table" layoutX="15.0" layoutY="62.0" prefHeight="348.0" prefWidth="382.0" visible="false">
-                                    <columns>
-                                        <TableColumn fx:id="or_storage_name" prefWidth="102.0" sortType="DESCENDING" text="Товар" />
-                                        <TableColumn fx:id="or_storage_price" prefWidth="136.0" text="Цена" />
-                                        <TableColumn fx:id="or_storage_count" prefWidth="142.0" text="Кол-во" />
-                                    </columns>
-                                </TableView>
                                 <TableView fx:id="store_table" editable="true" layoutX="393.0" layoutY="62.0" prefHeight="317.0" prefWidth="483.0" visible="false">
                                     <columns>
                                         <TableColumn fx:id="store_table_name" prefWidth="107.0" text="Товар" />
@@ -67,7 +60,15 @@
                               <TableColumn fx:id="or_ct_data" prefWidth="312.0" text="Дата рождения" />
                           </columns>
                         </TableView>
-                        <Button fx:id="createOrder" layoutX="591.0" layoutY="428.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="158.0" text="Сфорамировать заказ" visible="false" />
+                        <Button fx:id="createOrder" layoutX="591.0" layoutY="428.0" mnemonicParsing="false" onAction="#putOrder" prefHeight="25.0" prefWidth="158.0" text="Сфорамировать заказ" visible="false" />
+                                <TableView fx:id="or_storage_table" layoutX="15.0" layoutY="62.0" prefHeight="348.0" prefWidth="382.0" visible="false">
+                                    <columns>
+                                        <TableColumn fx:id="or_storage_name" prefWidth="102.0" sortType="DESCENDING" text="Товар" />
+                                        <TableColumn fx:id="or_storage_price" prefWidth="136.0" text="Цена" />
+                                        <TableColumn fx:id="or_storage_count" prefWidth="142.0" text="Кол-во" />
+                                    </columns>
+                                </TableView>
+                        <TextField fx:id="input_zipcode" layoutX="610.0" layoutY="200.0" prefHeight="23.0" prefWidth="150.0" visible="false" />
                             </children></AnchorPane>
                     </content>
                 </Tab>

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 })
 public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Repository<K, V> {
 
-    private final String type;
+    private String type;
 
     @JsonProperty("entities")
     protected Map<K, V> entities = new HashMap<>();
@@ -41,6 +41,8 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
 
     @ConstructorProperties({"type"})
     protected RepositoryEntity(String type){
+        System.out.println(type);
+        log = LoggerFactory.getLogger(type);
         this.type = type;
     }
 
@@ -90,6 +92,8 @@ public abstract class RepositoryEntity<K, V extends BaseEntity<K>> implements Re
     public void setEntities(Map<K, V> entities) {
         this.entities = entities;
     }
+
+    public void setType(String type) { this.type = type; }
 
     public String getType() {
         return type;

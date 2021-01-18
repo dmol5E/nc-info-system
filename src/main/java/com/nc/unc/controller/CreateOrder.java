@@ -18,15 +18,23 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
@@ -34,12 +42,10 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 public class CreateOrder extends Application {
@@ -89,28 +95,20 @@ public class CreateOrder extends Application {
      * */
     @FXML
     private TableView<Order> sk_table;
-
     @FXML
     private TableColumn<Order, Long> sk_key;
-
     @FXML
     private TableColumn<Order, String> sk_name;
-
     @FXML
     private TableColumn<Order, String> sk_lastname;
-
     @FXML
     private TableColumn<Order, String> sk_address_sender;
-
     @FXML
     private TableColumn<Order, String> sk_address_recipient;
-
     @FXML
     private TableColumn<Order, LocalDate> sk_dataSent;
-
     @FXML
     private TableColumn<Order, LocalDate> sk_dataWhen;
-
     @FXML
     private TableColumn<Order, StatusOrder> sk_status;
 
@@ -192,21 +190,17 @@ public class CreateOrder extends Application {
 
     @FXML
     private TableView<Product> io_table;
-
     @FXML
     private TableColumn<Product, Long> io_id;
-
     @FXML
     private TableColumn<Product, String> io_product_name;
-
     @FXML
     private TableColumn<Product, Float> io_price;
-
     @FXML
     private TableColumn<Product, Long> io_count;
-
     @FXML
     private TableColumn<Product, Integer> io_add_product;
+
 
     public void createTable(Event event) {
         io_id.setCellValueFactory(new PropertyValueFactory<>("key"));
@@ -261,16 +255,12 @@ public class CreateOrder extends Application {
 
     @FXML
     private TextField p_input_name;
-
     @FXML
     private TextField p_input_price;
-
     @FXML
     private TextField p_input_count;
-
     @FXML
     private Button create_product;
-
 
 
     public void createNewProduct(ActionEvent actionEvent) {
@@ -286,23 +276,20 @@ public class CreateOrder extends Application {
      * CreateOrder form
      * */
     int phase;
+
     @FXML
     private ProgressBar progress;
-
     @FXML
     private Button back,next,search,add_customer;
 
 
 
     @FXML
-    private TextField input_customer, input_address;
-
+    private TextField input_customer, input_address, input_zipcode;
     @FXML
     private TextFlow output_customer;
-
     @FXML
     private Label label_customer;
-
 
 
 
@@ -343,15 +330,30 @@ public class CreateOrder extends Application {
     @FXML
     private Button createOrder;
 
+    public void putOrder(ActionEvent actionEvent){
+        try {
+            orderService.createNewOrder(input_address.getText(), input_zipcode.getText());
+            returnBack(new ActionEvent()); returnBack(new ActionEvent());
+            or_storage_table.setItems(null);
+            or_storage_table.refresh();
+        }catch (BadRequestException e){
+            log.warn("Create new order exception ", e);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Input not valid");
+            errorAlert.setContentText("Create new order");
+            errorAlert.showAndWait();
+        }
+
+    }
 
 
     public void putToStorage(TableColumn.CellEditEvent<Product, Integer> productIntegerCellEditEvent) {
         try {
-            Product product = storeService.update(productIntegerCellEditEvent.getRowValue().getKey(),-1 * productIntegerCellEditEvent.getNewValue());
-            productIntegerCellEditEvent.getRowValue().setCount(product.getCount());
+            //Product product = storeService.update(productIntegerCellEditEvent.getRowValue().getKey(),-1 * productIntegerCellEditEvent.getNewValue());
+            productIntegerCellEditEvent.getRowValue().setCount(productIntegerCellEditEvent.getRowValue().getCount());
             store_table.edit(productIntegerCellEditEvent.getTablePosition().getRow(), productIntegerCellEditEvent.getTableColumn());
-            orderService.putOrderItem(product, productIntegerCellEditEvent.getNewValue());
-            or_storage_table.setItems(FXCollections.observableList(orderService.getStorage().stream().collect(Collectors.toList())));
+            orderService.putOrderItem(productIntegerCellEditEvent.getRowValue(), productIntegerCellEditEvent.getNewValue());
+            or_storage_table.setItems(FXCollections.observableList(orderService.getStorage()));
             or_storage_table.refresh();
             store_table.refresh();
         } catch (BadRequestException e){
@@ -382,7 +384,8 @@ public class CreateOrder extends Application {
             final ContextMenu contextMenu = new ContextMenu();
             final MenuItem SELECT = new MenuItem("SELECT");
             SELECT.setOnAction(actionEvent -> {
-                orderService.addOrderCustomer(row.getItem());
+                Customer customer = row.getItem();
+                orderService.addOrderCustomer(customer);
                 goNext(new ActionEvent());
             });
             contextMenu.getItems().add(SELECT);
@@ -404,6 +407,16 @@ public class CreateOrder extends Application {
             final ContextMenu contextMenu = new ContextMenu();
             final MenuItem REMOVE = new MenuItem("REMOVE");
             REMOVE.setOnAction(actionEvent -> {
+                orderService.putOrderItem(row.getItem().getProduct(),(-1) * row.getItem().getCount());
+                store_table.getItems()
+                        .stream()
+                        .filter(product -> product.equals(row.getItem().getProduct()))
+                        .findFirst()
+                        .get()
+                        .setCount(row.getItem().getProduct().getCount());
+                store_table.refresh();
+                or_storage_table.getItems().remove(row.getItem());
+                or_storage_table.refresh();
                 //toDo SERVICE REMOVE ROW ITEM ORDER
             });
 
@@ -415,13 +428,13 @@ public class CreateOrder extends Application {
             );
             return row;
         });
-        or_storage_table.setItems(null);
+        or_storage_table.setItems(FXCollections.observableArrayList(orderService.getStorage()));
 
         store_table_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         store_table_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         store_table_count.setCellValueFactory(new PropertyValueFactory<>("count"));
         stringConverterFromInteger(store_table_on_storage);
-        ObservableList<Product> products = FXCollections.observableArrayList(this.storeService.getAll().values());
+        ObservableList<Product> products = FXCollections.observableArrayList(this.orderService.getStore());
         store_table.setItems(products);
     }
 
@@ -456,6 +469,7 @@ public class CreateOrder extends Application {
                 next.setVisible(true);
                 output_customer.setVisible(false);
                 input_address.setVisible(false);
+                input_zipcode.setVisible(false);
                 output_customer.getChildren().clear();
                 break;
         }
@@ -480,19 +494,24 @@ public class CreateOrder extends Application {
                 store_table.setVisible(false);
                 next.setVisible(false);
                 output_customer.setVisible(true);
-                Text text_1=new Text("Клиент\n");
-                Text text_2=new Text("ФИО\n");
-                Text text_3=new Text("Номер телефона\n");
-                Text text_4=new Text("Адрес   ");
+                Text text_1=new Text(String.format("Имя: %s \n", orderService.getOrderCustomer().getFirstName()));
+                Text text_2=new Text(String.format("Фамилия: %s \n", orderService.getOrderCustomer().getLastName()));
+                Text text_3=new Text(String.format("Номер телефона: %s \n", orderService.getOrderCustomer().getPhoneNumber()));
+                Text text_4=new Text("Адрес   \n");
+                Text text_5=new Text("Зип код   \n");
+                Text text_6=new Text(String.format("Общая стоимость %s \n", orderService.getSum()));
                 output_customer.getChildren().add(text_1);
                 output_customer.getChildren().add(text_2);
                 output_customer.getChildren().add(text_3);
                 output_customer.getChildren().add(text_4);
+                output_customer.getChildren().add(text_5);
+                output_customer.getChildren().add(text_6);
                 output_customer.setLineSpacing(20);
                 output_customer.setTextAlignment(TextAlignment.LEFT);
                 createOrder.setVisible(true);
                 or_storage_table.setVisible(true);
                 input_address.setVisible(true);
+                input_zipcode.setVisible(true);
                 break;
         }
     }

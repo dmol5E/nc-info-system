@@ -1,12 +1,13 @@
 package com.nc.unc.service.impl;
 
 import com.nc.unc.model.OrderItem;
+import com.nc.unc.model.Product;
 import com.nc.unc.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class StorageServiceImpl implements StorageService {
@@ -22,26 +23,48 @@ public class StorageServiceImpl implements StorageService {
         log.info("Order Service Start");
     }
 
-    public Collection<OrderItem> getStorage() { return this.storage.values(); }
+    public List<OrderItem> getStorage() {
+        return this.storage.values().stream()
+                .filter(orderItem -> orderItem.getCount()!=0)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public int size() { return storage.size(); }
 
-    public double getPrice() { return this.price; }
+    public double getPrice() {
+        log.info("Storage: {}", storage);
+        return storage
+            .values()
+            .stream()
+                .filter(orderItem -> orderItem.getCount() !=0)
+                .reduce(0.0,
+                        (x,y) -> x + y.getPrice()*y.getCount(),
+                        Double::sum);
+    }
 
-    public void putOrderItem(OrderItem newStorageItem) {
-        if(this.storage.containsKey(newStorageItem.getKey())) {
-            storage.get(newStorageItem.getKey()).setCount(newStorageItem.getCount() + storage.get(newStorageItem.getKey()).getCount());
+    @Override
+    public void putOrderItem(Product product, int increase) {
+        OrderItem orderItem = storage.values().stream()
+                .filter(storageItem -> product.equals(storageItem.getProduct()))
+                .findFirst().orElse(null);
+        if(orderItem != null) {
+            orderItem.setCount(orderItem.getCount() + increase);
         } else {
+            OrderItem newStorageItem = new OrderItem((long) this.size(),product, increase);
             storage.put(newStorageItem.getKey(), newStorageItem);
-            price += newStorageItem.getCount() * newStorageItem.getProduct().getPrice();
         }
     }
 
     @Override
-    public Collection<OrderItem> get() { return storage.values(); }
+    public List<OrderItem> get() {
+        return this.storage.values().stream()
+                .filter(orderItem -> orderItem.getCount()!=0)
+                .collect(Collectors.toList());
+    }
 
     public void removeOrderItem(OrderItem storageItem) {
         this.storage.remove(storageItem.getKey());
     }
+
 }

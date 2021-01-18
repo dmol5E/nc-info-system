@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService {
 
@@ -29,9 +31,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
     private final StoreService storeService;
     private final OrderRepository orderRepository;
-    private final StorageService storageService;
+    private StorageService storageService;
 
-    private Customer customer;
 
     private Address address;
 
@@ -56,11 +57,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order createNewOrder() throws BadRequestException {
-        if(customer == null || address == null || storageService.size() == 0){
+    public void createNewOrder(String address, String  zipcode) throws BadRequestException {
+        if(sessionCustomer == null || address == null || storageService.size() == 0 || zipcode == null){
             throw new BadRequestException();
         }
-        return new Order(addressRepository.size(), customer, LocalDate.now(), storageService.getPrice(),new ArrayList<>(storageService.get()), address, addressRepository.getByKey(0L));
+        this.address = addressRepository
+                .getEntities()
+                .values()
+                .stream()
+                .filter(entityAddress -> entityAddress.getAddress().equals(address))
+                .filter(entityAddress->entityAddress.getZipCode() == Integer.parseInt(zipcode))
+                .findFirst().orElse(new Address((long) addressRepository.size(), address, Integer.parseInt(zipcode)));
+        orderRepository.put(new Order(orderRepository.size(),
+                          sessionCustomer,
+                          LocalDate.now(),
+                          storageService.getPrice(),
+                          new ArrayList<>(storageService.get()),
+                          this.address,
+                          addressRepository.getByKey(0L)));
+        storageService = new StorageServiceImpl();
     }
 
     @Override
@@ -68,11 +83,14 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
-    public void putOrderItem(Product product, int increase){
-        storageService.putOrderItem(new OrderItem((long) storageService.size(), product, increase));
+    public void putOrderItem(Product product, int increase) throws BadRequestException{
+        log.info("Put into order item: {}", product.toString());
+        storeService.update(product.getKey(), (-1) * increase);
+        storageService.putOrderItem(product, increase);
+        log.info("After put into order item: {}", product.toString());
     }
 
-    public Collection<OrderItem> getStorage(){return storageService.get();}
+    public List<OrderItem> getStorage(){return storageService.get();}
 
     @Override
     public Map<Long, Order> getAll() {
@@ -84,6 +102,22 @@ public class OrderServiceImpl implements OrderService {
         sessionCustomer = customer;
     }
 
+    @Override
+    public Customer getOrderCustomer() {
+        return sessionCustomer;
+    }
+
+    @Override
+    public double getSum() { return storageService.getPrice(); }
+
+
+    public List<Product> getStore(){
+        return storeService.getAll()
+                .values()
+                .stream()
+                .filter(product -> product.getCount()!=0)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public Order updateOrderStatus(long index, LocalDate date) {

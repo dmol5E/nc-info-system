@@ -1,6 +1,7 @@
 package com.nc.unc.repositories.impl;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.nc.unc.model.Address;
 
@@ -15,8 +16,8 @@ public class AddressRepository extends RepositoryEntity<Long, Address> {
         super(AddressRepository.class);
     }
 
-    @ConstructorProperties({"type"})
-    public AddressRepository(String className) { super(className);}
+    @JsonCreator
+    public AddressRepository(String className) { super(AddressRepository.class.getSimpleName());}
 
     public Map<Long, Address> getAddress(String address){
         String product = address.toLowerCase();

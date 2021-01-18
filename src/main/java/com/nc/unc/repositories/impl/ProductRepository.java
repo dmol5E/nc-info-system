@@ -1,5 +1,6 @@
 package com.nc.unc.repositories.impl;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.Product;
 
@@ -13,8 +14,8 @@ public class ProductRepository extends RepositoryEntity<Long, Product> {
         super(ProductRepository.class);
     }
 
-    @ConstructorProperties({"type"})
-    public ProductRepository(String className){super(className);}
+    @JsonCreator
+    public ProductRepository(String className){super(ProductRepository.class.getSimpleName());}
 
     public Product increaseCount(long id, int newCount) {
         Product product;

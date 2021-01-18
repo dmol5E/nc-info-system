@@ -59,6 +59,7 @@ public class App extends Application
         primaryStage.setScene(scene);
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(windowEvent -> dataSource.serialize());
 
     }
 }

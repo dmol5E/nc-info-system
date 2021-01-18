@@ -22,6 +22,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+class Phone{
+
+    private String name;
+    private int price;
+
+    public Phone(String name, int price){
+        this.name=name;
+        this.price=price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+}
+
 public class Main  {
     private static CustomerRepository customerRepository = new CustomerRepository();
     private static AddressRepository addressRepository = new AddressRepository();
@@ -66,6 +85,8 @@ public class Main  {
                 addressRepository.getByKey(1L), addressRepository.getByKey(2L)));
     }
 
+
+
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         addCust();
         addAdd();
@@ -87,6 +108,23 @@ public class Main  {
         CustomerService customerService = new CustomerServiceImpl(c);
         customerService.putCustomer("test","test", "test",LocalDate.now());
         System.out.println(customerService.getAll());
+        System.out.println(repos.toString());
 
+
+        Stream<Phone> phoneStream = Stream.of(new Phone("iPhone 6 S", 54000),
+                new Phone("Lumia 950", 45000),
+                new Phone("Samsung Galaxy S 6", 40000),
+                new Phone("LG G 4", 32000));
+
+        int sum = phoneStream.reduce(0,
+                (x,y)-> {
+                    if(y.getPrice()<50000)
+                        return x + y.getPrice();
+                    else
+                        return x;
+                },
+                Integer::sum);
+
+        System.out.println(sum); // 117000
     }
 }

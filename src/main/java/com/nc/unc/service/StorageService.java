@@ -1,13 +1,16 @@
 package com.nc.unc.service;
 
 import com.nc.unc.model.OrderItem;
+import com.nc.unc.model.Product;
 
 import java.util.Collection;
+import java.util.List;
 
 
 public interface StorageService {
 
 
+    void putOrderItem(Product product, int increase);
 
     int size();
 
@@ -15,7 +18,5 @@ public interface StorageService {
 
     void removeOrderItem(OrderItem storageItem);
 
-    void putOrderItem(OrderItem newStorageItem);
-
-    Collection<OrderItem> get();
+    List<OrderItem> get();
 }
