@@ -13,7 +13,5 @@ public interface StoreService {
 
     Product update(int id, int count);
 
-    int size();
-
     void put(String name, String count, String price);
 }

@@ -1,21 +1,16 @@
 package com.nc.unc.service.impl;
 
+import com.nc.unc.dao.impl.AddressDaoImpl;
+import com.nc.unc.dao.impl.CustomerDaoImpl;
+import com.nc.unc.dao.impl.OrderDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.*;
-import com.nc.unc.repositories.impl.AddressRepository;
-import com.nc.unc.repositories.impl.OrderItemRepository;
-import com.nc.unc.repositories.impl.OrderRepository;
-import com.nc.unc.repositories.impl.ProductRepository;
-import com.nc.unc.service.CustomerService;
-import com.nc.unc.service.OrderService;
-import com.nc.unc.service.StorageService;
-import com.nc.unc.service.StoreService;
+import com.nc.unc.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,28 +21,24 @@ public class OrderServiceImpl implements OrderService {
 
     private Customer sessionCustomer;
 
-    private final AddressRepository addressRepository;
+    private final OrderDaoImpl orderDao;
+
+    private final AddressService addressService;
     private final CustomerService customerService;
-    private final OrderItemRepository orderItemRepository;
     private final StoreService storeService;
-    private final OrderRepository orderRepository;
     private StorageService storageService;
 
 
-    private Address address;
-
-    public OrderServiceImpl(OrderRepository orderRepository,
+    public OrderServiceImpl(OrderDaoImpl orderRepository,
                             StoreService storeService,
-                            AddressRepository addressRepository,
-                            CustomerService customerService,
-                            OrderItemRepository orderItemRepository) {
+                            AddressService addressRepository,
+                            CustomerService customerService) {
         log.info("Order Service Start");
         storageService = new StorageServiceImpl();
-        this.orderItemRepository = orderItemRepository;
         this.customerService = customerService;
-        this.orderRepository = orderRepository;
+        this.orderDao = orderRepository;
         this.storeService = storeService;
-        this.addressRepository = addressRepository;
+        this.addressService = addressRepository;
     }
 
 
@@ -61,20 +52,17 @@ public class OrderServiceImpl implements OrderService {
         if(sessionCustomer == null || address == null || storageService.size() == 0 || zipcode == null){
             throw new BadRequestException();
         }
-        this.address = addressRepository
-                .getEntities()
-                .values()
-                .stream()
-                .filter(entityAddress -> entityAddress.getAddress().equals(address))
-                .filter(entityAddress->entityAddress.getZipCode() == Integer.parseInt(zipcode))
-                .findFirst().orElse(new Address(addressRepository.size(), address, Integer.parseInt(zipcode)));
-        orderRepository.put(new Order(orderRepository.size(),
-                          sessionCustomer,
-                          LocalDate.now(),
-                          storageService.getPrice(),
-                          new ArrayList<>(storageService.get()),
-                          this.address,
-                          addressRepository.getByKey(0)));
+        Address addressSession = addressService.searchOrInsert(address, zipcode);
+
+        orderDao.insert(Order.builder()
+                .customer(sessionCustomer)
+                .createdWhen(LocalDate.now())
+                .sum(storageService.getPrice())
+                .products(new ArrayList<>(storageService.get()))
+                .recipient(addressSession)
+                .sender(addressService.getById(1).get())
+                .build()
+        );
         storageService = new StorageServiceImpl();
     }
 
@@ -94,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Map<Integer, Order> getAll() {
-        return orderRepository.getEntities();
+        return orderDao.getAll();
     }
 
     @Override
@@ -121,8 +109,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrderStatus(int index, LocalDate date) {
-        this.orderRepository.getByKey(index).setSentWhen(date);
-        return this.orderRepository.getByKey(index);
+        Order order = orderDao.getByKey(index).get();
+        order.setSentWhen(date);
+
+        orderDao.update(order, order.getKey());
+        return order;
     }
 
 }

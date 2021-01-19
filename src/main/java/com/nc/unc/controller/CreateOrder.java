@@ -121,7 +121,7 @@ public class CreateOrder extends Application {
         sk_address_recipient.setCellValueFactory(new PropertyValueFactory<>("recipientAddress"));
         sk_address_sender.setCellValueFactory(new PropertyValueFactory<>("senderAddress"));
         sk_dataWhen.setCellValueFactory(new PropertyValueFactory<>("createdWhen"));
-        sk_status.setCellValueFactory(new PropertyValueFactory<>("curStatus"));
+        sk_status.setCellValueFactory(new PropertyValueFactory<>("curStatusOrder"));
         sk_dataSent.setCellValueFactory(new PropertyValueFactory<>("sentWhen"));
         sk_table.setRowFactory(tableView -> {
             final TableRow<Order> row = new TableRow<>();

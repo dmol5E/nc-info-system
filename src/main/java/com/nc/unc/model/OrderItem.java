@@ -1,13 +1,21 @@
 package com.nc.unc.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.beans.ConstructorProperties;
 
+@Setter
+@Getter
+@NoArgsConstructor
 public class OrderItem extends BaseEntity<Integer> {
     private Product product;
     private int count;
 
+    @Builder(toBuilder = true)
     @ConstructorProperties({"key", "product", "count"})
     public OrderItem(int key,
                      Product product,
@@ -17,17 +25,9 @@ public class OrderItem extends BaseEntity<Integer> {
         this.count = count;
     }
 
+    public float getPrice() { return product.getPrice(); }
+
     public String getName(){ return product.getName(); }
-
-    public double getPrice(){ return product.getPrice(); }
-
-    public void setCount(int count) { this.count = count; }
-
-    public void setProduct(Product product) { this.product = product; }
-
-    public int getCount() { return this.count; }
-
-    public Product getProduct() { return this.product; }
 
     @Override
     @JsonGetter("id")

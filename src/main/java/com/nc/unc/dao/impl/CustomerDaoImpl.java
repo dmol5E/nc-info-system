@@ -1,25 +1,35 @@
 package com.nc.unc.dao.impl;
 
-import com.nc.unc.dao.DBConnector;
+import com.nc.unc.util.jdbc.DBConnector;
 import com.nc.unc.dao.Dao;
 import com.nc.unc.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class CustomerDaoImpl implements Dao<Integer, Customer> {
 
+    private static String GET_BY_ID =
+            "select * from store.customer where id = ?;";
+
+    private static final String UPDATE_CUSTOMER_TEMPLATE =
+            "update store.customer " +
+                    "set first_name = ?, last_name = ?, phone_number = ?, date = ? " +
+                    "where id = ?;";
+
     private static Logger log = LoggerFactory.getLogger(CustomerDaoImpl.class.getSimpleName());
 
-    private final static String GET_ALL_CUSTOMER = "select * from store.customer";
+    private final static String GET_ALL_CUSTOMER =
+            "select * from store.customer;";
 
-    private final static String INSERT_CUSTOMER_TEMPLATE = "insert into "
-            + "store.customer(first_name, last_name, phone_number, date) " +
-            "values (?,?,?,?);";
+    private final static String INSERT_CUSTOMER_TEMPLATE =
+            "insert into " +
+                    "store.customer(first_name, last_name, phone_number, date) " +
+                    "values (?,?,?,?);";
 
     @Override
     public Map<Integer, Customer> getAll() {
@@ -35,23 +45,46 @@ public class CustomerDaoImpl implements Dao<Integer, Customer> {
         return res;
     }
 
-    @Override
-    public Map<Integer, Customer> gelAllWhere(String str) {
-        return null;
+    public void update(Customer customer, Integer id){
+        try(Connection connection = DBConnector.connection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMER_TEMPLATE)) {
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
+            statement.setString(3, customer.getPhoneNumber());
+            statement.setDate(4, Date.valueOf(customer.getData()));
+            statement.setInt(5, id);
+            statement.executeUpdate();
+        }catch (SQLException exc){
+            log.info("Exception update customer {}", customer, exc);
+        }
     }
 
-    public void insert(String firstName, String lastName, String phoneNumber, LocalDate date){
+    public void insert(Customer customer){
         try(Connection connection = DBConnector.connection();
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_CUSTOMER_TEMPLATE)) {
-            preparedStatement.setString(1, firstName);
-            preparedStatement.setString(2, lastName);
-            preparedStatement.setString(3, phoneNumber);
-            preparedStatement.setDate(4, Date.valueOf(date));
+            preparedStatement.setString(1, customer.getFirstName());
+            preparedStatement.setString(2, customer.getLastName());
+            preparedStatement.setString(3, customer.getPhoneNumber());
+            preparedStatement.setDate(4, Date.valueOf(customer.getData()));
 
             preparedStatement.executeUpdate();
         }catch (SQLException exc){
             log.info("Insert into customer exception", exc);
         }
+    }
+
+    @Override
+    public Optional<Customer> getByKey(Integer id) {
+        Customer customer = null;
+        try(Connection connection = DBConnector.connection();
+            PreparedStatement statement = connection.prepareStatement(GET_BY_ID)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) customer = customerMapper(rs);
+        }catch (SQLException exc){
+            log.info("Get all customer with conditions {} exception", id, exc);
+        }
+        return Optional.ofNullable(customer);
     }
 
     private static Customer customerMapper(ResultSet rs) throws SQLException{

@@ -1,4 +1,4 @@
-package com.nc.unc.dao;
+package com.nc.unc.util.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

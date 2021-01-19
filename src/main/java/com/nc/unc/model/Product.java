@@ -10,21 +10,20 @@ import lombok.Setter;
 import java.beans.ConstructorProperties;
 
 
-
 @Setter
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties({"count"})
 public class Product extends BaseEntity<Integer> {
     private String name;
-    private double price;
+    private float price;
     private int count;
     @Builder
     @ConstructorProperties({"key", "count", "name", "price"})
     public Product(int key,
                    int count,
                    String name,
-                   double price) {
+                   float price) {
         super(key);
         this.count = count;
         this.name = name;

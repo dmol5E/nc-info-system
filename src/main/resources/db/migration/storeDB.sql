@@ -9,7 +9,7 @@ drop table if exists store.order_item;
 drop table if exists store.product;
 drop type if exists store.status;
 
-create type store.status AS ENUM ('CREATED', 'CANCELED', 'SENT', 'DELIVERED');
+create type store.status AS enum ('CREATED', 'CANCELED', 'SENT', 'DELIVERED');
 
 create table store.address
 (

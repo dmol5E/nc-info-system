@@ -32,15 +32,15 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public int size() { return storage.size(); }
 
-    public double getPrice() {
+    @Override
+    public float getPrice() {
         log.info("Storage: {}", storage);
-        return storage
-            .values()
+        return storage.values()
             .stream()
                 .filter(orderItem -> orderItem.getCount() !=0)
-                .reduce(0.0,
+                .reduce(0.f,
                         (x,y) -> x + y.getPrice()*y.getCount(),
-                        Double::sum);
+                        Float::sum);
     }
 
     @Override

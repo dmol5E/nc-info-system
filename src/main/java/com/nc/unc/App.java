@@ -1,26 +1,20 @@
 package com.nc.unc;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.nc.unc.model.BaseEntity;
-import com.nc.unc.repositories.Repository;
-import com.nc.unc.repositories.impl.*;
+import com.nc.unc.dao.impl.AddressDaoImpl;
+import com.nc.unc.dao.impl.CustomerDaoImpl;
+import com.nc.unc.dao.impl.OrderDaoImpl;
+import com.nc.unc.dao.impl.ProductDaoImpl;
 import com.nc.unc.service.CustomerService;
 import com.nc.unc.service.OrderService;
 import com.nc.unc.service.StorageService;
 import com.nc.unc.service.StoreService;
-import com.nc.unc.service.impl.CustomerServiceImpl;
-import com.nc.unc.service.impl.OrderServiceImpl;
-import com.nc.unc.service.impl.StorageServiceImpl;
-import com.nc.unc.service.impl.StoreServiceImpl;
-import com.nc.unc.util.serialize.DataSource;
-import com.nc.unc.util.serialize.impl.DataSourceImpl;
+import com.nc.unc.service.impl.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.List;
 
 /**
  * Hello world!
@@ -41,17 +35,16 @@ public class App extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DataSource<RepositoryEntity<Integer, ? extends BaseEntity<Integer>>> dataSource = new DataSourceImpl<>();
-        List<RepositoryEntity<Integer, ? extends BaseEntity<Integer>>> repos = dataSource.deSerialize(new TypeReference<>() {});
 
-        customerService = new CustomerServiceImpl((CustomerRepository) dataSource.search(CustomerRepository.class));
-        storeService = new StoreServiceImpl((ProductRepository) dataSource.search(ProductRepository.class));
-        orderService = new OrderServiceImpl((OrderRepository) dataSource.search(OrderRepository.class),
-                storeService,
-                (AddressRepository) dataSource.search(AddressRepository.class), customerService,
-                (OrderItemRepository) dataSource.search(OrderItemRepository.class));
-        storageService = new StorageServiceImpl();
+        AddressDaoImpl addressDao = new AddressDaoImpl();
+        CustomerDaoImpl customerDao = new CustomerDaoImpl();
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        ProductDaoImpl productDao = new ProductDaoImpl();
 
+
+        customerService = new CustomerServiceImpl(customerDao);
+        storeService = new StoreServiceImpl(productDao);
+        orderService = new OrderServiceImpl(orderDao, storeService, new AddressServiceImpl(addressDao), customerService);
 
         Parent root = FXMLLoader.load(App.class.getResource("form/CreateOrder.fxml"));
         Scene scene = new Scene(root);
@@ -59,7 +52,5 @@ public class App extends Application
         primaryStage.setScene(scene);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setOnCloseRequest(windowEvent -> dataSource.serialize());
-
     }
 }

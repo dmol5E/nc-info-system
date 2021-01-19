@@ -9,7 +9,7 @@ drop table if exists store.order_item;
 drop table if exists store.product;
 drop type if exists store.status;
 
-create type store.status AS ENUM ('CREATED', 'CANCELED', 'SENT', 'DELIVERED');
+create type store.status AS enum ('CREATED', 'CANCELED', 'SENT', 'DELIVERED');
 
 create table store.address
 (
@@ -55,12 +55,6 @@ create table store.order
 select *
 from store.address;
 
-
-select *
-from store.order as _order
-         join store.address as recipient on recipient.id = _order.recipient
-         join store.customer as customer on customer.id = _order.customer
-         join store.address as sender on sender.id = _order.sender
 
 select *
 from store.customer;

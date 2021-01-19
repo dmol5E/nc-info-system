@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Order extends BaseEntity<Integer> {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate sentWhen;
-    private double sum;
+    private float sum;
 
     private List<OrderItem> products;
 
@@ -40,11 +41,14 @@ public class Order extends BaseEntity<Integer> {
     private Address sender;
 
     @Builder(toBuilder = true)
+    @ConstructorProperties({"key", "customer", "createdWhen",
+            "sentWhen", "products", "sum",
+            "recipient", "sender", "curStatusOrder"})
     public Order(int key,
                  Customer customer,
                  LocalDate createdWhen,
                  LocalDate sentWhen,
-                 double sum,
+                 float sum,
                  List<OrderItem> products,
                  Address recipient,
                  Address sender,
@@ -59,44 +63,6 @@ public class Order extends BaseEntity<Integer> {
         this.recipient = recipient;
         this.sender = sender;
         this.curStatusOrder = curStatusOrder;
-    }
-
-
-    public Order(int key,
-                 Customer customer,
-                 LocalDate createdWhen,
-                 double sum,
-                 List<OrderItem> products,
-                 Address recipient,
-                 Address sender) {
-        super(key);
-        this.curStatusOrder = DEFAULT_STATUS;
-        this.customer = customer;
-        this.createdWhen = createdWhen;
-        this.sum = sum;
-        this.products = products;
-        this.recipient = recipient;
-        this.sender = sender;
-    }
-
-    @JsonCreator
-    public Order(@JsonProperty("key") int key,
-                 @JsonProperty("customer") Customer customer,
-                 @JsonProperty("createdWhen") LocalDate createdWhen,
-                 @JsonProperty("sentWhen") LocalDate sentWhen,
-                 @JsonProperty("sum") double sum,
-                 @JsonProperty("products") List<OrderItem> products,
-                 @JsonProperty("recipient") Address recipient,
-                 @JsonProperty("sender") Address sender) {
-        super(key);
-        this.products = products;
-        this.curStatusOrder = DEFAULT_STATUS;
-        this.customer = customer;
-        this.createdWhen = createdWhen;
-        this.sentWhen = sentWhen;
-        this.sum = sum;
-        this.recipient = recipient;
-        this.sender = sender;
     }
 
     @JsonIgnore

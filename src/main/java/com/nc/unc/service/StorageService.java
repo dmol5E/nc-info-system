@@ -14,7 +14,7 @@ public interface StorageService {
 
     int size();
 
-    double getPrice();
+    float getPrice();
 
     void removeOrderItem(OrderItem storageItem);
 
