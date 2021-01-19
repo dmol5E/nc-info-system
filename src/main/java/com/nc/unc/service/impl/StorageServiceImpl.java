@@ -14,7 +14,7 @@ public class StorageServiceImpl implements StorageService {
 
     private Logger log = LoggerFactory.getLogger(StorageService.class.getSimpleName());
 
-    private final HashMap<Long, OrderItem> storage;
+    private final HashMap<Integer, OrderItem> storage;
 
     private double price;
 
@@ -51,7 +51,7 @@ public class StorageServiceImpl implements StorageService {
         if(orderItem != null) {
             orderItem.setCount(orderItem.getCount() + increase);
         } else {
-            OrderItem newStorageItem = new OrderItem((long) this.size(),product, increase);
+            OrderItem newStorageItem = new OrderItem(this.size(),product, increase);
             storage.put(newStorageItem.getKey(), newStorageItem);
         }
     }

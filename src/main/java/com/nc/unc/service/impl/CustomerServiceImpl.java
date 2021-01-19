@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Map<Long, Customer> getAll() {
+    public Map<Integer, Customer> getAll() {
         return customers.getEntities();
     }
 

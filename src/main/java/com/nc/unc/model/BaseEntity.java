@@ -1,9 +1,14 @@
 package com.nc.unc.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.beans.ConstructorProperties;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class BaseEntity<K> {
 
     protected K key;
@@ -12,11 +17,5 @@ public class BaseEntity<K> {
     public BaseEntity(K key){
         this.key = key;
     }
-
-    public void setKey(K key) {
-        this.key = key;
-    }
-
-    public K getKey() { return this.key; }
 
 }

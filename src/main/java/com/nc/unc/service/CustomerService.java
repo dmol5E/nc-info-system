@@ -14,5 +14,5 @@ public interface CustomerService {
 
     Collection<Customer> searchCustomerByName(String name);
 
-    Map<Long, Customer> getAll();
+    Map<Integer, Customer> getAll();
 }

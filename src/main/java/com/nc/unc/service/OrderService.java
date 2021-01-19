@@ -26,7 +26,7 @@ public interface OrderService {
 
     void findById();
 
-    Map<Long, Order> getAll();
+    Map<Integer, Order> getAll();
 
     void addOrderCustomer(Customer customer);
 
@@ -34,5 +34,5 @@ public interface OrderService {
 
     double getSum();
 
-    Order updateOrderStatus(long index, LocalDate date);
+    Order updateOrderStatus(int index, LocalDate date);
 }

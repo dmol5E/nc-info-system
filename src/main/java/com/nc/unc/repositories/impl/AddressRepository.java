@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @JsonRootName("AddressRepository")
-public class AddressRepository extends RepositoryEntity<Long, Address> {
+public class AddressRepository extends RepositoryEntity<Integer, Address> {
 
     public AddressRepository() {
         super(AddressRepository.class);
@@ -19,7 +19,7 @@ public class AddressRepository extends RepositoryEntity<Long, Address> {
     @JsonCreator
     public AddressRepository(String className) { super(AddressRepository.class.getSimpleName());}
 
-    public Map<Long, Address> getAddress(String address){
+    public Map<Integer, Address> getAddress(String address){
         String product = address.toLowerCase();
         return this.entities.entrySet().stream()
                 .filter(entry -> entry.getValue().getAddress().toLowerCase().contains(product))

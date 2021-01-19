@@ -67,14 +67,14 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .filter(entityAddress -> entityAddress.getAddress().equals(address))
                 .filter(entityAddress->entityAddress.getZipCode() == Integer.parseInt(zipcode))
-                .findFirst().orElse(new Address((long) addressRepository.size(), address, Integer.parseInt(zipcode)));
+                .findFirst().orElse(new Address(addressRepository.size(), address, Integer.parseInt(zipcode)));
         orderRepository.put(new Order(orderRepository.size(),
                           sessionCustomer,
                           LocalDate.now(),
                           storageService.getPrice(),
                           new ArrayList<>(storageService.get()),
                           this.address,
-                          addressRepository.getByKey(0L)));
+                          addressRepository.getByKey(0)));
         storageService = new StorageServiceImpl();
     }
 
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderItem> getStorage(){return storageService.get();}
 
     @Override
-    public Map<Long, Order> getAll() {
+    public Map<Integer, Order> getAll() {
         return orderRepository.getEntities();
     }
 
@@ -120,8 +120,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderStatus(long index, LocalDate date) {
-        return this.orderRepository.getByKey(index).setSentWhen(date);
+    public Order updateOrderStatus(int index, LocalDate date) {
+        this.orderRepository.getByKey(index).setSentWhen(date);
+        return this.orderRepository.getByKey(index);
     }
 
 }

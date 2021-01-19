@@ -16,17 +16,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Map<Long, Product> getAll() {
+    public Map<Integer, Product> getAll() {
         return repository.getEntities();
     }
 
     @Override
-    public Product findById(Long id) {
+    public Product findById(int id) {
         return null;
     }
 
     @Override
-    public Product update(Long id, int count) throws BadRequestException {
+    public Product update(int id, int count) throws BadRequestException {
         if(id < 0|| (repository.getByKey(id).getCount() + count) < 0)
             throw new BadRequestException();
         return repository.increaseCount(id,repository.getByKey(id).getCount() + count);

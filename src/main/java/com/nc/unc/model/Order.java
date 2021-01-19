@@ -8,29 +8,61 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.util.json.LocalDateDeserializer;
 import com.nc.unc.util.json.LocalDateSerializer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class Order extends BaseEntity<Long> {
-    private final Customer customer;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class Order extends BaseEntity<Integer> {
+    private Customer customer;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
-    private final LocalDate createdWhen;
+    private LocalDate createdWhen;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate sentWhen;
-    private final double sum;
+    private double sum;
 
-    private final List<OrderItem> products;
+    private List<OrderItem> products;
 
     private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
     private StatusOrder curStatusOrder;
-    private final Address recipient;
-    private final Address sender;
 
-    public Order(long key,
+    private Address recipient;
+    private Address sender;
+
+    @Builder(toBuilder = true)
+    public Order(int key,
+                 Customer customer,
+                 LocalDate createdWhen,
+                 LocalDate sentWhen,
+                 double sum,
+                 List<OrderItem> products,
+                 Address recipient,
+                 Address sender,
+                 StatusOrder curStatusOrder) {
+        super(key);
+        this.curStatusOrder = DEFAULT_STATUS;
+        this.customer = customer;
+        this.createdWhen = createdWhen;
+        this.sentWhen = sentWhen;
+        this.sum = sum;
+        this.products = products;
+        this.recipient = recipient;
+        this.sender = sender;
+        this.curStatusOrder = curStatusOrder;
+    }
+
+
+    public Order(int key,
                  Customer customer,
                  LocalDate createdWhen,
                  double sum,
@@ -48,7 +80,7 @@ public class Order extends BaseEntity<Long> {
     }
 
     @JsonCreator
-    public Order(@JsonProperty("key") long key,
+    public Order(@JsonProperty("key") int key,
                  @JsonProperty("customer") Customer customer,
                  @JsonProperty("createdWhen") LocalDate createdWhen,
                  @JsonProperty("sentWhen") LocalDate sentWhen,
@@ -78,26 +110,6 @@ public class Order extends BaseEntity<Long> {
 
     @JsonIgnore
     public String getLastName(){ return this.customer.getLastName(); }
-
-    public Order setCurStatus(StatusOrder curStatusOrder) { this.curStatusOrder = curStatusOrder; return this;}
-
-    public Order setSentWhen(LocalDate sentWhen) { this.sentWhen = sentWhen; return this;}
-
-    public Address getRecipient() { return this.recipient; }
-
-    public Customer getCustomer() { return this.customer; }
-
-    public List<OrderItem> getProducts() { return this.products; }
-
-    public double getSum() { return this.sum; }
-
-    public Address getSender() { return this.sender; }
-
-    public LocalDate getCreatedWhen() { return this.createdWhen; }
-
-    public LocalDate getSentWhen() { return this.sentWhen; }
-
-    public StatusOrder getCurStatus() { return this.curStatusOrder; }
 
     @Override
     public String toString() {

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import java.util.stream.Collectors;
 
-public class ProductRepository extends RepositoryEntity<Long, Product> {
+public class ProductRepository extends RepositoryEntity<Integer, Product> {
     public ProductRepository() {
         super(ProductRepository.class);
     }
@@ -17,16 +17,17 @@ public class ProductRepository extends RepositoryEntity<Long, Product> {
     @JsonCreator
     public ProductRepository(String className){super(ProductRepository.class.getSimpleName());}
 
-    public Product increaseCount(long id, int newCount) {
+    public Product increaseCount(int id, int newCount) {
         Product product;
         if((product = this.entities.get(id)) == null){
             log.warn("Id is wasn't contains {}", id);
             throw new BadRequestException();
         }
-        return product.setCount(newCount);
+        product.setCount(newCount);
+        return product;
     }
 
-    public Map<Long, Product> getProduct(String nameProduct){
+    public Map<Integer, Product> getProduct(String nameProduct){
         String product = nameProduct.toLowerCase();
         return this.entities.entrySet().stream()
                 .filter(entry -> entry.getValue().getName().toLowerCase().contains(product))

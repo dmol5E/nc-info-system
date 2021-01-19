@@ -41,8 +41,8 @@ public class App extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DataSource<RepositoryEntity<Long, ? extends BaseEntity<Long>>> dataSource = new DataSourceImpl<>();
-        List<RepositoryEntity<Long, ? extends BaseEntity<Long>>> repos = dataSource.deSerialize(new TypeReference<>() {});
+        DataSource<RepositoryEntity<Integer, ? extends BaseEntity<Integer>>> dataSource = new DataSourceImpl<>();
+        List<RepositoryEntity<Integer, ? extends BaseEntity<Integer>>> repos = dataSource.deSerialize(new TypeReference<>() {});
 
         customerService = new CustomerServiceImpl((CustomerRepository) dataSource.search(CustomerRepository.class));
         storeService = new StoreServiceImpl((ProductRepository) dataSource.search(ProductRepository.class));

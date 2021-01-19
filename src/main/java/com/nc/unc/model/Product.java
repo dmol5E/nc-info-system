@@ -1,13 +1,27 @@
 package com.nc.unc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.beans.ConstructorProperties;
 
-public class Product extends BaseEntity<Long> {
+
+
+@Setter
+@Getter
+@NoArgsConstructor
+@JsonIgnoreProperties({"count"})
+public class Product extends BaseEntity<Integer> {
     private String name;
     private double price;
     private int count;
+    @Builder
     @ConstructorProperties({"key", "count", "name", "price"})
-    public Product(long key,
+    public Product(int key,
                    int count,
                    String name,
                    double price) {
@@ -16,18 +30,6 @@ public class Product extends BaseEntity<Long> {
         this.name = name;
         this.price = price;
     }
-
-    public int getCount() { return this.count; }
-
-    public double getPrice() { return this.price; }
-
-    public String getName() { return this.name; }
-
-    public Product setCount(int count) { this.count = count; return this;}
-
-    public Product setName(String name) { this.name = name; return this;}
-
-    public Product setPrice(double price) { this.price = price; return this;}
 
     @Override
     public String toString() {

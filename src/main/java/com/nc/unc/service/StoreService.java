@@ -7,11 +7,11 @@ import java.util.Map;
 public interface StoreService {
 
 
-    Map<Long, Product> getAll();
+    Map<Integer, Product> getAll();
 
-    Product findById(Long id);
+    Product findById(int id);
 
-    Product update(Long id, int count);
+    Product update(int id, int count);
 
     int size();
 

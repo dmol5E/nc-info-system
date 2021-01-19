@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class CustomerRepository extends RepositoryEntity<Long, Customer> {
+public class CustomerRepository extends RepositoryEntity<Integer, Customer> {
 
     public CustomerRepository() {
         super(CustomerRepository.class);
@@ -17,7 +17,7 @@ public class CustomerRepository extends RepositoryEntity<Long, Customer> {
     @JsonCreator
     public CustomerRepository(String className){super(CustomerRepository.class.getSimpleName());}
 
-    public Map<Long, Customer> getCustomer(String search){
+    public Map<Integer, Customer> getCustomer(String search){
         String sought = search.toLowerCase();
         return this.entities.entrySet().stream()
                 .filter(entry -> entry.getValue().getFirstName().toLowerCase().contains(sought))

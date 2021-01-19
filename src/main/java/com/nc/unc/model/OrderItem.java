@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 
 import java.beans.ConstructorProperties;
 
-public class OrderItem extends BaseEntity<Long> {
+public class OrderItem extends BaseEntity<Integer> {
     private Product product;
     private int count;
 
     @ConstructorProperties({"key", "product", "count"})
-    public OrderItem(Long key,
+    public OrderItem(int key,
                      Product product,
                      int count) {
         super(key);
@@ -31,7 +31,7 @@ public class OrderItem extends BaseEntity<Long> {
 
     @Override
     @JsonGetter("id")
-    public Long getKey() {
+    public Integer getKey() {
         return super.getKey();
     }
 

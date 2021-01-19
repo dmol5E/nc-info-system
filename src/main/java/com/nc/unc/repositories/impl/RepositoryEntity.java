@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @JsonIgnoreProperties({"log"})
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
         @Type(value = AddressRepository.class, name = "AddressRepository"),

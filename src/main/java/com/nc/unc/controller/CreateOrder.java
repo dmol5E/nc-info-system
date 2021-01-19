@@ -96,7 +96,7 @@ public class CreateOrder extends Application {
     @FXML
     private TableView<Order> sk_table;
     @FXML
-    private TableColumn<Order, Long> sk_key;
+    private TableColumn<Order, Integer> sk_key;
     @FXML
     private TableColumn<Order, String> sk_name;
     @FXML
@@ -130,12 +130,12 @@ public class CreateOrder extends Application {
             final MenuItem SENT = new MenuItem("SENT");
             final MenuItem DELIVERED = new MenuItem("DELIVERED");
             CANCELED.setOnAction(actionEvent -> {
-                sk_table.getItems().get(row.getIndex()).setCurStatus(StatusOrder.CANCELED);
+                sk_table.getItems().get(row.getIndex()).setCurStatusOrder(StatusOrder.CANCELED);
                 //order.getByKey(order.getKey()).setCurStatus(StatusOrder.CANCELED);
                 sk_table.refresh();
             });
             DELIVERED.setOnAction(actionEvent -> {
-                Order order = sk_table.getItems().get(row.getIndex()).setCurStatus(StatusOrder.DELIVERED);
+                sk_table.getItems().get(row.getIndex()).setCurStatusOrder(StatusOrder.DELIVERED);
                 //orderRepository.getByKey(order.getKey()).setCurStatus(StatusOrder.DELIVERED);
                 sk_table.refresh();
             });
@@ -178,7 +178,8 @@ public class CreateOrder extends Application {
     }
 
     public void createDateSended(TableColumn.CellEditEvent<Order, LocalDate> orderLocalDateCellEditEvent) {
-        orderLocalDateCellEditEvent.getRowValue().setSentWhen(orderLocalDateCellEditEvent.getNewValue()).setCurStatus(StatusOrder.SENT);
+        orderLocalDateCellEditEvent.getRowValue().setSentWhen(orderLocalDateCellEditEvent.getNewValue());
+        orderLocalDateCellEditEvent.getRowValue().setCurStatusOrder(StatusOrder.SENT);
         orderService.updateOrderStatus(orderLocalDateCellEditEvent.getRowValue().getKey(), orderLocalDateCellEditEvent.getNewValue());
         this.sk_table.edit(orderLocalDateCellEditEvent.getTablePosition().getRow(), orderLocalDateCellEditEvent.getTableColumn());
         this.sk_table.refresh();
@@ -191,13 +192,13 @@ public class CreateOrder extends Application {
     @FXML
     private TableView<Product> io_table;
     @FXML
-    private TableColumn<Product, Long> io_id;
+    private TableColumn<Product, Integer> io_id;
     @FXML
     private TableColumn<Product, String> io_product_name;
     @FXML
     private TableColumn<Product, Float> io_price;
     @FXML
-    private TableColumn<Product, Long> io_count;
+    private TableColumn<Product, Integer> io_count;
     @FXML
     private TableColumn<Product, Integer> io_add_product;
 
