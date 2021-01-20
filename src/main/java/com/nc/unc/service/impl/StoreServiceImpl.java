@@ -22,7 +22,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Product findById(int id) {
-        return null;
+        return productDao.getByKey(id).orElse(null);
     }
 
     @Override

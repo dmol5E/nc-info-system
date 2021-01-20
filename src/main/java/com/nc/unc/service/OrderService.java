@@ -16,7 +16,7 @@ public interface OrderService {
 
     List<Product> getStore();
 
-    void putOrderItem(Product product, int increase);
+    void putOrderItem(int id, int increase);
 
     List<OrderItem> getStorage();
 
@@ -24,7 +24,9 @@ public interface OrderService {
 
     void createNewOrder(String address, String zipcode) throws BadRequestException;
 
-    void findById();
+    Order findOrderById(int id);
+
+    void updateOrder(int id, Order order);
 
     Map<Integer, Order> getAll();
 

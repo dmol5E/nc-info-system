@@ -19,4 +19,6 @@ public interface StorageService {
     void removeOrderItem(OrderItem storageItem);
 
     List<OrderItem> get();
+
+    Collection<OrderItem> getToCreate();
 }

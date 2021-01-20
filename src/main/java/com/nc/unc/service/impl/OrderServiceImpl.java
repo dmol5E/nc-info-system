@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
                             AddressService addressRepository,
                             CustomerService customerService) {
         log.info("Order Service Start");
-        storageService = new StorageServiceImpl();
+        storageService = new StorageServiceImpl(storeService);
         this.customerService = customerService;
         this.orderDao = orderRepository;
         this.storeService = storeService;
@@ -58,24 +58,29 @@ public class OrderServiceImpl implements OrderService {
                 .customer(sessionCustomer)
                 .createdWhen(LocalDate.now())
                 .sum(storageService.getPrice())
-                .products(new ArrayList<>(storageService.get()))
+                .products(new ArrayList<>( storageService.getToCreate()))
                 .recipient(addressSession)
                 .sender(addressService.getById(1).get())
                 .build()
         );
-        storageService = new StorageServiceImpl();
+        storageService = new StorageServiceImpl(storeService);
     }
 
     @Override
-    public void findById() {
-
+    public Order findOrderById(int id) {
+        return orderDao.getByKey(id).orElse(null);
     }
 
-    public void putOrderItem(Product product, int increase) throws BadRequestException{
-        log.info("Put into order item: {}", product.toString());
-        storeService.update(product.getKey(), (-1) * increase);
-        storageService.putOrderItem(product, increase);
-        log.info("After put into order item: {}", product.toString());
+    @Override
+    public void updateOrder(int id, Order order) {
+        orderDao.update(order, id);
+    }
+
+    public void putOrderItem(int id, int increase) throws BadRequestException{
+        Product productInDB = storeService.findById(id);
+        if(productInDB.getCount() < Math.abs(increase))
+            throw new BadRequestException();
+        storageService.putOrderItem(productInDB, increase);
     }
 
     public List<OrderItem> getStorage(){return storageService.get();}

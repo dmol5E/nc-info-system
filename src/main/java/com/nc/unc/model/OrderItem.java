@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.beans.ConstructorProperties;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -33,6 +34,20 @@ public class OrderItem extends BaseEntity<Integer> {
     @JsonGetter("id")
     public Integer getKey() {
         return super.getKey();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return count == orderItem.count &&
+                Objects.equals(product, orderItem.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, count);
     }
 
     @Override

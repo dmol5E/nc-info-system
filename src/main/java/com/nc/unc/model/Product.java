@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.beans.ConstructorProperties;
+import java.util.Objects;
 
 
 @Setter
@@ -28,6 +29,21 @@ public class Product extends BaseEntity<Integer> {
         this.count = count;
         this.name = name;
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Float.compare(product.price, price) == 0 &&
+                count == product.count &&
+                Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, count);
     }
 
     @Override
