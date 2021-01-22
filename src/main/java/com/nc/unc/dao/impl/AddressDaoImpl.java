@@ -1,7 +1,7 @@
 package com.nc.unc.dao.impl;
 
+import com.nc.unc.dao.AddressDao;
 import com.nc.unc.util.jdbc.DBConnector;
-import com.nc.unc.dao.Dao;
 import com.nc.unc.model.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-
-public class AddressDaoImpl implements Dao<Integer, Address> {
+public class AddressDaoImpl implements AddressDao {
 
     private final Logger logger = LoggerFactory.getLogger(AddressDaoImpl.class.getSimpleName());
 
@@ -26,7 +25,7 @@ public class AddressDaoImpl implements Dao<Integer, Address> {
                     "where id = ?";
 
     private static final String SEARCH_ADDRESS =
-            "select * from store.address where address = ? and zipcode = ?;";
+            "";
 
     private static final String INSERT_ADDRESS_TEMPLATE =
             "insert into store.address(zipcode, address) " +
@@ -83,8 +82,7 @@ public class AddressDaoImpl implements Dao<Integer, Address> {
 
     public void insert(Address address) {
         try (Connection connection = DBConnector.connection();
-             PreparedStatement statement =
-                     connection.prepareStatement(INSERT_ADDRESS_TEMPLATE, new String[] { "id", "address", "zipcode" })){
+             PreparedStatement statement = connection.prepareStatement(INSERT_ADDRESS_TEMPLATE)){
             statement.setInt(1, address.getZipCode());
             statement.setString(2, address.getAddress());
             statement.execute();

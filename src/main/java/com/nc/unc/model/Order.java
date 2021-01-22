@@ -1,8 +1,6 @@
 package com.nc.unc.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nc.unc.enums.StatusOrder;
@@ -15,7 +13,7 @@ import lombok.Setter;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -32,7 +30,7 @@ public class Order extends BaseEntity<Integer> {
     private LocalDate sentWhen;
     private float sum;
 
-    private List<OrderItem> products;
+    private Map<Integer, OrderItem> products;
 
     private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
     private StatusOrder curStatusOrder;
@@ -49,7 +47,7 @@ public class Order extends BaseEntity<Integer> {
                  LocalDate createdWhen,
                  LocalDate sentWhen,
                  float sum,
-                 List<OrderItem> products,
+                 Map<Integer, OrderItem> products,
                  Address recipient,
                  Address sender,
                  StatusOrder curStatusOrder) {

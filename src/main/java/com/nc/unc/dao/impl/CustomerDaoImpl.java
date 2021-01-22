@@ -1,7 +1,7 @@
 package com.nc.unc.dao.impl;
 
+import com.nc.unc.dao.CustomerDao;
 import com.nc.unc.util.jdbc.DBConnector;
-import com.nc.unc.dao.Dao;
 import com.nc.unc.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class CustomerDaoImpl implements Dao<Integer, Customer> {
+public class CustomerDaoImpl implements CustomerDao {
 
     private static String GET_BY_ID =
             "select * from store.customer where id = ?;";

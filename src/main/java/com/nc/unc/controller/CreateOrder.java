@@ -54,7 +54,6 @@ public class CreateOrder extends Application {
 
     private CustomerService customerService;
     private OrderService orderService;
-    private StorageService storageService;
     private StoreService storeService;
 
     /**
@@ -431,14 +430,14 @@ public class CreateOrder extends Application {
             final MenuItem REMOVE = new MenuItem("REMOVE");
             REMOVE.setOnAction(actionEvent -> {
 
-                Product productInTable = store_table.getItems()
-                        .stream()
-                        .filter(product -> product.getName().equals(row.getItem().getProduct().getName()))
-                        .filter(product -> product.getPrice() == row.getItem().getPrice())
-                        .findFirst()
-                        .get();
-                productInTable.setCount(productInTable.getCount() + row.getItem().getCount());
-                orderService.putOrderItem(row.getItem().getProduct().getKey(),(-1) * row.getItem().getCount());
+                //Product productInTable = store_table.getItems()
+                //        .stream()
+                //        .filter(product -> product.getName().equals(row.getItem().getProduct().getName()))
+                //        .filter(product -> product.getPrice() == row.getItem().getPrice())
+                //        .findFirst()
+                //        .get();
+                //productInTable.setCount(productInTable.getCount() + row.getItem().getCount());
+                //orderService.putOrderItem(row.getItem().getProduct().getKey(),(-1) * row.getItem().getCount());
                 store_table.refresh();
                 or_storage_table.getItems().remove(row.getItem());
                 or_storage_table.refresh();
@@ -467,7 +466,6 @@ public class CreateOrder extends Application {
         this.orderService = App.orderService;
         this.storeService = App.storeService;
         this.customerService = App.customerService;
-        this.storageService = App.storageService;
     }
 
     public void returnBack(ActionEvent actionEvent) {

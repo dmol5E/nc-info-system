@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ public class JsonHelper {
 
     private static final ObjectMapper mapper;
 
-    private static final PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder().build();
 
     static {
         mapper = new ObjectMapper();

@@ -1,7 +1,7 @@
 package com.nc.unc.dao.impl;
 
+import com.nc.unc.dao.ProductDao;
 import com.nc.unc.util.jdbc.DBConnector;
-import com.nc.unc.dao.Dao;
 import com.nc.unc.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ProductDaoImpl implements Dao<Integer, Product> {
+public class ProductDaoImpl implements ProductDao {
 
     private static final Logger log = LoggerFactory.getLogger(ProductDaoImpl.class.getSimpleName());
 

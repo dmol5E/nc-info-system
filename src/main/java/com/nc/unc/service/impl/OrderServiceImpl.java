@@ -54,15 +54,15 @@ public class OrderServiceImpl implements OrderService {
         }
         Address addressSession = addressService.searchOrInsert(address, zipcode);
 
-        orderDao.insert(Order.builder()
-                .customer(sessionCustomer)
-                .createdWhen(LocalDate.now())
-                .sum(storageService.getPrice())
-                .products(new ArrayList<>( storageService.getToCreate()))
-                .recipient(addressSession)
-                .sender(addressService.getById(1).get())
-                .build()
-        );
+       //orderDao.insert(Order.builder()
+       //        .customer(sessionCustomer)
+       //        .createdWhen(LocalDate.now())
+       //        .sum(storageService.getPrice())
+       //        .products(new ArrayList<>( storageService.getToCreate()))
+       //        .recipient(addressSession)
+       //        .sender(addressService.getById(1).get())
+       //        .build()
+       //);
         storageService = new StorageServiceImpl(storeService);
     }
 

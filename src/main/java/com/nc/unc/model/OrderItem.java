@@ -13,22 +13,23 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 public class OrderItem extends BaseEntity<Integer> {
-    private Product product;
+    private String name;
+    private float price;
     private int count;
 
+
     @Builder(toBuilder = true)
-    @ConstructorProperties({"key", "product", "count"})
+    @ConstructorProperties({"key", "name", "price", "count"})
     public OrderItem(int key,
-                     Product product,
+                     String name,
+                     float price,
                      int count) {
         super(key);
-        this.product = product;
+        this.name = name;
+        this.price = price;
         this.count = count;
     }
 
-    public float getPrice() { return product.getPrice(); }
-
-    public String getName(){ return product.getName(); }
 
     @Override
     @JsonGetter("id")
@@ -41,21 +42,23 @@ public class OrderItem extends BaseEntity<Integer> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return count == orderItem.count &&
-                Objects.equals(product, orderItem.product);
+        return Float.compare(orderItem.price, price) == 0 &&
+                count == orderItem.count &&
+                Objects.equals(name, orderItem.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product, count);
+        return Objects.hash(name, price, count);
     }
 
     @Override
     public String toString() {
         return "OrderItem{" +
-                "\n  key=" + super.key +
-                "\n  product=" + product +
-                "\n  count=" + count +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", count=" + count +
+                ", key=" + key +
                 '}';
     }
 }

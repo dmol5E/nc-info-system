@@ -1,10 +1,8 @@
 module infosystem {
     requires org.slf4j;
-
-    requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.annotation;
+    requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
-    requires com.fasterxml.jackson.datatype.jsr310;
     requires org.postgresql.jdbc;
     requires javafx.graphics;
     requires javafx.controls;
@@ -13,6 +11,7 @@ module infosystem {
     requires java.base;
     requires java.sql;
     requires static lombok;
+
 
     opens com.nc.unc to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.nc.unc.controller;
@@ -26,4 +25,7 @@ module infosystem {
     exports com.nc.unc.model;
     exports com.nc.unc.enums;
     exports com.nc.unc;
+
+
+
 }

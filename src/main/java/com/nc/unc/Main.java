@@ -1,51 +1,62 @@
 package com.nc.unc;
 
 
-import com.nc.unc.dao.impl.AddressDaoImpl;
-import com.nc.unc.dao.impl.CustomerDaoImpl;
-import com.nc.unc.dao.impl.OrderDaoImpl;
-import com.nc.unc.dao.impl.ProductDaoImpl;
+import com.nc.unc.dao.OrderItemDao;
+import com.nc.unc.dao.ProductHistoryDao;
+import com.nc.unc.dao.impl.*;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.model.*;
 import com.nc.unc.util.json.JsonHelper;
 
+import java.time.LocalDate;
+
 public class Main  {
 
     public static void main(String[] args) {
-        AddressDaoImpl addressDao = new AddressDaoImpl();
+        //AddressDaoImpl addressDao = new AddressDaoImpl();
         //addressDao.update(new Address(1, "addressg",23321), 1);
-        System.out.println(addressDao.getAll());
-        addressDao.insert(Address.builder().address("adsdda3s4").zipCode(111).build());
+        //addressDao.insert(Address.builder().address("Test1").zipCode(100).build());
+        //addressDao.insert(Address.builder().address("Test2").zipCode(101).build());
+        //addressDao.insert(Address.builder().address("Test3").zipCode(102).build());
+        //addressDao.insert(Address.builder().address("Test4").zipCode(103).build());
+        //System.out.println(addressDao.getAll());
 
-        CustomerDaoImpl customerDao = new CustomerDaoImpl();
+        //CustomerDaoImpl customerDao = new CustomerDaoImpl();
+        //customerDao.insert(Customer.builder().firstName("fTest1").lastName("lTest1").phoneNumber("pTest1").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest2").lastName("lTest2").phoneNumber("pTest2").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest3").lastName("lTest3").phoneNumber("pTest3").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest4").lastName("lTest4").phoneNumber("pTest4").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest5").lastName("lTest5").phoneNumber("pTest5").data(LocalDate.now()).build());
         //customerDao.update(new Customer(1, "updateCustomer", "updateCustomer", "updatePhone",LocalDate.now()), 1);
-        System.out.println(customerDao.getAll());
-        //customerDao.insert("fistName", "lastName", "phone", LocalDate.now());
-        //customerDao.insert("fistName", "lastName", "phone", LocalDate.now());
+        //System.out.println(customerDao.getAll());
 
-        ProductDaoImpl productDao = new ProductDaoImpl();
+        //ProductDaoImpl productDao = new ProductDaoImpl();
         //productDao.update(new Product(1, 10, "updateProduct", 40.f),1);
-        System.out.println(productDao.getAll());
-        //productDao.insert("product2", 150.f, 4);
-        //productDao.insert("product1", 100.f, 4);
+        //productDao.insert(Product.builder().name("nTest1").count(10).price(100f).build());
+        //productDao.insert(Product.builder().name("nTest2").price(100f).build());
+        //productDao.insert(Product.builder().name("nTest3").count(5).price(1100f).build());
+        //productDao.insert(Product.builder().name("nTest4").count(8).price(110f).build());
+        //productDao.insert(Product.builder().name("nTest5").count(2).price(150f).build());
+        //productDao.insert(Product.builder().name("nTest6").count(6).price(200f).build());
 
+        //System.out.println(productDao.getAll());
 
+        //ProductHistoryDao productHistoryDao = new ProductHistoryDaoImpl();
+
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest1").price(100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest2").price(100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest3").price(1100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest4").price(110f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest5").price(150f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest6").price(200f).build());
+
+        //System.out.println(productHistoryDao.getAll());
         OrderDaoImpl orderDao = new OrderDaoImpl();
-        //List<OrderItem> list = new ArrayList<>();
-        //list.add(new OrderItem(1, new Product(1, 76,"product1", 300.f),3));
-        //list.add(new OrderItem(2, new Product(1, 21,"product2", 100.f),3));
-        //list.add(new OrderItem(3, new Product(1, 52,"product3", 100.f),3));
-        //String storage = JsonHelper.toJson(list);
-        //orderDao.insert(1,1,2, storage, LocalDate.now(), 100.f);
-        System.out.println(JsonHelper.toJson(orderDao.getAll()));
-        System.out.println("-------------------------");
-        System.out.println(productDao.getByKey(1).orElse(null));
-        System.out.println(customerDao.getByKey(1).orElse(null));
-        System.out.println(addressDao.getByKey(1).orElse(null));
-        System.out.println(orderDao.getByKey(1).orElse(null));
-        System.out.println("-------------------------");
-        Order order = orderDao.getAll().get(1);
-        order.setCurStatusOrder(StatusOrder.CREATED);
-        orderDao.update(order,order.getKey());
+
+        System.out.println(orderDao.getByKey(1));
+
+        //OrderItemDao orderItemDao = new OrderItemDaoImpl();
+
+        //System.out.println(orderItemDao.getAll());
     }
 }

@@ -52,7 +52,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public void putOrderItem(Product productInDB, int increase) {
         OrderItem orderItem = storage.values().stream()
-                .filter(storageItem -> productInDB.equals(storageItem.getProduct()))
+                .filter(storageItem -> productInDB.equals(storageItem.getName()))
                 .findFirst()
                 .orElse(null);
 
@@ -70,7 +70,8 @@ public class StorageServiceImpl implements StorageService {
                 throw new BadRequestException();
             OrderItem newStorageItem = OrderItem.builder()
                     .key(this.size())
-                    .product(productInDB)
+                    .name(productInDB.getName())
+                    .price(productInDB.getPrice())
                     .count(increase)
                     .build();
             storage.put(newStorageItem.getKey(), newStorageItem);
@@ -86,9 +87,11 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public Collection<OrderItem> getToCreate() {
-        storage.values().forEach(orderItem
-                -> storeService.update(orderItem.getProduct().getKey(), (-1) * orderItem.getCount()));
-        return storage.values();
+        //storage.values().forEach(orderItem
+        //        -> storeService.update(orderItem..().getKey(), (-1) * orderItem.getCount()));
+        //return storage.values();
+        //todo update product table
+        return null;
     }
 
     public void removeOrderItem(OrderItem storageItem) {
