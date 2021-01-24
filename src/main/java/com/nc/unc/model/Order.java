@@ -1,70 +1,91 @@
 package com.nc.unc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nc.unc.enums.StatusOrder;
+import com.nc.unc.util.json.LocalDateDeserializer;
+import com.nc.unc.util.json.LocalDateSerializer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.beans.ConstructorProperties;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Map;
 
-public class Order extends BaseEntity<Long> {
-    private final Customer customer;
-    private final LocalDate createdWhen;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class Order extends BaseEntity<Integer> {
+    private Customer customer;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate createdWhen;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate sentWhen;
-    private final double sum;
-    private final List<OrderItem> products;
+    private float sum;
 
-    private static final Status DEFAULT_STATUS = Status.CREATED;
-    private Status curStatus;
-    private boolean imposed;
-    private final Address recipient;
-    private final Address sender;
+    private Map<Integer, OrderItem> products;
 
-    public Order(long key,
+    private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
+    private StatusOrder curStatusOrder;
+
+    private Address recipient;
+    private Address sender;
+
+    @Builder(toBuilder = true)
+    @ConstructorProperties({"key", "customer", "createdWhen",
+            "sentWhen", "products", "sum",
+            "recipient", "sender", "curStatusOrder"})
+    public Order(int key,
                  Customer customer,
                  LocalDate createdWhen,
-                 double sum,
-                 List<OrderItem> products,
+                 LocalDate sentWhen,
+                 float sum,
+                 Map<Integer, OrderItem> products,
                  Address recipient,
-                 Address sender) {
+                 Address sender,
+                 StatusOrder curStatusOrder) {
         super(key);
-        this.curStatus = DEFAULT_STATUS;
+        this.curStatusOrder = DEFAULT_STATUS;
         this.customer = customer;
         this.createdWhen = createdWhen;
+        this.sentWhen = sentWhen;
         this.sum = sum;
         this.products = products;
         this.recipient = recipient;
         this.sender = sender;
+        this.curStatusOrder = curStatusOrder;
     }
 
-    public void setCurStatus(Status curStatus) { this.curStatus = curStatus; }
+    @JsonIgnore
+    public String getRecipientAddress(){ return this.recipient.getAddress(); }
 
-    public void setSentWhen(LocalDate sentWhen) { this.sentWhen = sentWhen; }
+    @JsonIgnore
+    public String getSenderAddress(){ return this.sender.getAddress(); }
 
-    public Address getRecipient() { return this.recipient; }
+    @JsonIgnore
+    public String getName(){ return this.customer.getFirstName(); }
 
-    public Customer getCustomer() { return this.customer; }
-
-    public List<OrderItem> getProducts() { return this.products; }
-
-    public double getSum() { return this.sum; }
-
-    public Address getSender() { return this.sender; }
-
-    public LocalDate getCreatedWhen() { return this.createdWhen; }
-
-    public LocalDate getSentWhen() { return this.sentWhen; }
-
-    public Status getCurStatus() { return this.curStatus; }
+    @JsonIgnore
+    public String getLastName(){ return this.customer.getLastName(); }
 
     @Override
     public String toString() {
         return "Order{" +
-                "customer=" + customer +
-                ", createdWhen=" + createdWhen +
-                ", sentWhen=" + sentWhen +
-                ", sum=" + sum +
-                ", products=" + products +
-                ", curStatus=" + curStatus +
-                ", imposed=" + imposed +
-                ", recipient=" + recipient +
-                ", sender=" + sender +
-                '}';
+                "\n  customer=" + customer +
+                "\n  createdWhen=" + createdWhen +
+                "\n  sentWhen=" + sentWhen +
+                "\n  sum=" + sum +
+                "\n  products=" + products +
+                "\n  curStatus=" + curStatusOrder +
+                "\n  recipient=" + recipient +
+                "\n  sender=" + sender +
+                "\n}";
     }
 }

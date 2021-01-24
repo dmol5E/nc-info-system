@@ -1,82 +1,62 @@
 package com.nc.unc;
 
-import com.nc.unc.json.SerialisePoolRepository;
+
+import com.nc.unc.dao.OrderItemDao;
+import com.nc.unc.dao.ProductHistoryDao;
+import com.nc.unc.dao.impl.*;
+import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.model.*;
-import com.nc.unc.repositories.*;
+import com.nc.unc.util.json.JsonHelper;
 
-import com.google.gson.Gson;
-
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main  {
-    private static CustomerRepository customerRepository = new CustomerRepository();
-    private static AddressRepository addressRepository = new AddressRepository();
-    private static ProductRepository productRepository = new ProductRepository();
-    private static OrderItemRepository orderItemRepository = new OrderItemRepository();
-    private static OrderRepository orderRepository = new OrderRepository();
 
-    private static void addCust(){
-        customerRepository.put(new Customer(1L,"firstName", "lastName", "PhoneNumber", LocalDate.of(2017, Month.NOVEMBER,30)));
-        customerRepository.put(new Customer(2L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1997, Month.APRIL, 2)));
-        customerRepository.put(new Customer(3L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1995, Month.APRIL, 2)));
-        customerRepository.put(new Customer(4L,"firstName", "lastName", "PhoneNumber", LocalDate.of(1995, Month.APRIL, 2)));
-        System.out.println(customerRepository.sizeEntities());
-    }
+    public static void main(String[] args) {
+        //AddressDaoImpl addressDao = new AddressDaoImpl();
+        //addressDao.update(new Address(1, "addressg",23321), 1);
+        //addressDao.insert(Address.builder().address("Test1").zipCode(100).build());
+        //addressDao.insert(Address.builder().address("Test2").zipCode(101).build());
+        //addressDao.insert(Address.builder().address("Test3").zipCode(102).build());
+        //addressDao.insert(Address.builder().address("Test4").zipCode(103).build());
+        //System.out.println(addressDao.getAll());
 
-    private static void addAdd(){
-        addressRepository.put(new Address(1L,"Address1", 1231));
-        addressRepository.put(new Address(2L,"Address2", 1232));
-        addressRepository.put(new Address(3L,"Address3", 1233));
-    }
+        //CustomerDaoImpl customerDao = new CustomerDaoImpl();
+        //customerDao.insert(Customer.builder().firstName("fTest1").lastName("lTest1").phoneNumber("pTest1").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest2").lastName("lTest2").phoneNumber("pTest2").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest3").lastName("lTest3").phoneNumber("pTest3").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest4").lastName("lTest4").phoneNumber("pTest4").data(LocalDate.now()).build());
+        //customerDao.insert(Customer.builder().firstName("fTest5").lastName("lTest5").phoneNumber("pTest5").data(LocalDate.now()).build());
+        //customerDao.update(new Customer(1, "updateCustomer", "updateCustomer", "updatePhone",LocalDate.now()), 1);
+        //System.out.println(customerDao.getAll());
 
-    private static void addPr(){
-        productRepository.put(new Product(1L,"Name1", 200.0));
-        productRepository.put(new Product(2L,"Name2", 200.0));
-        productRepository.put(new Product(3L,"Name3", 200.0));
-        productRepository.put(new Product(4L,"Name4", 200.0));
-    }
+        //ProductDaoImpl productDao = new ProductDaoImpl();
+        //productDao.update(new Product(1, 10, "updateProduct", 40.f),1);
+        //productDao.insert(Product.builder().name("nTest1").count(10).price(100f).build());
+        //productDao.insert(Product.builder().name("nTest2").price(100f).build());
+        //productDao.insert(Product.builder().name("nTest3").count(5).price(1100f).build());
+        //productDao.insert(Product.builder().name("nTest4").count(8).price(110f).build());
+        //productDao.insert(Product.builder().name("nTest5").count(2).price(150f).build());
+        //productDao.insert(Product.builder().name("nTest6").count(6).price(200f).build());
 
-    private static void addItRep(){
-        orderItemRepository.put(new OrderItem(1L, productRepository.getByKey(1L), 10));
-        orderItemRepository.put(new OrderItem(2L, productRepository.getByKey(2L), 11));
-        orderItemRepository.put(new OrderItem(3L, productRepository.getByKey(3L), 1));
-    }
+        //System.out.println(productDao.getAll());
 
-    private static void addOrRep() {
-        orderRepository.put(new Order(1L,customerRepository.getByKey(0L),LocalDate.of(2017, Month.NOVEMBER,30),
-                4000.0,Stream.of(orderItemRepository.getByKey(0L),orderItemRepository.getByKey(1L)).collect(Collectors.toList()),
-                addressRepository.getByKey(0L), addressRepository.getByKey(1L)));
+        //ProductHistoryDao productHistoryDao = new ProductHistoryDaoImpl();
 
-        orderRepository.put(new Order(2L,customerRepository.getByKey(1L),LocalDate.of(2020, Month.NOVEMBER,30),
-                1000.0,Stream.of(orderItemRepository.getByKey(0L),orderItemRepository.getByKey(1L)).collect(Collectors.toList()),
-                addressRepository.getByKey(1L), addressRepository.getByKey(2L)));
-    }
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest1").price(100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest2").price(100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest3").price(1100f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest4").price(110f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest5").price(150f).build());
+        //productHistoryDao.insert(ProductHistory.builder().name("nTest6").price(200f).build());
 
-    public static void main(String[] args) throws IOException {
-        addCust();
-        addAdd();
-        addPr();
-        addItRep();
-        Gson gson = new Gson();
-        List<Repository<Long,? extends BaseEntity<Long>>> repositories
-                = Stream.of(customerRepository, addressRepository, productRepository,orderItemRepository,orderRepository).collect(Collectors.toList());
-        SerialisePoolRepository serialisePoolRepository = new SerialisePoolRepository(repositories);
-        serialisePoolRepository.serialize();
-        var result = serialisePoolRepository.deSerialize();
-        for (var it : result){
-            System.out.println(it.getEntities().toString());
-        }
-        repositories.add(customerRepository);
-        Repository<Long, Address> repository = new AddressRepository();
-        BaseEntity<Long> baseEntity = new Address(1L, "32", 32);
-        String str = gson.toJson(customerRepository);
-        CustomerRepository customerRepository2 = gson.fromJson(str ,CustomerRepository.class);
-        System.out.println(customerRepository2.toString());
+        //System.out.println(productHistoryDao.getAll());
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+
+        System.out.println(orderDao.getByKey(1));
+
+        //OrderItemDao orderItemDao = new OrderItemDaoImpl();
+
+        //System.out.println(orderItemDao.getAll());
     }
 }

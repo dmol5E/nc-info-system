@@ -1,40 +1,58 @@
 package com.nc.unc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class Product extends BaseEntity<Long> {
+import java.beans.ConstructorProperties;
+import java.util.Objects;
+
+
+@Setter
+@Getter
+@NoArgsConstructor
+@JsonIgnoreProperties({"count"})
+public class Product extends BaseEntity<Integer> {
     private String name;
-    private double price;
+    private float price;
     private int count;
-    public Product(long key,
+    @Builder
+    @ConstructorProperties({"key", "count", "name", "price"})
+    public Product(int key,
+                   int count,
                    String name,
-                   double price) {
+                   float price) {
         super(key);
-        this.count = 0;
+        this.count = count;
         this.name = name;
         this.price = price;
     }
 
     @Override
-    public Long getKey() { return super.getKey(); }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Float.compare(product.price, price) == 0 &&
+                count == product.count &&
+                Objects.equals(name, product.name);
+    }
 
-    public int getCount() { return this.count; }
-
-    public double getPrice() { return this.price; }
-
-    public String getName() { return this.name; }
-
-    public void setCount(int count) { this.count = count; }
-
-    public void setName(String name) { this.name = name; }
-
-    public void setPrice(double price) { this.price = price; }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, count);
+    }
 
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
+                "\n  key=" + super.key +
+                "\n  name='" + name + '\'' +
+                "\n  price=" + price +
+                "\n  count=" + count +
                 '}';
     }
 }
