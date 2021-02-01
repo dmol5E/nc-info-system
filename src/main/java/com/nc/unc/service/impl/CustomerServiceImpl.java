@@ -1,5 +1,6 @@
 package com.nc.unc.service.impl;
 
+import com.nc.unc.dao.CustomerDao;
 import com.nc.unc.dao.impl.CustomerDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.Customer;
@@ -15,28 +16,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class.getSimpleName());
 
-    private final CustomerDaoImpl customers;
+    private final CustomerDao customers;
 
-    public CustomerServiceImpl(CustomerDaoImpl customers){
+    public CustomerServiceImpl(CustomerDao customers){
         this.customers = customers;
         log.info("Customer Service Start");
     }
 
     @Override
-    public void putCustomer(String firstName, String lastName,String phone, LocalDate localDate) throws BadRequestException {
-        if(firstName.equals("") || lastName.equals("")
-                || phone.equals("") || localDate == null) {
-            log.warn("Invalid Input Date Exception java request: name: {} lastname: {} phone: {} localDate: {}", firstName, lastName, phone, localDate);
-            throw new BadRequestException();
-        }
-        else
-            customers.insert(Customer.builder()
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .phoneNumber(phone)
-                    .data(localDate)
-                    .build()
-            );
+    public void putCustomer(Customer customer) {
+        customers.insert(customer);
     }
 
     @Override

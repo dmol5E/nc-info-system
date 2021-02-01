@@ -3,14 +3,8 @@ package com.nc.unc.controller;
 import com.nc.unc.App;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.exception.BadRequestException;
-import com.nc.unc.model.Customer;
-import com.nc.unc.model.Order;
-import com.nc.unc.model.OrderItem;
-import com.nc.unc.model.Product;
-import com.nc.unc.service.CustomerService;
-import com.nc.unc.service.OrderService;
-import com.nc.unc.service.StorageService;
-import com.nc.unc.service.StoreService;
+import com.nc.unc.model.*;
+import com.nc.unc.service.*;
 import com.nc.unc.util.json.JsonHelper;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -22,17 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
@@ -42,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,11 +35,13 @@ import java.util.ArrayList;
 
 public class CreateOrder extends Application {
 
+
     private Logger log = LoggerFactory.getLogger(CreateOrder.class.getSimpleName());
 
     private CustomerService customerService;
     private OrderService orderService;
     private StoreService storeService;
+    private AddressService addressService;
 
     /**
      * Create new Customer form
@@ -75,18 +62,26 @@ public class CreateOrder extends Application {
     private Button c_create_customer;
 
     public void createNewCustomer(ActionEvent actionEvent) {
-        try {
-            customerService.putCustomer(c_input_name.getText(),
-                    c_input_lastname.getText(),
-                    c_input_phone.getText(),
-                    c_input_date.getValue());
-            log.info("added new customer {} ", JsonHelper.toJson(customerService.getAll()));
-        } catch (BadRequestException e){
+        if(c_input_name.getText().equals("") ||
+                c_input_lastname.getText().equals("") ||
+                c_input_phone.getText().equals("") ||
+                c_input_date.getValue().equals(""))
+        {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
             errorAlert.setContentText("Invalid date new customer");
             errorAlert.showAndWait();
         }
+
+            customerService.putCustomer(
+                    Customer.builder()
+                            .firstName(c_input_name.getText())
+                            .lastName(c_input_lastname.getText())
+                            .data(c_input_date.getValue())
+                            .phoneNumber(c_input_phone.getText())
+                            .build());
+            log.info("added new customer {} ", JsonHelper.toJson(customerService.getAll()));
+
     }
 
     /**
@@ -110,6 +105,7 @@ public class CreateOrder extends Application {
     private TableColumn<Order, LocalDate> sk_dataWhen;
     @FXML
     private TableColumn<Order, StatusOrder> sk_status;
+
 
 
     public void createOrdersTable(Event event) {
@@ -295,17 +291,16 @@ public class CreateOrder extends Application {
     /**
      * CreateOrder form
      * */
-    int phase;
+    private int phase;
 
     @FXML
     private ProgressBar progress;
     @FXML
-    private Button back,next,search,add_customer;
+    private Button back,next,search;
 
 
 
-    @FXML
-    private TextField input_customer, input_address, input_zipcode;
+
     @FXML
     private TextFlow output_customer;
     @FXML
@@ -336,9 +331,6 @@ public class CreateOrder extends Application {
     @FXML
     private TableColumn<Customer, LocalDate> or_ct_data;
 
-
-
-
     @FXML
     private TableView<OrderItem> or_storage_table;
     @FXML
@@ -349,14 +341,22 @@ public class CreateOrder extends Application {
     private TableColumn<OrderItem, Integer> or_storage_count;
     @FXML
     private Button createOrder;
+    @FXML
+    private ComboBox<Address> input_address;
+    @FXML
+    private ComboBox<Address> input_zipcode;
+
 
     public void putOrder(ActionEvent actionEvent){
         try {
-            orderService.createNewOrder(input_address.getText(), input_zipcode.getText());
+            orderService.createNewOrder(Address.builder()
+                    .address(input_address.getValue().getAddress())
+                    .zipCode(input_zipcode.getValue().getZipCode())
+                    .build());
             returnBack(new ActionEvent()); returnBack(new ActionEvent());
             or_storage_table.setItems(null);
             or_storage_table.refresh();
-        }catch (BadRequestException e){
+        } catch (BadRequestException e) {
             log.warn("Create new order exception ", e);
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Input not valid");
@@ -421,6 +421,46 @@ public class CreateOrder extends Application {
         ObservableList<Customer> customers = FXCollections.observableArrayList(this.customerService.getAll().values());
         or_ct_table.setItems(customers);
 
+
+        input_address.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Address address) {
+                if (address != null)
+                    return address.getAddress();
+                return "";
+            }
+
+            @Override
+            public Address fromString(String s) {
+                return addressService.getByAddress(s).orElse(Address.builder().address(s).build());
+            }
+        });
+
+        input_address.valueProperty().addListener((observableValue, address, t1) -> {
+            if (t1 == null)
+                input_zipcode.itemsProperty().setValue(FXCollections.observableList(new ArrayList<>(addressService.getAll().values())));
+            else
+                input_zipcode.itemsProperty().setValue(FXCollections.observableArrayList(addressService.getByAddress(t1.getAddress()).orElse(null)));
+        });
+
+        input_zipcode.setConverter(new StringConverter<Address>() {
+
+            @Override
+            public String toString(Address address) {
+                return Integer.toString(address.getZipCode());
+            }
+
+            @Override
+            public Address fromString(String s) {
+                if(s.equals(""))
+                    return null;
+                return addressService.getByZipcode(
+                        Integer.parseInt(s)).orElse(Address.builder().zipCode(Integer.parseInt(s)).build());
+            }
+        });
+
+        input_address.itemsProperty().setValue(FXCollections.observableList(new ArrayList<>(addressService.getAll().values())));
+        input_zipcode.itemsProperty().setValue(FXCollections.observableList(new ArrayList<>(addressService.getAll().values())));
         or_storage_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         or_storage_price.setCellValueFactory(new PropertyValueFactory<>("price"));
         or_storage_count.setCellValueFactory(new PropertyValueFactory<>("count"));
@@ -429,15 +469,14 @@ public class CreateOrder extends Application {
             final ContextMenu contextMenu = new ContextMenu();
             final MenuItem REMOVE = new MenuItem("REMOVE");
             REMOVE.setOnAction(actionEvent -> {
-
-                //Product productInTable = store_table.getItems()
-                //        .stream()
-                //        .filter(product -> product.getName().equals(row.getItem().getProduct().getName()))
-                //        .filter(product -> product.getPrice() == row.getItem().getPrice())
-                //        .findFirst()
-                //        .get();
-                //productInTable.setCount(productInTable.getCount() + row.getItem().getCount());
-                //orderService.putOrderItem(row.getItem().getProduct().getKey(),(-1) * row.getItem().getCount());
+                Product productInTable = store_table.getItems()
+                        .stream()
+                        .filter(product -> product.getName().equals(row.getItem().getName()))
+                        .filter(product -> product.getPrice() == row.getItem().getPrice())
+                        .findFirst()
+                        .get();
+                productInTable.setCount(productInTable.getCount() + row.getItem().getCount());
+                orderService.removeOrderItem(row.getItem().getKey());
                 store_table.refresh();
                 or_storage_table.getItems().remove(row.getItem());
                 or_storage_table.refresh();
@@ -466,6 +505,7 @@ public class CreateOrder extends Application {
         this.orderService = App.orderService;
         this.storeService = App.storeService;
         this.customerService = App.customerService;
+        this.addressService = App.addressService;
     }
 
     public void returnBack(ActionEvent actionEvent) {
@@ -479,7 +519,6 @@ public class CreateOrder extends Application {
                 or_ct_table.setVisible(true);
                 or_storage_table.setVisible(false);
                 store_table.setVisible(false);
-                input_customer.setVisible(true);
                 label_customer.setVisible(true);
                 break;
             case 2:
@@ -507,7 +546,6 @@ public class CreateOrder extends Application {
                 or_ct_table.setVisible(false);
                 or_storage_table.setVisible(true);
                 store_table.setVisible(true);
-                input_customer.setVisible(false);
                 label_customer.setVisible(false);
                 break;
             case 1:

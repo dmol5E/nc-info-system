@@ -18,4 +18,8 @@ public interface AddressDao {
     Optional<Address> search(String address, int zipcode);
 
     Optional<Address> getByKey(Integer id);
+
+    Optional<Address> searchByAddress(String address);
+
+    Optional<Address> searchByZipCode(int zipcode);
 }

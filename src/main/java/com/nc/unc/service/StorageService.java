@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface StorageService {
 
+    void formAnOrder(int id);
 
     void putOrderItem(Product product, int increase);
 
@@ -16,9 +17,8 @@ public interface StorageService {
 
     float getPrice();
 
-    void removeOrderItem(OrderItem storageItem);
+    void removeOrderItem(int id);
 
     List<OrderItem> get();
 
-    Collection<OrderItem> getToCreate();
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface CustomerService {
 
-    void putCustomer(String name, String lastName,String phone, LocalDate localDate) throws BadRequestException;
+    void putCustomer(Customer customer) throws BadRequestException;
 
     Collection<Customer> searchCustomerByName(String name);
 

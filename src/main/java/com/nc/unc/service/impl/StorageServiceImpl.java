@@ -1,6 +1,7 @@
 package com.nc.unc.service.impl;
 
-import com.nc.unc.dao.impl.ProductDaoImpl;
+import com.nc.unc.dao.OrderItemDao;
+import com.nc.unc.dao.impl.OrderItemDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.OrderItem;
 import com.nc.unc.model.Product;
@@ -18,8 +19,8 @@ public class StorageServiceImpl implements StorageService {
     private Logger log = LoggerFactory.getLogger(StorageService.class.getSimpleName());
 
     private final HashMap<Integer, OrderItem> storage;
+    private final OrderItemDao orderItemDao = new OrderItemDaoImpl();
     private final StoreService storeService;
-    private double price;
 
     public StorageServiceImpl(StoreService productDao) {
         this.storeService = productDao;
@@ -50,9 +51,19 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
+    public void formAnOrder(int id) {
+        storage.values()
+                .forEach(orderItem -> orderItemDao
+                        .insert(orderItem,
+                                storeService.searchProductHistory(orderItem).orElseThrow().getKey(),
+                                id));
+    }
+
+    @Override
     public void putOrderItem(Product productInDB, int increase) {
         OrderItem orderItem = storage.values().stream()
-                .filter(storageItem -> productInDB.equals(storageItem.getName()))
+                .filter(storageItem -> productInDB.getName().equals(storageItem.getName()))
+                .filter(storageItem -> productInDB.getPrice() == storageItem.getPrice())
                 .findFirst()
                 .orElse(null);
 
@@ -85,17 +96,9 @@ public class StorageServiceImpl implements StorageService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Collection<OrderItem> getToCreate() {
-        //storage.values().forEach(orderItem
-        //        -> storeService.update(orderItem..().getKey(), (-1) * orderItem.getCount()));
-        //return storage.values();
-        //todo update product table
-        return null;
-    }
 
-    public void removeOrderItem(OrderItem storageItem) {
-        this.storage.remove(storageItem.getKey());
+    public void removeOrderItem(int id) {
+        this.storage.remove(id);
     }
 
 }

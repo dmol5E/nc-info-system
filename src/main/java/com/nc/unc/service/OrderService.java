@@ -1,10 +1,7 @@
 package com.nc.unc.service;
 
 import com.nc.unc.exception.BadRequestException;
-import com.nc.unc.model.Customer;
-import com.nc.unc.model.Order;
-import com.nc.unc.model.OrderItem;
-import com.nc.unc.model.Product;
+import com.nc.unc.model.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -18,11 +15,13 @@ public interface OrderService {
 
     void putOrderItem(int id, int increase);
 
+    void removeOrderItem(int id);
+
     List<OrderItem> getStorage();
 
-    void putCustomer(String name, String lastName,String phone, LocalDate localDate) throws BadRequestException;
+    void putCustomer(Customer customer);
 
-    void createNewOrder(String address, String zipcode) throws BadRequestException;
+    void createNewOrder(Address address);
 
     Order findOrderById(int id);
 

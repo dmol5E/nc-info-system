@@ -1,6 +1,7 @@
 package com.nc.unc.dao.impl;
 
 import com.nc.unc.dao.ProductDao;
+import com.nc.unc.model.OrderItem;
 import com.nc.unc.util.jdbc.DBConnector;
 import com.nc.unc.model.Product;
 import org.slf4j.Logger;
@@ -81,6 +82,23 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         return Optional.ofNullable(product);
+    }
+
+    @Override
+    public Optional<Product> search(OrderItem item) {
+        String searchOrderItemSql = "select * from store.product where name = ? and price = ?;";
+
+        Product orderItem = null;
+        try(Connection connection = DBConnector.connection();
+            PreparedStatement statement = connection.prepareStatement(searchOrderItemSql)) {
+            statement.setString(1, item.getName());
+            statement.setFloat(2, item.getPrice());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) orderItem = productMapper(rs);
+        }catch (SQLException exc){
+            log.info("Order Item search in product {}",item, exc);
+        }
+        return Optional.ofNullable(orderItem);
     }
 
     private static Product productMapper(ResultSet rs)throws SQLException{

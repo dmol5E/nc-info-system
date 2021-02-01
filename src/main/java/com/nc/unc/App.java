@@ -1,13 +1,8 @@
 package com.nc.unc;
 
-import com.nc.unc.dao.impl.AddressDaoImpl;
-import com.nc.unc.dao.impl.CustomerDaoImpl;
-import com.nc.unc.dao.impl.OrderDaoImpl;
-import com.nc.unc.dao.impl.ProductDaoImpl;
-import com.nc.unc.service.CustomerService;
-import com.nc.unc.service.OrderService;
-import com.nc.unc.service.StorageService;
-import com.nc.unc.service.StoreService;
+import com.nc.unc.dao.*;
+import com.nc.unc.dao.impl.*;
+import com.nc.unc.service.*;
 import com.nc.unc.service.impl.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,11 +17,12 @@ import javafx.stage.Stage;
  */
 public class App extends Application
 {
-    static public OrderService orderService;
-    static public StorageService storageService;
-    static public CustomerService customerService;
-    static public StoreService storeService;
-
+    public static OrderService orderService;
+    public static StorageService storageService;
+    public static CustomerService customerService;
+    public static StoreService storeService;
+    public static AddressService addressService;
+    public static ProductHistoryService productHistoryService;
 
     public static void main( String[] args )
     {
@@ -36,14 +32,16 @@ public class App extends Application
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        AddressDaoImpl addressDao = new AddressDaoImpl();
-        CustomerDaoImpl customerDao = new CustomerDaoImpl();
-        OrderDaoImpl orderDao = new OrderDaoImpl();
-        ProductDaoImpl productDao = new ProductDaoImpl();
+        AddressDao addressDao = new AddressDaoImpl();
+        CustomerDao customerDao = new CustomerDaoImpl();
+        OrderDao orderDao = new OrderDaoImpl();
+        ProductDao productDao = new ProductDaoImpl();
+        ProductHistoryDao productHistoryDao= new ProductHistoryDaoImpl();
 
-
+        productHistoryService = new ProductHistoryServiceImpl(productHistoryDao);
+        addressService = new AddressServiceImpl(addressDao);
         customerService = new CustomerServiceImpl(customerDao);
-        storeService = new StoreServiceImpl(productDao);
+        storeService = new StoreServiceImpl(productDao, productHistoryService);
         orderService = new OrderServiceImpl(orderDao, storeService, new AddressServiceImpl(addressDao), customerService);
 
         Parent root = FXMLLoader.load(App.class.getResource("form/CreateOrder.fxml"));

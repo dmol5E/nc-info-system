@@ -2,6 +2,7 @@ package com.nc.unc.dao.impl;
 
 import com.nc.unc.dao.ProductHistoryDao;
 import com.nc.unc.model.OrderItem;
+import com.nc.unc.model.Product;
 import com.nc.unc.model.ProductHistory;
 import com.nc.unc.util.jdbc.DBConnector;
 import org.slf4j.Logger;
@@ -20,20 +21,31 @@ public class ProductHistoryDaoImpl implements ProductHistoryDao {
 
     @Override
     public Optional<ProductHistory> search(OrderItem orderItem) {
+        return getProductHistory(orderItem.getName(), orderItem.getPrice());
+    }
+
+    @Override
+    public Optional<ProductHistory> search(Product product) {
+        return getProductHistory(product.getName(), product.getPrice());
+    }
+
+    private Optional<ProductHistory> getProductHistory(String name, float price) {
         String sqlSearchProduct = "select * from store.product_history where name = ? and price = ?";
         ProductHistory productHistory = null;
         try(Connection connection = DBConnector.connection();
             PreparedStatement statement = connection.prepareStatement(sqlSearchProduct))  {
-            statement.setString(1, orderItem.getName());
-            statement.setFloat(2, orderItem.getPrice());
+            statement.setString(1, name);
+            statement.setFloat(2, price);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) productHistory = mapperProductHistory(rs);
         }catch (SQLException exc){
-            log.info("Update productHistory exception");
+            log.info("Search product history exception");
         }
 
         return Optional.ofNullable(productHistory);
     }
+
+
 
     @Override
     public void update(ProductHistory value, Integer key) {

@@ -125,6 +125,40 @@ public class AddressDaoImpl implements AddressDao {
         );
     }
 
+
+
+    @Override
+    public Optional<Address> searchByAddress(String address) {
+        String searchByAddressSQL = "select * from store.address where address.address = ?";
+        Address addressFromBD = null;
+
+        try(Connection connection = DBConnector.connection();
+            PreparedStatement statement = connection.prepareStatement(searchByAddressSQL)) {
+            statement.setString(1, address);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) addressFromBD = addressMapper(rs);
+        }catch (SQLException exc){
+            logger.info("search By Address {} Exception ", address, exc);
+        }
+        return Optional.ofNullable(addressFromBD);
+    }
+
+    @Override
+    public Optional<Address> searchByZipCode(int zipcode) {
+        String searchByZipCodeSQL = "select * from store.address where zipcode = ?";
+        Address addressFromBD = null;
+
+        try(Connection connection = DBConnector.connection();
+            PreparedStatement statement = connection.prepareStatement(searchByZipCodeSQL)) {
+            statement.setInt(1, zipcode);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) addressFromBD = addressMapper(rs);
+        }catch (SQLException exc){
+            logger.info("search By ZipCode {} Exception ", zipcode, exc);
+        }
+        return Optional.ofNullable(addressFromBD);
+    }
+
     private static Address addressMapper(ResultSet rs) throws SQLException {
         return Address.builder()
                 .key(rs.getInt("id"))

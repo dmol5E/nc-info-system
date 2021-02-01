@@ -1,5 +1,6 @@
 package com.nc.unc.dao;
 
+import com.nc.unc.model.OrderItem;
 import com.nc.unc.model.Product;
 
 import java.util.Map;
@@ -14,5 +15,7 @@ public interface ProductDao {
     void insert(Product product);
 
     Optional<Product> getByKey(Integer id);
+
+    Optional<Product> search(OrderItem item);
 
 }

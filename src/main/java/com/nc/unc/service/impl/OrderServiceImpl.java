@@ -1,7 +1,6 @@
 package com.nc.unc.service.impl;
 
-import com.nc.unc.dao.impl.AddressDaoImpl;
-import com.nc.unc.dao.impl.CustomerDaoImpl;
+import com.nc.unc.dao.OrderDao;
 import com.nc.unc.dao.impl.OrderDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.*;
@@ -21,7 +20,7 @@ public class OrderServiceImpl implements OrderService {
 
     private Customer sessionCustomer;
 
-    private final OrderDaoImpl orderDao;
+    private final OrderDao orderDao;
 
     private final AddressService addressService;
     private final CustomerService customerService;
@@ -29,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private StorageService storageService;
 
 
-    public OrderServiceImpl(OrderDaoImpl orderRepository,
+    public OrderServiceImpl(OrderDao orderRepository,
                             StoreService storeService,
                             AddressService addressRepository,
                             CustomerService customerService) {
@@ -43,26 +42,26 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void putCustomer(String name, String lastName, String phone, LocalDate localDate) throws BadRequestException {
-        customerService.putCustomer(name, lastName, phone, localDate);
+    public void putCustomer(Customer customer) {
+        customerService.putCustomer(customer);
     }
 
     @Override
-    public void createNewOrder(String address, String  zipcode) throws BadRequestException {
-        if(sessionCustomer == null || address == null || storageService.size() == 0 || zipcode == null){
+    public void createNewOrder(Address address) throws BadRequestException {
+        if(sessionCustomer == null || address == null || storageService.size() == 0){
             throw new BadRequestException();
         }
-        Address addressSession = addressService.searchOrInsert(address, zipcode);
-
-       //orderDao.insert(Order.builder()
-       //        .customer(sessionCustomer)
-       //        .createdWhen(LocalDate.now())
-       //        .sum(storageService.getPrice())
-       //        .products(new ArrayList<>( storageService.getToCreate()))
-       //        .recipient(addressSession)
-       //        .sender(addressService.getById(1).get())
-       //        .build()
-       //);
+        Address addressSession = addressService.search(address).orElse(addressService.insert(address));
+        storageService.formAnOrder(
+                orderDao.insert(Order.builder()
+                        .customer(sessionCustomer)
+                        .createdWhen(LocalDate.now())
+                        .sum(storageService.getPrice())
+                        .recipient(addressSession)
+                        .sender(addressService.getById(1).orElseThrow())
+                        .build()
+        ));
+        storageService.get().forEach(orderItem -> storeService.update(storeService.search(orderItem).orElseThrow().getKey(),(-1) * orderItem.getCount()));
         storageService = new StorageServiceImpl(storeService);
     }
 
@@ -76,11 +75,16 @@ public class OrderServiceImpl implements OrderService {
         orderDao.update(order, id);
     }
 
-    public void putOrderItem(int id, int increase) throws BadRequestException{
+    public void putOrderItem(int id, int increase) {
         Product productInDB = storeService.findById(id);
         if(productInDB.getCount() < Math.abs(increase))
             throw new BadRequestException();
         storageService.putOrderItem(productInDB, increase);
+    }
+
+    @Override
+    public void removeOrderItem(int id) {
+        storageService.removeOrderItem(id);
     }
 
     public List<OrderItem> getStorage(){return storageService.get();}
