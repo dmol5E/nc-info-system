@@ -447,7 +447,9 @@ public class CreateOrder extends Application {
 
             @Override
             public String toString(Address address) {
-                return Integer.toString(address.getZipCode());
+                if(address != null)
+                    return Integer.toString(address.getZipCode());
+                return null;
             }
 
             @Override

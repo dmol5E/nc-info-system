@@ -1,7 +1,6 @@
 package com.nc.unc.service.impl;
 
 import com.nc.unc.dao.AddressDao;
-import com.nc.unc.dao.impl.AddressDaoImpl;
 import com.nc.unc.model.Address;
 import com.nc.unc.service.AddressService;
 

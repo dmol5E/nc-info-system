@@ -1,7 +1,6 @@
 package com.nc.unc.service.impl;
 
 import com.nc.unc.dao.OrderDao;
-import com.nc.unc.dao.impl.OrderDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.*;
 import com.nc.unc.service.*;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

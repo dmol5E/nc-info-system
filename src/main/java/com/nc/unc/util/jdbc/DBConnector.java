@@ -21,7 +21,7 @@ public class DBConnector {
         try {
             Class.forName("org.postgresql.Driver");
         }catch (ClassNotFoundException e){
-            log.error("Failed to loaf jdbc:postgresql driver", e);
+            log.error("Failed to load jdbc:postgresql driver", e);
             System.exit(-1);
         }
         URL = String.format(URL_TEMPLATE, HOST, PORT, DB_NAME);
