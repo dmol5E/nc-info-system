@@ -4,64 +4,71 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nc.unc.enums.StatusOrder;
+import com.nc.unc.myDao.annotation.*;
+import com.nc.unc.myDao.annotation.enums.EnumType;
 import com.nc.unc.util.json.LocalDateDeserializer;
 import com.nc.unc.util.json.LocalDateSerializer;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Set;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order extends BaseEntity<Integer> {
-    private Customer customer;
+@AllArgsConstructor
+@Table(value = "order", schema = "store")
+@Builder(toBuilder = true)
+public class Order {
+
+    @PrimaryKey("id")
+    private int id;
+
+    @Attribute("customer")
+    private int fkCustomer;
+
+    @Attribute("created_when")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate createdWhen;
 
+    @Attribute("sent_when")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate sentWhen;
+
+    @Attribute("sum")
     private float sum;
 
-    private Map<Integer, OrderItem> products;
-
-    private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
+    @Attribute("status")
+    @Enumerated(value = EnumType.STRING)
     private StatusOrder curStatusOrder;
 
+    @Attribute("recipient")
+    private int fkRecipient;
+
+    @Attribute("sender")
+    private int fkSender;
+
+    //@ManyToOne
+    //@JoinColumn(name = "customer")
+    private Customer customer;
+
+    //@ManyToOne
+    //@JoinColumn(name = "recipient")
     private Address recipient;
+
+    //@ManyToOne
+    //@JoinColumn(name = "sender")
     private Address sender;
 
-    @Builder(toBuilder = true)
-    @ConstructorProperties({"key", "customer", "createdWhen",
-            "sentWhen", "products", "sum",
-            "recipient", "sender", "curStatusOrder"})
-    public Order(int key,
-                 Customer customer,
-                 LocalDate createdWhen,
-                 LocalDate sentWhen,
-                 float sum,
-                 Map<Integer, OrderItem> products,
-                 Address recipient,
-                 Address sender,
-                 StatusOrder curStatusOrder) {
-        super(key);
-        this.curStatusOrder = DEFAULT_STATUS;
-        this.customer = customer;
-        this.createdWhen = createdWhen;
-        this.sentWhen = sentWhen;
-        this.sum = sum;
-        this.products = products;
-        this.recipient = recipient;
-        this.sender = sender;
-        this.curStatusOrder = curStatusOrder;
-    }
+    //@OneToMany
+    private Set<OrderItem> products;
+
+    private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
+
 
     @JsonIgnore
     public String getRecipientAddress(){ return this.recipient.getAddress(); }

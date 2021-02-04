@@ -1,7 +1,6 @@
 package com.nc.unc.service.impl;
 
 import com.nc.unc.dao.ProductDao;
-import com.nc.unc.dao.impl.ProductDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.OrderItem;
 import com.nc.unc.model.Product;
@@ -44,7 +43,7 @@ public class StoreServiceImpl implements StoreService {
         if(id < 0 || (newCount = (product.getCount() + count)) < 0)
             throw new BadRequestException();
         product.setCount(newCount);
-        productDao.update(product, product.getKey());
+        productDao.update(product, product.getId());
         return product;
     }
 

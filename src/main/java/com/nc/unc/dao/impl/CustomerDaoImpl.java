@@ -89,7 +89,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     private static Customer customerMapper(ResultSet rs) throws SQLException{
         return Customer.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
                 .phoneNumber(rs.getString("phone_number"))

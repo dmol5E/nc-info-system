@@ -161,7 +161,7 @@ public class AddressDaoImpl implements AddressDao {
 
     private static Address addressMapper(ResultSet rs) throws SQLException {
         return Address.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .address(rs.getString("address"))
                 .zipCode(rs.getInt("zipcode"))
                 .build();

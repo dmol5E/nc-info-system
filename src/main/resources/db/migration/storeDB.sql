@@ -73,6 +73,8 @@ create table store.order_item
     primary key (id)
 );
 
+select id, date, first_name, last_name, phone_number FROM store.customer WHERE id = ?;
+
 select * from store.order_item;
 select * from store.order;
 select * from store.product_history;

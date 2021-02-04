@@ -103,7 +103,7 @@ public class ProductDaoImpl implements ProductDao {
 
     private static Product productMapper(ResultSet rs)throws SQLException{
         return Product.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .count(rs.getInt("count"))
                 .name(rs.getString("name"))
                 .price(rs.getFloat("price"))

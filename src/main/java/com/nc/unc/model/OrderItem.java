@@ -1,41 +1,37 @@
 package com.nc.unc.model;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.beans.ConstructorProperties;
+import com.nc.unc.myDao.annotation.Attribute;
+import com.nc.unc.myDao.annotation.PrimaryKey;
+import com.nc.unc.myDao.annotation.Table;
+import lombok.*;
 import java.util.Objects;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class OrderItem extends BaseEntity<Integer> {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Table(value = "order_item", schema = "store")
+public class OrderItem {
+
+    @PrimaryKey("id")
+    private int id;
+
+    @Attribute("name")
     private String name;
+
+    @Attribute("price")
     private float price;
+
+    @Attribute("count")
     private int count;
 
+    @Attribute("order_id")
+    private int orderId;
 
-    @Builder(toBuilder = true)
-    @ConstructorProperties({"key", "name", "price", "count"})
-    public OrderItem(int key,
-                     String name,
-                     float price,
-                     int count) {
-        super(key);
-        this.name = name;
-        this.price = price;
-        this.count = count;
-    }
-
-
-    @Override
-    @JsonGetter("id")
-    public Integer getKey() {
-        return super.getKey();
-    }
+    @Attribute("product_history_id")
+    private int productHistoryId;
 
     @Override
     public boolean equals(Object o) {
@@ -58,7 +54,6 @@ public class OrderItem extends BaseEntity<Integer> {
                 "name='" + name + '\'' +
                 ", price=" + price +
                 ", count=" + count +
-                ", key=" + key +
                 '}';
     }
 }

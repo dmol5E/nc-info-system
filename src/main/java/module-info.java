@@ -1,4 +1,5 @@
 module infosystem {
+    requires java.naming;
     requires org.slf4j;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
@@ -11,6 +12,7 @@ module infosystem {
     requires java.base;
     requires java.sql;
     requires static lombok;
+    requires spring.jdbc;
 
 
     opens com.nc.unc to javafx.fxml, com.fasterxml.jackson.databind;

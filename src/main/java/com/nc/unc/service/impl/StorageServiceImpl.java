@@ -55,7 +55,7 @@ public class StorageServiceImpl implements StorageService {
         storage.values()
                 .forEach(orderItem -> orderItemDao
                         .insert(orderItem,
-                                storeService.searchProductHistory(orderItem).orElseThrow().getKey(),
+                                storeService.searchProductHistory(orderItem).orElseThrow().getId(),
                                 id));
     }
 
@@ -73,19 +73,19 @@ public class StorageServiceImpl implements StorageService {
                 throw new BadRequestException();
             orderItem.setCount(orderItem.getCount() + increase);
 
-            if(storage.get(orderItem.getKey()).getCount() == 0)
-                storage.remove(orderItem.getKey());
+            if(storage.get(orderItem.getId()).getCount() == 0)
+                storage.remove(orderItem.getId());
 
         } else {
             if(increase > productInDB.getCount())
                 throw new BadRequestException();
             OrderItem newStorageItem = OrderItem.builder()
-                    .key(this.size())
+                    .id(this.size())
                     .name(productInDB.getName())
                     .price(productInDB.getPrice())
                     .count(increase)
                     .build();
-            storage.put(newStorageItem.getKey(), newStorageItem);
+            storage.put(newStorageItem.getId(), newStorageItem);
         }
     }
 

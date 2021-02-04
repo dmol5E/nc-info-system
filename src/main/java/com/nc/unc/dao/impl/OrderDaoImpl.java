@@ -50,9 +50,9 @@ public class OrderDaoImpl implements OrderDao {
     public void update(Order order, Integer id) {
         try(Connection connection = DBConnector.connection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_ORDER_TEMPLATE)) {
-            statement.setInt(1, order.getCustomer().getKey());
-            statement.setInt(2, order.getRecipient().getKey());
-            statement.setInt(3, order.getSender().getKey());
+            statement.setInt(1, order.getCustomer().getId());
+            statement.setInt(2, order.getRecipient().getId());
+            statement.setInt(3, order.getSender().getId());
             statement.setDate(4, Date.valueOf(order.getCreatedWhen()));
             statement.setDate(5, Optional.ofNullable(order.getSentWhen())
                     .filter(Objects::nonNull)
@@ -85,9 +85,9 @@ public class OrderDaoImpl implements OrderDao {
         int key = 0;
         try(Connection connection = DBConnector.connection();
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ORDER_TEMPLATE, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1, order.getCustomer().getKey());
-            preparedStatement.setInt(2, order.getRecipient().getKey());
-            preparedStatement.setInt(3, order.getSender().getKey());
+            preparedStatement.setInt(1, order.getCustomer().getId());
+            preparedStatement.setInt(2, order.getRecipient().getId());
+            preparedStatement.setInt(3, order.getSender().getId());
             preparedStatement.setDate(4, Date.valueOf(order.getCreatedWhen()));
             preparedStatement.setFloat(5, order.getSum());
             preparedStatement.executeUpdate();
@@ -115,25 +115,25 @@ public class OrderDaoImpl implements OrderDao {
 
     private static Order orderMapper(ResultSet rs) throws SQLException {
         return Order.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .recipient(Address.builder()
-                        .key(rs.getInt("recipient_id"))
+                        .id(rs.getInt("recipient_id"))
                         .address(rs.getString("recipient_address"))
                         .zipCode(rs.getInt("recipient_zipcode"))
                         .build())
                 .customer(Customer.builder()
-                        .key(rs.getInt("customer_id"))
+                        .id(rs.getInt("customer_id"))
                         .lastName(rs.getString("customer_ls"))
                         .firstName(rs.getString("customer_fn"))
                         .data(rs.getDate("customer_date").toLocalDate())
                         .phoneNumber(rs.getString("customer_pn"))
                         .build())
                 .sender(Address.builder()
-                        .key(rs.getInt("sender_id"))
+                        .id(rs.getInt("sender_id"))
                         .address(rs.getString("sender_address"))
                         .zipCode(rs.getInt("sender_zipcode"))
                         .build())
-                .products(orderItemDao.getByOrderId(rs.getInt("id")))
+                .products(null)
                 .createdWhen(rs.getDate("created_when").toLocalDate())
                 .sentWhen(Optional.ofNullable(rs.getDate("sent_when"))
                         .filter(Objects::nonNull).map(Date::toLocalDate)

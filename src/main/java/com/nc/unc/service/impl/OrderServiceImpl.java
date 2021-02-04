@@ -59,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
                         .sender(addressService.getById(1).orElseThrow())
                         .build()
         ));
-        storageService.get().forEach(orderItem -> storeService.update(storeService.search(orderItem).orElseThrow().getKey(),(-1) * orderItem.getCount()));
+        storageService.get().forEach(orderItem -> storeService.update(storeService.search(orderItem).orElseThrow().getId(),(-1) * orderItem.getCount()));
         storageService = new StorageServiceImpl(storeService);
     }
 
@@ -119,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderDao.getByKey(index).get();
         order.setSentWhen(date);
 
-        orderDao.update(order, order.getKey());
+        orderDao.update(order, order.getId());
         return order;
     }
 

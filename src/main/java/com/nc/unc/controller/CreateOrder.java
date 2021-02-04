@@ -126,16 +126,16 @@ public class CreateOrder extends Application {
             final MenuItem DELIVERED = new MenuItem("DELIVERED");
             CANCELED.setOnAction(actionEvent -> {
                 sk_table.getItems().get(row.getIndex()).setCurStatusOrder(StatusOrder.CANCELED);
-                Order order = orderService.findOrderById(row.getItem().getKey());
+                Order order = orderService.findOrderById(row.getItem().getId());
                 order.setCurStatusOrder(StatusOrder.CANCELED);
-                orderService.updateOrder(order.getKey(), order);
+                orderService.updateOrder(order.getId(), order);
                 sk_table.refresh();
             });
             DELIVERED.setOnAction(actionEvent -> {
                 sk_table.getItems().get(row.getIndex()).setCurStatusOrder(StatusOrder.DELIVERED);
-                Order order = orderService.findOrderById(row.getItem().getKey());
+                Order order = orderService.findOrderById(row.getItem().getId());
                 order.setCurStatusOrder(StatusOrder.DELIVERED);
-                orderService.updateOrder(order.getKey(), order);
+                orderService.updateOrder(order.getId(), order);
                 sk_table.refresh();
             });
             contextMenu.getItems().add(CANCELED);
@@ -177,10 +177,10 @@ public class CreateOrder extends Application {
     }
 
     public void createDateSended(TableColumn.CellEditEvent<Order, LocalDate> orderLocalDateCellEditEvent) {
-        Order order = orderService.findOrderById(orderLocalDateCellEditEvent.getRowValue().getKey());
+        Order order = orderService.findOrderById(orderLocalDateCellEditEvent.getRowValue().getId());
         order.setSentWhen(orderLocalDateCellEditEvent.getNewValue());
         order.setCurStatusOrder(StatusOrder.SENT);
-        orderService.updateOrder(order.getKey(), order);
+        orderService.updateOrder(order.getId(), order);
 
 
         TableRow<Order> tableColumn = new TableRow<>();
@@ -252,7 +252,7 @@ public class CreateOrder extends Application {
 
     public void addNewProduct(TableColumn.CellEditEvent<Product, Integer> cellEditEvent) {
         try {
-            Product product = storeService.update(cellEditEvent.getRowValue().getKey(), cellEditEvent.getNewValue());
+            Product product = storeService.update(cellEditEvent.getRowValue().getId(), cellEditEvent.getNewValue());
             cellEditEvent.getRowValue().setCount(product.getCount());
             io_table.edit(cellEditEvent.getTablePosition().getRow(), cellEditEvent.getTableColumn());
             io_table.refresh();
@@ -371,7 +371,7 @@ public class CreateOrder extends Application {
         try {
             productIntegerCellEditEvent.getRowValue().setCount(productIntegerCellEditEvent.getRowValue().getCount());
             store_table.edit(productIntegerCellEditEvent.getTablePosition().getRow(), productIntegerCellEditEvent.getTableColumn());
-            orderService.putOrderItem(productIntegerCellEditEvent.getRowValue().getKey(), productIntegerCellEditEvent.getNewValue());
+            orderService.putOrderItem(productIntegerCellEditEvent.getRowValue().getId(), productIntegerCellEditEvent.getNewValue());
             or_storage_table.setItems(FXCollections.observableList(orderService.getStorage()));
             or_storage_table.refresh();
             store_table.getItems()
@@ -478,7 +478,7 @@ public class CreateOrder extends Application {
                         .findFirst()
                         .get();
                 productInTable.setCount(productInTable.getCount() + row.getItem().getCount());
-                orderService.removeOrderItem(row.getItem().getKey());
+                orderService.removeOrderItem(row.getItem().getId());
                 store_table.refresh();
                 or_storage_table.getItems().remove(row.getItem());
                 or_storage_table.refresh();

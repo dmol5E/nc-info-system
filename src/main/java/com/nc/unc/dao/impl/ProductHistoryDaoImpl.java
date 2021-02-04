@@ -55,7 +55,7 @@ public class ProductHistoryDaoImpl implements ProductHistoryDao {
 
         try(Connection connection = DBConnector.connection();
             PreparedStatement statement = connection.prepareStatement(sqlUpdateProductHistory)) {
-            statement.setInt(1, value.getKey());
+            statement.setInt(1, value.getId());
             statement.setString(2, value.getName());
             statement.setFloat(3, value.getPrice());
             statement.executeUpdate();
@@ -117,7 +117,7 @@ public class ProductHistoryDaoImpl implements ProductHistoryDao {
 
     private ProductHistory mapperProductHistory(ResultSet rs) throws SQLException {
         return ProductHistory.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .price(rs.getFloat("price"))
                 .orderItem(orderItemDao.getByProductHistory(rs.getInt("id")))

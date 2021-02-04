@@ -1,26 +1,27 @@
 package com.nc.unc.model;
 
+import com.nc.unc.myDao.annotation.Attribute;
+import com.nc.unc.myDao.annotation.PrimaryKey;
+import com.nc.unc.myDao.annotation.Table;
 import lombok.*;
 
-import java.beans.ConstructorProperties;
-
-@EqualsAndHashCode(callSuper=true)
 @Setter
 @Getter
 @NoArgsConstructor
-public class Address extends BaseEntity<Integer> {
+@AllArgsConstructor
+@Table(value = "address", schema = "store")
+@Builder(toBuilder = true)
+public class Address {
 
+    @PrimaryKey("id")
+    private int id;
+
+    @Attribute("address")
     private String address;
 
+    @Attribute("zipcode")
     private int zipCode;
 
-    @Builder(toBuilder = true)
-    @ConstructorProperties({"key", "address", "zipcode"})
-    public Address(int key, String address, int zipCode) {
-        super(key);
-        this.address = address;
-        this.zipCode = zipCode;
-    }
 
     @Override
     public String toString() {

@@ -1,14 +1,12 @@
 package com.nc.unc.service.impl;
 
 import com.nc.unc.dao.CustomerDao;
-import com.nc.unc.dao.impl.CustomerDaoImpl;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.Customer;
 import com.nc.unc.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 

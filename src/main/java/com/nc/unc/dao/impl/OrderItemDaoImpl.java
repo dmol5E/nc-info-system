@@ -141,7 +141,7 @@ public class OrderItemDaoImpl implements OrderItemDao {
 
     public OrderItem orderItemMapper(ResultSet rs) throws SQLException {
         return OrderItem.builder()
-                .key(rs.getInt("id"))
+                .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .price(rs.getFloat("price"))
                 .count(rs.getInt("count"))

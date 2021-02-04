@@ -2,12 +2,12 @@ package com.nc.unc.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nc.unc.myDao.annotation.Attribute;
+import com.nc.unc.myDao.annotation.PrimaryKey;
+import com.nc.unc.myDao.annotation.Table;
 import com.nc.unc.util.json.LocalDateDeserializer;
 import com.nc.unc.util.json.LocalDateSerializer;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.time.LocalDate;
@@ -18,34 +18,32 @@ import java.beans.ConstructorProperties;
 @Setter
 @Getter
 @NoArgsConstructor
-public class Customer extends BaseEntity<Integer> {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Table(value = "customer", schema = "store")
+public class Customer {
+
+    @PrimaryKey("id")
+    private int id;
+
+    @Attribute("first_name")
     private String firstName;
+
+    @Attribute("last_name")
     private String lastName;
+
+    @Attribute("phone_number")
     private String phoneNumber;
 
+    @Attribute("date")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate data;
 
-    @Builder(toBuilder = true)
-    @ConstructorProperties({"id","firstName","lastName","phoneNumber","data"})
-    public Customer (int key,
-                    String firstName,
-                    String lastName,
-                    String phoneNumber,
-                    LocalDate data)
-    {
-        super(key);
-        this.data = data;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "\n  id=" + super.key +
                 "\n  firstName='" + this.firstName + '\'' +
                 "\n  lastName='" + this.lastName + '\'' +
                 "\n  phoneNumber='" + this.phoneNumber + '\'' +
