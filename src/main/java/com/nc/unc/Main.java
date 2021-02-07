@@ -16,9 +16,6 @@ public class Main  {
                 .setFieldMatchingEnabled(true)
                 .setSkipNullEnabled(true)
                 .setFieldAccessLevel(PRIVATE);
-        gf f = new gf();
 
-        gfDto gfDto = modelMapper.map(f, com.nc.unc.gfDto.class);
-        System.out.println(gfDto);
     }
 }
