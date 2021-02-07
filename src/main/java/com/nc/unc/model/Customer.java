@@ -8,6 +8,7 @@ import com.nc.unc.myDao.annotation.Table;
 import com.nc.unc.util.json.LocalDateDeserializer;
 import com.nc.unc.util.json.LocalDateSerializer;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.time.LocalDate;
@@ -36,8 +37,7 @@ public class Customer {
     private String phoneNumber;
 
     @Attribute("date")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate data;
 
 

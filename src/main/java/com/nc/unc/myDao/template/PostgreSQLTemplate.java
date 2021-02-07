@@ -48,11 +48,6 @@ public class PostgreSQLTemplate implements SQLTemplate {
         this.deleteSql = getDeleteSQL();
         this.updateSql = getUpdateSQL();
         this.insertSql = getInsertSQL();
-
-        System.out.println(selectSql);
-        System.out.println(deleteSql);
-        System.out.println(updateSql);
-        System.out.println(insertSql);
     }
 
     private String assemblePrimaryKeysWhere(){
@@ -60,10 +55,9 @@ public class PostgreSQLTemplate implements SQLTemplate {
     }
 
     private String preAssembleSelectInSql() {
-        String SQL = "select :attributes from :table where :pk IN (:in_list);";
+        String SQL = "select :attributes from :table where (:in_list);";
         return SQL.replaceAll(":attributes", attributesSql)
-                .replaceAll(":table", tableName)
-                .replaceAll(":pk", primaryKey.value());
+                .replaceAll(":table", tableName);
     }
 
     private String assembleAttributes(){
@@ -82,11 +76,12 @@ public class PostgreSQLTemplate implements SQLTemplate {
         String SQL = "insert into :table_name (:columns) values :values";
 
         StringBuilder sb = new StringBuilder();
+        sb.append("(");
         for (int i = 0; i < this.fieldAttributeMap.size(); i++){
             sb.append("?, ");
         }
         sb.delete(sb.length() - 2, sb.length());
-
+        sb.append(")");
         return SQL.replaceAll(":table_name", tableName)
                 .replaceAll(":columns",  this.fieldAttributeMap.values().stream()
                         .map(Attribute::value)
@@ -117,9 +112,24 @@ public class PostgreSQLTemplate implements SQLTemplate {
     }
 
     @Override
+    public String getSelectAllSql() {
+        String SQL = "select :attributes FROM :table_name";
+        return SQL.replaceAll(":attributes", attributesSql)
+                .replaceAll(":table_name", tableName);
+    }
+
+    @Override
     public String getDeleteSQL() {
         String SQL = "delete from :table_name WHERE :primary_key";
         return SQL.replaceAll(":table_name", tableName)
+                .replaceAll(":primary_key", primaryKeyWhere);
+    }
+
+    @Override
+    public String getExistsSql() {
+        String EXISTS_SQL = "select count(*) from (select :pk from :table_name where :primary_key limit 1) sub";
+        return EXISTS_SQL.replaceAll(":pk", primaryKey.value())
+                .replaceAll(":table_name", tableName)
                 .replaceAll(":primary_key", primaryKeyWhere);
     }
 

@@ -1,11 +1,22 @@
 package com.nc.unc.config;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 
 import javax.sql.DataSource;
 
-@AllArgsConstructor
+@NoArgsConstructor
+@Configuration
+@ConfigurationProperties("postgres")
+@EnableConfigurationProperties(PostgreSQLConfig.class)
+@Setter
 public class PostgreSQLConfig {
 
 
@@ -15,6 +26,7 @@ public class PostgreSQLConfig {
     private String username;
     private String password;
 
+    @Bean
     public DataSource dataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerName(servername);

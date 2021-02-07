@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 public interface Entity<T> {
-    void putGeneratedPrimaryKey(KeyHolder holder, T entity) throws IllegalAccessException;
 
     Object[] resolveCreateParameters(T entity);
 

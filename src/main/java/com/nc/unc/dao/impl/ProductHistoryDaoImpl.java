@@ -120,7 +120,7 @@ public class ProductHistoryDaoImpl implements ProductHistoryDao {
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .price(rs.getFloat("price"))
-                .orderItem(orderItemDao.getByProductHistory(rs.getInt("id")))
+                .orderItem(null)
                 .build();
     }
 }

@@ -1,13 +1,17 @@
 package com.nc.unc.myDao.mapper;
 
 
+import com.nc.unc.Main;
 import com.nc.unc.myDao.annotation.Attribute;
 import com.nc.unc.myDao.annotation.Enumerated;
 import com.nc.unc.myDao.annotation.PrimaryKey;
+import com.nc.unc.myDao.template.Entity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 
+
+import java.beans.ConstructorProperties;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -22,13 +26,25 @@ import java.util.Map;
 import static java.lang.Math.toIntExact;
 
 @Slf4j(topic = "log")
-@AllArgsConstructor
 public class AbstractMapper<T> implements RowMapper<T> {
 
-    private final Class<T> entityClass;
-    private final Field primaryKeyField;
+
+    private Field primaryKeyField;
     private final Map<Field, Attribute> fieldAttributeMap;
     private final Map<Field, Attribute> fieldEnumeratedMap;
+
+    private final Class<T> entityClass;
+    private final Entity<T> entity;
+
+    public AbstractMapper(Class<T> entityClass, Entity<T> entity){
+        this.entityClass = entityClass;
+        this.entity = entity;
+        primaryKeyField = entity.getFieldPrimaryKey();
+        fieldAttributeMap = entity.getFieldAttributeMap();
+        fieldEnumeratedMap =  entity.getFieldEnumeratedMap();
+    }
+
+
     @Override
     public T mapRow(ResultSet rs, int i) throws SQLException {
         try {

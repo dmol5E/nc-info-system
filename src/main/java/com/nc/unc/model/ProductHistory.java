@@ -24,7 +24,7 @@ public class ProductHistory  {
     private String name;
     @Attribute("price")
     private float price;
-    private Map<Integer, OrderItem> orderItem;
+    private List<OrderItem> orderItem;
 
     @Override
     public String toString() {

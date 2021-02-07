@@ -11,7 +11,7 @@ import com.nc.unc.util.json.LocalDateSerializer;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 
@@ -52,20 +52,13 @@ public class Order {
     @Attribute("sender")
     private int fkSender;
 
-    //@ManyToOne
-    //@JoinColumn(name = "customer")
     private Customer customer;
 
-    //@ManyToOne
-    //@JoinColumn(name = "recipient")
     private Address recipient;
 
-    //@ManyToOne
-    //@JoinColumn(name = "sender")
     private Address sender;
 
-    //@OneToMany
-    private Set<OrderItem> products;
+    private List<OrderItem> products;
 
     private static final StatusOrder DEFAULT_STATUS = StatusOrder.CREATED;
 

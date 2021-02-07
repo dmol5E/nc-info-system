@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: backend
+  profiles:
+    active: prod
+
+
+postgres:
+  servername: localhost
+  port: 5432
+  database: netcracker
+  username: postgres
+  password: 123
+
+
+server:
+  port: 80

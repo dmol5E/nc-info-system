@@ -73,9 +73,9 @@ create table store.order_item
     primary key (id)
 );
 
-select id, date, first_name, last_name, phone_number FROM store.customer WHERE id = ?;
+select id, status, recipient, customer, sum, sender, created_when, sent_when FROM store.order WHERE created_when <= ? and  created_when >= ?;
 
-select * from store.order_item;
+
 select * from store.order;
 select * from store.product_history;
 select * from store.product;
