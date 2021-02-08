@@ -13,7 +13,7 @@ public interface CrudDAO<T> {
     Optional<T> find(Number id);
     List<T> findIn(List<?> args);
     void delete(T t);
-    void insert(T t);
+    Number insert(T t);
     List<T> getAll();
     void update(T t);
 

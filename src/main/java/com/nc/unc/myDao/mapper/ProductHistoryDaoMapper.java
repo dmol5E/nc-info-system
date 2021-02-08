@@ -28,7 +28,7 @@ public class ProductHistoryDaoMapper extends AbstractMapper<ProductHistory>{
     public ProductHistory mapRow(ResultSet rs, int i) throws SQLException {
         ProductHistory productHistory = super.mapRow(rs, i);
         if(productHistory != null)
-            productHistory.setOrderItem(orderItemDao.getByProductHistory(productHistory.getId()));
+            productHistory.setOrderItems(orderItemDao.getByProductHistory(productHistory.getId()));
         return productHistory;
     }
 }

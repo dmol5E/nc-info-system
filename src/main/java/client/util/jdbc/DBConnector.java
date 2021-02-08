@@ -1,4 +1,4 @@
-package com.nc.unc.util.jdbc;
+package client.util.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -10,17 +10,23 @@ import java.util.Objects;
 @Component
 public class ProductMapper {
 
-    private final ModelMapper mapper;
-
-    public ProductMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
-
     public ProductDto toDto(Product product){
-        return Objects.isNull(product) ? null : mapper.map(product, ProductDto.class);
+        return Objects.isNull(product) ? null :
+                ProductDto.builder()
+                        .id(product.getId())
+                        .count(product.getCount())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .build();
     }
 
     public Product toEntity(ProductDto productDto){
-        return Objects.isNull(productDto) ? null : mapper.map(productDto, Product.class);
+        return Objects.isNull(productDto) ? null :
+                Product.builder()
+                        .id(productDto.getId())
+                        .name(productDto.getName())
+                        .price(productDto.getPrice())
+                        .count(productDto.getCount())
+                        .build();
     }
 }

@@ -24,14 +24,14 @@ public class ProductHistory  {
     private String name;
     @Attribute("price")
     private float price;
-    private List<OrderItem> orderItem;
+    private List<OrderItem> orderItems;
 
     @Override
     public String toString() {
         return "ProductHistory{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
-                ", orderItem=" + orderItem.toString() +
+                ", orderItem=" + orderItems.toString() +
                 '}';
     }
 }

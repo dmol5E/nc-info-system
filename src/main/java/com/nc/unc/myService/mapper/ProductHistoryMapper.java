@@ -10,17 +10,23 @@ import java.util.Objects;
 @Component
 public class ProductHistoryMapper {
 
-    private final ModelMapper mapper;
-
-    public ProductHistoryMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
-
     public ProductHistory toEntity(ProductHistoryDto productHistoryDto){
-        return Objects.isNull(productHistoryDto) ? null : mapper.map(productHistoryDto, ProductHistory.class);
+        return Objects.isNull(productHistoryDto) ? null :
+                ProductHistory.builder()
+                        .id(productHistoryDto.getId())
+                        .price(productHistoryDto.getPrice())
+                        .name(productHistoryDto.getName())
+                        .orderItems(productHistoryDto.getOrderItems())
+                        .build();
     }
 
     public ProductHistoryDto toDto(ProductHistory productHistory){
-        return Objects.isNull(productHistory) ? null : mapper.map(productHistory, ProductHistoryDto.class);
+        return Objects.isNull(productHistory) ? null :
+                ProductHistoryDto.builder()
+                        .id(productHistory.getId())
+                        .name(productHistory.getName())
+                        .orderItems(productHistory.getOrderItems())
+                        .price(productHistory.getPrice())
+                        .build();
     }
 }

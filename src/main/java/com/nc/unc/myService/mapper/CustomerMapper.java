@@ -10,19 +10,27 @@ import java.util.Objects;
 
 @Component
 public class CustomerMapper {
-    private final ModelMapper mapper;
-
-    @Autowired
-    public CustomerMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
 
     public Customer toEntity(CustomerDto dto) {
-        return Objects.isNull(dto) ? null : mapper.map(dto, Customer.class);
+        return Objects.isNull(dto) ? null :
+                Customer.builder()
+                        .id(dto.getId())
+                        .data(dto.getData())
+                        .firstName(dto.getFirstName())
+                        .lastName(dto.getLastName())
+                        .phoneNumber(dto.getPhoneNumber())
+                        .build();
     }
 
     public CustomerDto toDto(Customer entity){
-        return Objects.isNull(entity) ? null : mapper.map(entity, CustomerDto.class);
+        return Objects.isNull(entity) ? null :
+                CustomerDto.builder()
+                        .id(entity.getId())
+                        .data(entity.getData())
+                        .firstName(entity.getFirstName())
+                        .lastName(entity.getLastName())
+                        .phoneNumber(entity.getPhoneNumber())
+                        .build();
     }
 
 }

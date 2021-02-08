@@ -19,6 +19,14 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.7.5</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/com.github.chhsiao90/modelmapper-module-java8-datatypes -->
         <dependency>
             <groupId>com.github.chhsiao90</groupId>
@@ -77,12 +85,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>5.1.4.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.5</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->

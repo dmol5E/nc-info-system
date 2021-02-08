@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="423.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.controller.CreateOrder">
+<AnchorPane prefHeight="423.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.form.CreateOrder">
     <children>
         <TabPane layoutX="7.0" layoutY="8.0" prefHeight="528.0" prefWidth="914.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>

@@ -2,6 +2,7 @@ package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.OrderItemDto;
 import com.nc.unc.dto.ProductDto;
+import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.OrderItem;
 import com.nc.unc.myDao.OrderItemDao;
 import com.nc.unc.myService.IProductHistoryService;
@@ -11,6 +12,7 @@ import com.nc.unc.myService.mapper.OrderItemMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class StorageService implements IStorageService {
     private OrderItemDao orderItemDao;
     private IProductHistoryService productHistoryService;
     @Autowired
-    public void autowired(IStoreService storeService,
+    public StorageService(IStoreService storeService,
                           OrderItemDao orderItemDao,
                           OrderItemMapper orderItemMapper,
                           IProductHistoryService productHistoryService){
@@ -42,7 +44,7 @@ public class StorageService implements IStorageService {
         storage.values().forEach(orderItemDto -> {
             OrderItem orderItem = orderItemMapper.toEntity(orderItemDto);
             orderItem.setOrderId(id);
-            orderItem.setProductHistoryId(productHistoryService.searchByOrderItem(orderItemDto.getName(), orderItemDto.getPrice()).orElseThrow().getId());
+            orderItem.setProductHistoryId(productHistoryService.searchByOrderItem(orderItemDto.getName(), orderItemDto.getPrice()).getId());
             orderItemDao.insert(orderItem);
         });
     }
@@ -51,7 +53,8 @@ public class StorageService implements IStorageService {
     public void putOrderItem(ProductDto product, int increase) {
         log.debug("StorageService.putOrderItem(ProductDto product, int increase) was invoked");
         if(increase < 0 || product.getCount() < increase){
-            throw new IllegalArgumentException();
+            log.error("Illegal date");
+            throw new RequestException("Illegal date", HttpStatus.BAD_REQUEST);
         }
 
         OrderItemDto orderItem = storage.values().stream()
@@ -59,12 +62,15 @@ public class StorageService implements IStorageService {
                 .filter(storageItem -> product.getPrice() == product.getPrice())
                 .findFirst().orElse(null);
         if(orderItem != null){
-            if(orderItem.getCount() + increase > product.getCount())
-                throw new IllegalArgumentException();
+            if(orderItem.getCount() + increase > product.getCount()) {
+                log.error("No such products");
+                throw new RequestException("Illegal date", HttpStatus.BAD_REQUEST);
+            }
 
             orderItem.setCount(orderItem.getCount() + increase);
 
         } else {
+
             OrderItemDto newStorageItem = OrderItemDto.builder()
                     .id(this.size())
                     .name(product.getName())
@@ -72,6 +78,7 @@ public class StorageService implements IStorageService {
                     .count(increase)
                     .build();
             storage.put(newStorageItem.getId(), newStorageItem);
+
         }
     }
 
@@ -98,6 +105,7 @@ public class StorageService implements IStorageService {
 
     @Override
     public List<OrderItemDto> get() {
+        log.debug("StorageService.get() was invoked");
         return new ArrayList<>(storage.values());
     }
 }

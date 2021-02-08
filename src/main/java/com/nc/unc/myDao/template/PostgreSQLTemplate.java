@@ -97,7 +97,7 @@ public class PostgreSQLTemplate implements SQLTemplate {
                 .map(s -> s + " = ?, ")
                 .collect(Collectors.joining());
         updateAttributesSQL = updateAttributesSQL.substring(0, updateAttributesSQL.length() - 2);
-        System.out.println(updateAttributesSQL);
+        updateAttributesSQL = updateAttributesSQL.substring(0, updateAttributesSQL.length() - 2);
         return SQL.replaceAll(":table_name", tableName)
                 .replaceAll(":update_attributes",updateAttributesSQL)
                 .replaceAll(":primary_key", primaryKeyWhere);

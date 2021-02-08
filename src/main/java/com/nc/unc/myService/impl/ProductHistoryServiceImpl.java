@@ -2,12 +2,14 @@ package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.ProductDto;
 import com.nc.unc.dto.ProductHistoryDto;
+import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.ProductHistory;
 import com.nc.unc.myDao.ProductHistoryDao;
 import com.nc.unc.myService.IProductHistoryService;
 import com.nc.unc.myService.mapper.ProductHistoryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class ProductHistoryServiceImpl implements IProductHistoryService {
     private ProductHistoryDao productDao;
 
     @Autowired
-    public void autowired(ProductHistoryMapper productHistoryMapper,
-                          ProductHistoryDao productDao){
+    public ProductHistoryServiceImpl(ProductHistoryMapper productHistoryMapper,
+                                     ProductHistoryDao productDao){
         this.productDao = productDao;
         this.productHistoryMapper = productHistoryMapper;
     }
@@ -31,39 +33,56 @@ public class ProductHistoryServiceImpl implements IProductHistoryService {
     @Override
     public void put(ProductDto product) {
         log.debug("ProductHistoryImpl.put(ProductDto product) was invoked");
-        ProductHistory productHistory =
-                ProductHistory.builder()
-                        .price(product.getPrice())
-                        .name(product.getName())
-                        .build();
+
+        ProductHistory productHistory = ProductHistory.builder()
+                .price(product.getPrice())
+                .name(product.getName())
+                .build();
         productDao.insert(productHistory);
     }
 
     @Override
-    public Optional<ProductHistoryDto> searchById(int id) {
+    public ProductHistoryDto searchById(int id) {
         log.debug("ProductHistoryImpl.searchById(int id) was invoked");
-        return productDao.find(id)
-                .stream()
+        Optional<ProductHistory> optionalProductHistory = productDao.find(id);
+
+        if(optionalProductHistory.isEmpty()){
+            log.error("No such ProductHistory by id {}", id);
+            throw new RequestException("No such ProductHistory", HttpStatus.BAD_REQUEST);
+        }
+
+        return optionalProductHistory.stream()
                 .map(productHistoryMapper::toDto)
-                .findFirst();
+                .findFirst().get();
     }
 
     @Override
-    public Optional<ProductHistoryDto> searchByOrderItem(String name, float price) {
+    public ProductHistoryDto searchByOrderItem(String name, float price) {
         log.debug("ProductHistoryImpl.searchByOrderItem(String name, float price) was invoked");
-        return productDao.searchOrderItem(name, price)
-                .stream()
+        Optional<ProductHistory> optionalProductHistory = productDao.searchOrderItem(name, price);
+
+        if(optionalProductHistory.isEmpty()){
+            log.error("No such ProductHistory by name {} price {}", name, price);
+            throw new RequestException("No such ProductHistory", HttpStatus.BAD_REQUEST);
+        }
+
+        return optionalProductHistory.stream()
                 .map(productHistoryMapper::toDto)
-                .findFirst();
+                .findFirst().get();
     }
 
     @Override
-    public Optional<ProductHistoryDto> searchByProduct(String name, float price) {
+    public ProductHistoryDto searchByProduct(String name, float price) {
         log.debug("ProductHistoryImpl.searchByProduct(String name, float price) was invoked");
-        return productDao.searchOrderItem(name, price)
-                .stream()
+        Optional<ProductHistory> optionalProductHistory = productDao.searchProduct(name, price);
+        if(optionalProductHistory.isEmpty()){
+            log.error("No such ProductHistory by name {} price {}", name, price);
+            throw new RequestException("No such ProductHistory", HttpStatus.BAD_REQUEST);
+        }
+
+        return optionalProductHistory.stream()
                 .map(productHistoryMapper::toDto)
-                .findFirst();
+                .findFirst().get();
     }
 
     @Override

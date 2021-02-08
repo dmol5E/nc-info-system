@@ -9,11 +9,17 @@ import com.nc.unc.myDao.template.SQLTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j(topic = "CrudDaoImpl")
@@ -41,9 +47,8 @@ public abstract class CrudDaoImpl<T> implements CrudDAO<T> {
                                             entity.getPrimaryKey(),
                                             entity.getFieldAttributeMap(),
                                             entity.getFieldEnumeratedMap());
-        log.info("Entity getField ");
-        this.abstractMapper = new AbstractMapper<>(entityClass,
-                                                    entity);
+
+        abstractMapper = new AbstractMapper<>(entityClass, entity);
 
     }
 
@@ -85,12 +90,19 @@ public abstract class CrudDaoImpl<T> implements CrudDAO<T> {
     }
 
     @Override
-    public void insert(T t) {
-        jdbcTemplate.update(postgreSQLTemplate.getInsertSQL(), preparedStatement -> {
+    public Number insert(T t) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        PreparedStatementCreator psc = connection -> {
+            PreparedStatement ps = connection.prepareStatement(postgreSQLTemplate.getInsertSQL(), Statement.RETURN_GENERATED_KEYS);
             int i = 1;
             for (Object obj: entity.resolveCreateParameters(t))
-                preparedStatement.setObject(i++, obj);
-        });
+                ps.setObject(i++, obj);
+            return ps;
+        };
+        jdbcTemplate.update(psc, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
     @Override
     public AbstractMapper<T> getAbstractMapper() { return abstractMapper; }

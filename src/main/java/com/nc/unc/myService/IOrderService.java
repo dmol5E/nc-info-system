@@ -21,7 +21,6 @@ public interface IOrderService {
     OrderDto findOrderById(int id);
     void updateOrder(int id, OrderDto order);
     List<OrderDto> getAll();
-    void addOrderCustomer(CustomerDto customer);
     CustomerDto getOrderCustomer();
     double getSum();
     OrderDto updateOrderStatus(int index, LocalDate date);

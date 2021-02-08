@@ -1,7 +1,7 @@
 package com.nc.unc.dao.impl;
 
 import com.nc.unc.dao.OrderDao;
-import com.nc.unc.util.jdbc.DBConnector;
+import client.util.jdbc.DBConnector;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.model.*;
 import org.slf4j.Logger;

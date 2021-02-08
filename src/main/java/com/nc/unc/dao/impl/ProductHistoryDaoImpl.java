@@ -4,7 +4,7 @@ import com.nc.unc.dao.ProductHistoryDao;
 import com.nc.unc.model.OrderItem;
 import com.nc.unc.model.Product;
 import com.nc.unc.model.ProductHistory;
-import com.nc.unc.util.jdbc.DBConnector;
+import client.util.jdbc.DBConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +120,7 @@ public class ProductHistoryDaoImpl implements ProductHistoryDao {
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .price(rs.getFloat("price"))
-                .orderItem(null)
+                .orderItems(null)
                 .build();
     }
 }

@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface IStoreService {
     List<ProductDto> getAll();
-    Optional<ProductDto> findById(int id);
-    Optional<ProductDto> increase(RequestToIncreaseProducts productDto);
+    ProductDto findById(int id);
+    ProductDto increase(int id, int count);
+    ProductDto decrease(int id, int count);
     void put(ProductDto productDto);
-    Optional<ProductDto> search(OrderItemDto orderItemDto);
+    ProductDto search(OrderItemDto orderItemDto);
 }

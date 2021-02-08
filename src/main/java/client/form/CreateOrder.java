@@ -1,11 +1,14 @@
-package com.nc.unc.controller;
+package client.form;
 
+import client.https.HttpClientCustomer;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.nc.unc.App;
+import com.nc.unc.dto.CustomerDto;
 import com.nc.unc.enums.StatusOrder;
 import com.nc.unc.exception.BadRequestException;
 import com.nc.unc.model.*;
 import com.nc.unc.service.*;
-import com.nc.unc.util.json.JsonHelper;
+import client.util.json.JsonHelper;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -27,16 +30,19 @@ import javafx.util.StringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class CreateOrder extends Application {
 
 
     private Logger log = LoggerFactory.getLogger(CreateOrder.class.getSimpleName());
+
+
 
     private CustomerService customerService;
     private OrderService orderService;
@@ -61,7 +67,7 @@ public class CreateOrder extends Application {
     @FXML
     private Button c_create_customer;
 
-    public void createNewCustomer(ActionEvent actionEvent) {
+    public void createNewCustomer(ActionEvent actionEvent) throws IOException {
         if(c_input_name.getText().equals("") ||
                 c_input_lastname.getText().equals("") ||
                 c_input_phone.getText().equals("") ||
@@ -72,7 +78,6 @@ public class CreateOrder extends Application {
             errorAlert.setContentText("Invalid date new customer");
             errorAlert.showAndWait();
         }
-
             customerService.putCustomer(
                     Customer.builder()
                             .firstName(c_input_name.getText())
@@ -321,15 +326,15 @@ public class CreateOrder extends Application {
 
 
     @FXML
-    private TableView<Customer> or_ct_table;
+    private TableView<CustomerDto> or_ct_table;
     @FXML
-    private TableColumn<Customer, String> or_ct_name;
+    private TableColumn<CustomerDto, String> or_ct_name;
     @FXML
-    private TableColumn<Customer, String> or_ct_last_name;
+    private TableColumn<CustomerDto, String> or_ct_last_name;
     @FXML
-    private TableColumn<Customer, String> or_ct_phone;
+    private TableColumn<CustomerDto, String> or_ct_phone;
     @FXML
-    private TableColumn<Customer, LocalDate> or_ct_data;
+    private TableColumn<CustomerDto, LocalDate> or_ct_data;
 
     @FXML
     private TableView<OrderItem> or_storage_table;
@@ -396,18 +401,18 @@ public class CreateOrder extends Application {
     }
 
 
-    public void orStart(Event event) {
+    public void orStart(Event event) throws IOException {
         or_ct_name.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         or_ct_last_name.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         or_ct_phone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         or_ct_data.setCellValueFactory(new PropertyValueFactory<>("data"));
         or_ct_table.setRowFactory(customerTableView ->  {
-            final TableRow<Customer> row = new TableRow<>();
+            final TableRow<CustomerDto> row = new TableRow<>();
             final ContextMenu contextMenu = new ContextMenu();
             final MenuItem SELECT = new MenuItem("SELECT");
             SELECT.setOnAction(actionEvent -> {
-                Customer customer = row.getItem();
-                orderService.addOrderCustomer(customer);
+                CustomerDto customer = row.getItem();
+                //orderService.addOrderCustomer(customer);
                 goNext(new ActionEvent());
             });
             contextMenu.getItems().add(SELECT);
@@ -418,7 +423,8 @@ public class CreateOrder extends Application {
             );
             return row;
         });
-        ObservableList<Customer> customers = FXCollections.observableArrayList(this.customerService.getAll().values());
+        List<CustomerDto> customerDtoList = JsonHelper.fromJson(HttpClientCustomer.getCustomers().body().string(), new TypeReference<>() {});
+        ObservableList<CustomerDto> customers = FXCollections.observableArrayList(customerDtoList);
         or_ct_table.setItems(customers);
 
 

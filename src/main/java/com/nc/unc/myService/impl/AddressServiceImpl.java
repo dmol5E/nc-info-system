@@ -1,11 +1,14 @@
 package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.AddressDto;
+import com.nc.unc.exception.RequestException;
+import com.nc.unc.model.Address;
 import com.nc.unc.myDao.AddressDao;
 import com.nc.unc.myService.IAddressService;
 import com.nc.unc.myService.mapper.AddressMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,55 +22,90 @@ public class AddressServiceImpl implements IAddressService {
     private AddressDao addressDao;
     private AddressMapper addressMapper;
 
-    private String regexZipcode = "^\\d{5}(?:[-\\s]\\d{4})?$";
-
     @Autowired
-    public void autowired(AddressDao addressDao,
-                          AddressMapper addressMapper){
+    public AddressServiceImpl(AddressDao addressDao,
+                              AddressMapper addressMapper){
         this.addressDao = addressDao;
         this.addressMapper = addressMapper;
     }
 
     @Override
-    public void insert(AddressDto address) {
-        if(!checkZipcode(address.getZipcode()) || address.getAddress().equals(""))
-            throw new IllegalArgumentException();
-        addressDao.insert(addressMapper.toEntity(address));
+    public int insert(AddressDto address) {
+        log.debug("AddressServiceImpl.findId(int id) was invoked");
+        if(!checkZipcode(address.getZipcode()) || address.getAddress().equals("")) {
+            log.error("Invalid date zipcode {} address {} ", address.getZipcode(), address.getAddress());
+            throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
+        }
+        return addressDao.insert(addressMapper.toEntity(address)).intValue();
     }
 
     @Override
     public List<AddressDto> getAll() {
+        log.debug("AddressServiceImpl.getAll() was invoked");
         return addressDao.getAll().stream()
                 .map(addressMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<AddressDto> search(AddressDto address) {
-        if(!checkZipcode(address.getZipcode()) || address.getAddress().equals(""))
-            throw new IllegalArgumentException();
-        return addressDao.searchByAddressZipcode(address.getAddress(), address.getZipcode()).stream()
+    public AddressDto search(AddressDto address) {
+        log.debug("AddressServiceImpl.search(AddressDto address) was invoked");
+        if(!checkZipcode(address.getZipcode()) || address.getAddress().equals("")) {
+            log.error("Invalid date zipcode {} address {} ", address.getZipcode(), address.getAddress());
+            throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Address> optionalAddress = addressDao.searchByAddressZipcode(address.getAddress(), address.getZipcode());
+        if(optionalAddress.isEmpty()){
+            log.error("No such element zipcode {} address {} ", address.getZipcode(), address.getAddress());
+            throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);
+        }
+
+        return optionalAddress.stream()
                 .map(addressMapper::toDto)
-                .findFirst();
+                .findFirst().get();
     }
 
     @Override
-    public Optional<AddressDto> getByAddress(String address) {
-        if(address.equals(""))
-            throw new IllegalArgumentException();
-        return Optional.empty();
+    public AddressDto getByAddress(String address) {
+        log.debug("AddressServiceImpl.getByAddress(String address was invoked");
+        if(address.equals("")) {
+            log.error("Invalid date address {} ", address);
+            throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Address> optionalAddress = addressDao.searchByAddress(address);
+        if (optionalAddress.isEmpty()){
+            log.error("No such element by address {} ", address);
+            throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);
+        }
+
+        return optionalAddress.stream()
+                .map(addressMapper::toDto)
+                .findFirst().get();
     }
 
     @Override
-    public Optional<AddressDto> getByZipcode(int zipcode) {
-        if(!checkZipcode(zipcode))
-            throw new IllegalArgumentException();
-        return addressDao.searchByZipcode(zipcode).stream()
+    public AddressDto getByZipcode(int zipcode) {
+        log.debug("AddressServiceImpl.getByZipcode(int zipcode) was invoked");
+        if(!checkZipcode(zipcode)) {
+            log.error("Invalid date address {} ", zipcode);
+            throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Address> optionalAddress = addressDao.searchByZipcode(zipcode);
+        if (optionalAddress.isEmpty()){
+            log.error("No such element by zipcode {} ", zipcode);
+            throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);
+        }
+
+        return optionalAddress.stream()
                 .map(addressMapper::toDto)
-                .findFirst();
+                .findFirst().get();
     }
 
     private boolean checkZipcode(int zipcode){
+        String regexZipcode = "^\\d{5}(?:[-\\s]\\d{4})?$";
         return Integer.toString(zipcode).matches(regexZipcode);
     }
 }

@@ -1,6 +1,6 @@
 package com.nc.unc.config;
 
-import lombok.AllArgsConstructor;
+
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.postgresql.ds.PGSimpleDataSource;

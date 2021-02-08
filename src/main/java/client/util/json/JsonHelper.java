@@ -1,4 +1,4 @@
-package com.nc.unc.util.json;
+package client.util.json;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

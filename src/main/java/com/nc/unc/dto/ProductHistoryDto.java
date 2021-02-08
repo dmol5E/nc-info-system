@@ -1,14 +1,26 @@
 package com.nc.unc.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nc.unc.model.OrderItem;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder(toBuilder = true)
+@ToString
 public class ProductHistoryDto {
     private int id;
+
+    @JsonProperty("name")
     private String name;
-    private int price;
-    private List<OrderItem> list;
+
+    @JsonProperty("price")
+    private float price;
+
+    @JsonProperty("orderItems")
+    private List<OrderItem> orderItems;
 }

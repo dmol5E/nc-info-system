@@ -20,11 +20,12 @@ open module infosystem {
     requires java.sql;
     requires static lombok;
     requires spring.jdbc;
-    requires postgresql;
     requires spring.webmvc;
     requires modelmapper;
     requires modelmapper.module.java8.datatypes;
     requires modelmapper.module.jsr310;
+    requires org.postgresql.jdbc;
+    requires okhttp;
 
 }
 

@@ -1,7 +1,7 @@
 package com.nc.unc.dao.impl;
 
 import com.nc.unc.dao.AddressDao;
-import com.nc.unc.util.jdbc.DBConnector;
+import client.util.jdbc.DBConnector;
 import com.nc.unc.model.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

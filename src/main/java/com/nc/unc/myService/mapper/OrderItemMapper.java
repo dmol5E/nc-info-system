@@ -10,17 +10,27 @@ import java.util.Objects;
 @Component
 public class OrderItemMapper {
 
-    private final ModelMapper mapper;
-
-    public OrderItemMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
-
     public OrderItemDto toDto(OrderItem orderItem) {
-        return Objects.isNull(orderItem) ? null : mapper.map(orderItem, OrderItemDto.class);
+        return Objects.isNull(orderItem) ? null :
+                OrderItemDto.builder()
+                        .id(orderItem.getId())
+                        .count(orderItem.getCount())
+                        .name(orderItem.getName())
+                        .orderId(orderItem.getOrderId())
+                        .productHistoryId(orderItem.getProductHistoryId())
+                        .price(orderItem.getPrice())
+                        .build();
     }
 
     public OrderItem toEntity(OrderItemDto orderItemDto) {
-        return Objects.isNull(orderItemDto) ? null : mapper.map(orderItemDto, OrderItem.class);
+        return Objects.isNull(orderItemDto) ? null :
+                OrderItem.builder()
+                        .id(orderItemDto.getId())
+                        .price(orderItemDto.getPrice())
+                        .count(orderItemDto.getCount())
+                        .name(orderItemDto.getName())
+                        .orderId(orderItemDto.getOrderId())
+                        .productHistoryId(orderItemDto.getProductHistoryId())
+                        .build();
     }
 }

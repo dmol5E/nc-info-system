@@ -9,17 +9,22 @@ import java.util.Objects;
 
 @Component
 public class AddressMapper {
-    private final ModelMapper mapper;
-
-    public AddressMapper(ModelMapper mapper) {
-        this.mapper = mapper;
-    }
 
     public Address toEntity(AddressDto addressDto) {
-        return Objects.isNull(addressDto) ? null : mapper.map(addressDto, Address.class);
+        return Objects.isNull(addressDto) ? null :
+                Address.builder()
+                        .id(addressDto.getId())
+                        .zipCode(addressDto.getZipcode())
+                        .address(addressDto.getAddress())
+                        .build();
     }
 
     public AddressDto toDto(Address address) {
-        return Objects.isNull(address) ? null : mapper.map(address, AddressDto.class);
+        return Objects.isNull(address) ? null :
+                AddressDto.builder()
+                        .id(address.getId())
+                        .address(address.getAddress())
+                        .zipcode(address.getZipCode())
+                        .build();
     }
 }

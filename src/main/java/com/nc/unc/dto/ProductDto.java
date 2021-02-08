@@ -1,12 +1,23 @@
 package com.nc.unc.dto;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder(toBuilder = true)
+@ToString
 public class ProductDto {
     private int id;
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("price")
     private float price;
+
+    @JsonProperty("count")
     private int count;
 }
 

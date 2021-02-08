@@ -1,19 +1,14 @@
 package com.nc.unc.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nc.unc.myDao.annotation.Attribute;
 import com.nc.unc.myDao.annotation.PrimaryKey;
 import com.nc.unc.myDao.annotation.Table;
-import com.nc.unc.util.json.LocalDateDeserializer;
-import com.nc.unc.util.json.LocalDateSerializer;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.beans.ConstructorProperties;
 
 
 @Setter
