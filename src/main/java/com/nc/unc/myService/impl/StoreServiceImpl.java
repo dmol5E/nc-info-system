@@ -2,14 +2,13 @@ package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.OrderItemDto;
 import com.nc.unc.dto.ProductDto;
-import com.nc.unc.dto.request.RequestToIncreaseProducts;
 import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.Product;
 import com.nc.unc.model.ProductHistory;
-import com.nc.unc.myDao.ProductDao;
-import com.nc.unc.myDao.ProductHistoryDao;
+import com.nc.unc.myDao.IProductDao;
+import com.nc.unc.myDao.IProductHistoryDao;
 import com.nc.unc.myService.IStoreService;
-import com.nc.unc.myService.mapper.ProductMapper;
+import com.nc.unc.myService.mapper.impl.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,24 +22,24 @@ import java.util.stream.Collectors;
 @Service
 public class StoreServiceImpl implements IStoreService {
 
-    private ProductHistoryDao productHistoryDao;
-    private ProductDao productDao;
+    private IProductHistoryDao IProductHistoryDao;
+    private IProductDao IProductDao;
     private ProductMapper modelMapper;
 
     @Autowired
-    public StoreServiceImpl(ProductDao productDao,
-                            ProductHistoryDao productHistoryDao,
+    public StoreServiceImpl(IProductDao IProductDao,
+                            IProductHistoryDao IProductHistoryDao,
                             ProductMapper modelMapper){
         this.modelMapper = modelMapper;
-        this.productDao = productDao;
-        this.productHistoryDao = productHistoryDao;
+        this.IProductDao = IProductDao;
+        this.IProductHistoryDao = IProductHistoryDao;
     }
 
 
     @Override
     public List<ProductDto> getAll() {
         log.debug("StoreServiceImpl.getAll() was invoked");
-        return productDao.getAll()
+        return IProductDao.getAll()
                 .stream()
                 .map(modelMapper::toDto)
                 .collect(Collectors.toList());
@@ -49,7 +48,7 @@ public class StoreServiceImpl implements IStoreService {
     @Override
     public ProductDto findById(int productId) {
         log.debug("StoreServiceImpl.findById(int id) was invoked");
-        Optional<Product> optionalProduct = productDao.find(productId);
+        Optional<Product> optionalProduct = IProductDao.find(productId);
         if(optionalProduct.isEmpty()){
             log.error("No such product with id {}", productId);
             throw new RequestException("No such product", HttpStatus.NOT_FOUND);
@@ -86,7 +85,7 @@ public class StoreServiceImpl implements IStoreService {
 
     private ProductDto changeProductCount(int productId, int newCount){
         log.debug("StoreServiceImpl.changeProductCount(int productId, int newCount) was invoked");
-        Optional<Product> optionalProduct = productDao.find(productId);
+        Optional<Product> optionalProduct = IProductDao.find(productId);
 
         if(optionalProduct.isEmpty()) {
             log.error("No such product with id {}", productId);
@@ -94,7 +93,7 @@ public class StoreServiceImpl implements IStoreService {
         }
 
         optionalProduct.get().setCount(optionalProduct.get().getCount() + newCount);
-        productDao.update(optionalProduct.get());
+        IProductDao.update(optionalProduct.get());
 
         return optionalProduct.stream()
                 .map(modelMapper::toDto)
@@ -110,11 +109,11 @@ public class StoreServiceImpl implements IStoreService {
             log.error("Invalid date from productDto count : {} price: {} ", productDto.getCount(), productDto.getPrice());
             throw new RequestException("Invalid date from productDto", HttpStatus.BAD_REQUEST);
         }
-        productHistoryDao.insert(ProductHistory.builder()
+        IProductHistoryDao.insert(ProductHistory.builder()
                 .name(productDto.getName())
                 .price(productDto.getPrice())
                 .build());
-        productDao.insert(modelMapper.toEntity(productDto));
+        IProductDao.insert(modelMapper.toEntity(productDto));
     }
 
     @Override

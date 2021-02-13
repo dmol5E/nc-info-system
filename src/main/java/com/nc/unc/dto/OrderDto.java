@@ -1,15 +1,15 @@
 package com.nc.unc.dto;
 
+import client.util.json.LocalDateDeserializer;
+import client.util.json.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nc.unc.enums.StatusOrder;
-import com.nc.unc.model.Address;
-import com.nc.unc.model.Customer;
-import com.nc.unc.model.OrderItem;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nc.unc.model.enums.StatusOrder;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,10 +22,14 @@ public class OrderDto {
 
     @JsonProperty("createdWhen")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate createdWhen;
 
     @JsonProperty("sentWhen")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate sentWhen;
 
     @JsonProperty("sum")
@@ -34,24 +38,18 @@ public class OrderDto {
     @JsonProperty("curStatusOrder")
     private StatusOrder curStatusOrder;
 
-    @JsonProperty("fkCustomer")
-    private int fkCustomer;
+    @JsonProperty("recipientAddress")
+    private String recipientAddress;
 
-    @JsonProperty("fkRecipient")
-    private int fkRecipient;
+    @JsonProperty("senderAddress")
+    private String senderAddress;
 
-    @JsonProperty("fkSender")
-    private int fkSender;
+    @JsonProperty("firstName")
+    private String firstName;
 
-    @JsonProperty("customer")
-    private Customer customer;
+    @JsonProperty("lastName")
+    private String lastName;
 
-    @JsonProperty("recipient")
-    private Address recipient;
-
-    @JsonProperty("sender")
-    private Address sender;
-
-    @JsonProperty("products")
-    private List<OrderItem> products;
+    @JsonProperty("phoneNumber")
+    private String phoneNumber;
 }

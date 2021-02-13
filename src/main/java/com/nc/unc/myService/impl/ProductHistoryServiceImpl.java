@@ -4,9 +4,9 @@ import com.nc.unc.dto.ProductDto;
 import com.nc.unc.dto.ProductHistoryDto;
 import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.ProductHistory;
-import com.nc.unc.myDao.ProductHistoryDao;
+import com.nc.unc.myDao.IProductHistoryDao;
 import com.nc.unc.myService.IProductHistoryService;
-import com.nc.unc.myService.mapper.ProductHistoryMapper;
+import com.nc.unc.myService.mapper.impl.ProductHistoryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 public class ProductHistoryServiceImpl implements IProductHistoryService {
 
     private ProductHistoryMapper productHistoryMapper;
-    private ProductHistoryDao productDao;
+    private IProductHistoryDao productDao;
 
     @Autowired
     public ProductHistoryServiceImpl(ProductHistoryMapper productHistoryMapper,
-                                     ProductHistoryDao productDao){
+                                     IProductHistoryDao productDao){
         this.productDao = productDao;
         this.productHistoryMapper = productHistoryMapper;
     }

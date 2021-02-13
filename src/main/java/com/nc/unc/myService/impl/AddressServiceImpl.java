@@ -3,9 +3,9 @@ package com.nc.unc.myService.impl;
 import com.nc.unc.dto.AddressDto;
 import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.Address;
-import com.nc.unc.myDao.AddressDao;
+import com.nc.unc.myDao.IAddressDao;
 import com.nc.unc.myService.IAddressService;
-import com.nc.unc.myService.mapper.AddressMapper;
+import com.nc.unc.myService.mapper.impl.AddressMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
 @Service
 public class AddressServiceImpl implements IAddressService {
 
-    private AddressDao addressDao;
     private AddressMapper addressMapper;
 
+    private IAddressDao IAddressDao;
+
     @Autowired
-    public AddressServiceImpl(AddressDao addressDao,
+    public AddressServiceImpl(IAddressDao IAddressDao,
                               AddressMapper addressMapper){
-        this.addressDao = addressDao;
+        this.IAddressDao = IAddressDao;
         this.addressMapper = addressMapper;
     }
 
@@ -36,13 +37,13 @@ public class AddressServiceImpl implements IAddressService {
             log.error("Invalid date zipcode {} address {} ", address.getZipcode(), address.getAddress());
             throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
         }
-        return addressDao.insert(addressMapper.toEntity(address)).intValue();
+        return IAddressDao.insert(addressMapper.toEntity(address)).intValue();
     }
 
     @Override
     public List<AddressDto> getAll() {
         log.debug("AddressServiceImpl.getAll() was invoked");
-        return addressDao.getAll().stream()
+        return IAddressDao.getAll().stream()
                 .map(addressMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -55,7 +56,7 @@ public class AddressServiceImpl implements IAddressService {
             throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Address> optionalAddress = addressDao.searchByAddressZipcode(address.getAddress(), address.getZipcode());
+        Optional<Address> optionalAddress = IAddressDao.searchByAddressZipcode(address.getAddress(), address.getZipcode());
         if(optionalAddress.isEmpty()){
             log.error("No such element zipcode {} address {} ", address.getZipcode(), address.getAddress());
             throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);
@@ -74,7 +75,7 @@ public class AddressServiceImpl implements IAddressService {
             throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Address> optionalAddress = addressDao.searchByAddress(address);
+        Optional<Address> optionalAddress = IAddressDao.searchByAddress(address);
         if (optionalAddress.isEmpty()){
             log.error("No such element by address {} ", address);
             throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);
@@ -93,7 +94,7 @@ public class AddressServiceImpl implements IAddressService {
             throw new RequestException("Invalid date", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Address> optionalAddress = addressDao.searchByZipcode(zipcode);
+        Optional<Address> optionalAddress = IAddressDao.searchByZipcode(zipcode);
         if (optionalAddress.isEmpty()){
             log.error("No such element by zipcode {} ", zipcode);
             throw new RequestException("Invalid date", HttpStatus.NOT_FOUND);

@@ -1,6 +1,6 @@
 package com.nc.unc.myDao.impl;
 
-import com.nc.unc.myDao.CrudDAO;
+import com.nc.unc.myDao.ICrudDAO;
 import com.nc.unc.myDao.mapper.AbstractMapper;
 import com.nc.unc.myDao.template.Entity;
 import com.nc.unc.myDao.template.EntityImpl;
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j(topic = "CrudDaoImpl")
-public abstract class CrudDaoImpl<T> implements CrudDAO<T> {
+public abstract class CrudDaoImpl<T> implements ICrudDAO<T> {
 
     private JdbcTemplate jdbcTemplate;
     private SQLTemplate postgreSQLTemplate;
@@ -81,7 +81,7 @@ public abstract class CrudDaoImpl<T> implements CrudDAO<T> {
     }
 
     public void update(T t){
-        jdbcTemplate.update(postgreSQLTemplate.getUpdateSQL(), entity.resolvePrimaryKeyParameters(t));
+        jdbcTemplate.update(postgreSQLTemplate.getUpdateSQL(), entity.resolveUpdateParameters(t));
     }
 
     @Override
@@ -101,8 +101,8 @@ public abstract class CrudDaoImpl<T> implements CrudDAO<T> {
             return ps;
         };
         jdbcTemplate.update(psc, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        log.info("keys from db{}",keyHolder.getKeys().get("id"));
+        return (Number) Objects.requireNonNull(keyHolder.getKeys().get(entity.getPrimaryKey().value()));
     }
     @Override
     public AbstractMapper<T> getAbstractMapper() { return abstractMapper; }

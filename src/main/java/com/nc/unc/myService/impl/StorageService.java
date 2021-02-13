@@ -4,11 +4,11 @@ import com.nc.unc.dto.OrderItemDto;
 import com.nc.unc.dto.ProductDto;
 import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.OrderItem;
-import com.nc.unc.myDao.OrderItemDao;
+import com.nc.unc.myDao.IOrderItemDao;
 import com.nc.unc.myService.IProductHistoryService;
 import com.nc.unc.myService.IStorageService;
 import com.nc.unc.myService.IStoreService;
-import com.nc.unc.myService.mapper.OrderItemMapper;
+import com.nc.unc.myService.mapper.impl.OrderItemMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -26,11 +26,11 @@ public class StorageService implements IStorageService {
 
     private HashMap<Integer, OrderItemDto> storage = new HashMap<>();
     private OrderItemMapper orderItemMapper;
-    private OrderItemDao orderItemDao;
+    private IOrderItemDao orderItemDao;
     private IProductHistoryService productHistoryService;
     @Autowired
     public StorageService(IStoreService storeService,
-                          OrderItemDao orderItemDao,
+                          IOrderItemDao orderItemDao,
                           OrderItemMapper orderItemMapper,
                           IProductHistoryService productHistoryService){
         this.orderItemMapper = orderItemMapper;

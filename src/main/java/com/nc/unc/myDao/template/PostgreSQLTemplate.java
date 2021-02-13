@@ -4,11 +4,12 @@ import com.nc.unc.myDao.annotation.Attribute;
 import com.nc.unc.myDao.annotation.PrimaryKey;
 import com.nc.unc.myDao.annotation.Table;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@Slf4j
 public class PostgreSQLTemplate implements SQLTemplate {
 
     private final PrimaryKey primaryKey;
@@ -96,7 +97,6 @@ public class PostgreSQLTemplate implements SQLTemplate {
                 .map(Attribute::value)
                 .map(s -> s + " = ?, ")
                 .collect(Collectors.joining());
-        updateAttributesSQL = updateAttributesSQL.substring(0, updateAttributesSQL.length() - 2);
         updateAttributesSQL = updateAttributesSQL.substring(0, updateAttributesSQL.length() - 2);
         return SQL.replaceAll(":table_name", tableName)
                 .replaceAll(":update_attributes",updateAttributesSQL)

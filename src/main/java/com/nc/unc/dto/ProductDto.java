@@ -10,7 +10,9 @@ import lombok.*;
 @Builder(toBuilder = true)
 @ToString
 public class ProductDto {
+
     private int id;
+
     @JsonProperty("name")
     private String name;
 

@@ -1,8 +1,7 @@
 package com.nc.unc.myDao.mapper;
 
 import com.nc.unc.model.ProductHistory;
-import com.nc.unc.myDao.OrderItemDao;
-import com.nc.unc.myDao.template.Entity;
+import com.nc.unc.myDao.IOrderItemDao;
 import com.nc.unc.myDao.template.EntityImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,10 +12,10 @@ import java.sql.SQLException;
 @Component
 public class ProductHistoryDaoMapper extends AbstractMapper<ProductHistory>{
 
-    private OrderItemDao orderItemDao;
+    private IOrderItemDao orderItemDao;
 
     @Autowired
-    public void set(OrderItemDao orderItemDao){
+    public void set(IOrderItemDao orderItemDao){
         this.orderItemDao = orderItemDao;
     }
 

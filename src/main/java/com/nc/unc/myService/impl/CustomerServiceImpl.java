@@ -1,12 +1,12 @@
 package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.CustomerDto;
-import com.nc.unc.exception.BadRequestException;
+
 import com.nc.unc.exception.RequestException;
 import com.nc.unc.model.Customer;
-import com.nc.unc.myDao.CustomerDao;
+import com.nc.unc.myDao.ICustomerDao;
 import com.nc.unc.myService.ICustomerService;
-import com.nc.unc.myService.mapper.CustomerMapper;
+import com.nc.unc.myService.mapper.impl.CustomerMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerServiceImpl implements ICustomerService {
 
-    private CustomerDao customerDao;
+    private ICustomerDao ICustomerDao;
     private CustomerMapper customerMapper;
 
     @Autowired
-    public CustomerServiceImpl(CustomerDao customerDao,  CustomerMapper customerMapper){
-        this.customerDao = customerDao;
+    public CustomerServiceImpl(ICustomerDao ICustomerDao, CustomerMapper customerMapper){
+        this.ICustomerDao = ICustomerDao;
         this.customerMapper = customerMapper;
     }
 
     @Override
     public List<CustomerDto> getAll() {
         log.debug("CustomerServiceImpl.getAll() was invoked");
-        return customerDao.getAll()
+        return ICustomerDao.getAll()
                 .stream()
                 .map(customerMapper::toDto)
                 .collect(Collectors.toList());
@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public CustomerDto findId(int id) {
         log.debug("CustomerServiceImpl.findId(int id) was invoked");
-        Optional<Customer> optionalCustomer = customerDao.find(id);
+        Optional<Customer> optionalCustomer = ICustomerDao.find(id);
         if(optionalCustomer.isEmpty()){
             log.error("No such customer by id {}", id);
             throw new RequestException("No such customer", HttpStatus.BAD_REQUEST);
@@ -58,7 +58,7 @@ public class CustomerServiceImpl implements ICustomerService {
             log.error("Invalid phone number {}", customerDto.getPhoneNumber());
             throw new RequestException("Invalid phone number", HttpStatus.BAD_REQUEST);
         }
-        customerDao.insert(customerMapper.toEntity(customerDto));
+        ICustomerDao.insert(customerMapper.toEntity(customerDto));
     }
 
     private boolean checkPhoneNumber(String phone){

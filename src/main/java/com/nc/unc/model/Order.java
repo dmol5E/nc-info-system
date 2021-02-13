@@ -3,7 +3,7 @@ package com.nc.unc.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.nc.unc.enums.StatusOrder;
+import com.nc.unc.model.enums.StatusOrder;
 import com.nc.unc.myDao.annotation.*;
 import com.nc.unc.myDao.annotation.enums.EnumType;
 import client.util.json.LocalDateDeserializer;

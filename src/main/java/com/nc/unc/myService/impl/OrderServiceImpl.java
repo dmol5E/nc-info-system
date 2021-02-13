@@ -1,12 +1,12 @@
 package com.nc.unc.myService.impl;
 
 import com.nc.unc.dto.*;
+import com.nc.unc.model.enums.StatusOrder;
 import com.nc.unc.exception.RequestException;
-import com.nc.unc.model.Address;
 import com.nc.unc.model.Order;
-import com.nc.unc.myDao.OrderDao;
+import com.nc.unc.myDao.IOrderDao;
 import com.nc.unc.myService.*;
-import com.nc.unc.myService.mapper.OrderMapper;
+import com.nc.unc.myService.mapper.impl.OrderMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ public class OrderServiceImpl implements IOrderService {
 
     private CustomerDto sessionCustomer;
 
-    private OrderDao orderDao;
+    private IOrderDao orderDao;
 
     private OrderMapper orderMapper;
     private IAddressService addressService;
@@ -37,7 +37,7 @@ public class OrderServiceImpl implements IOrderService {
     public OrderServiceImpl(IAddressService addressService,
                             ICustomerService customerService,
                             IStoreService storeService,
-                            OrderDao orderDao,
+                            IOrderDao orderDao,
                             OrderMapper orderMapper,
                             IStorageService storageService){
         this.orderMapper = orderMapper;
@@ -113,12 +113,21 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void updateOrder(int id, OrderDto order) {
+    public void updateOrder(OrderDto order) {
+        log.debug("OrderServiceImpl.updateOrder(OrderDto order) was invoked");
 
+        Optional<Order> optionalOrder = orderDao.find(order.getId());
+        if(optionalOrder.isEmpty()){
+            log.error("No such order to this OrderDto");
+            throw new RequestException("No such order to this OrderDto", HttpStatus.NOT_FOUND);
+        }
+
+        orderDao.update(optionalOrder.get());
     }
 
     @Override
     public List<OrderDto> getAll() {
+        log.debug("OrderServiceImpl.getAll() was invoked");
         return orderDao.getAll().stream()
                 .map(orderMapper::toDto)
                 .collect(Collectors.toList());
@@ -126,7 +135,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public CustomerDto getOrderCustomer() {
-        return null;
+        log.debug("OrderServiceImpl.getOrderCustomer() was invoked");
+        return sessionCustomer;
     }
 
     @Override
@@ -136,6 +146,25 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public OrderDto updateOrderStatus(int index, LocalDate date) {
-        return null;
+        log.debug("OrderServiceImpl.updateOrderStatus(int index, LocalDate date) was invoked");
+        Optional<Order> optionalOrder = orderDao.find(index);
+        if(optionalOrder.isEmpty()){
+            log.error("No such order to this OrderDto");
+            throw new RequestException("No such order to this OrderDto", HttpStatus.NOT_FOUND);
+        }
+
+        if(date.isBefore(optionalOrder.get().getCreatedWhen())){
+            log.error("Invalid time to sent date ");
+            throw new RequestException("Invalid time to sent date", HttpStatus.NOT_FOUND);
+        }
+
+
+        optionalOrder.get().setSentWhen(date);
+        optionalOrder.get().setCurStatusOrder(StatusOrder.SENT);
+        orderDao.update(optionalOrder.get());
+        return optionalOrder.stream()
+                .map(orderMapper::toDto)
+                .findFirst()
+                .get();
     }
 }

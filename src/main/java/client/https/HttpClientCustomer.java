@@ -17,4 +17,13 @@ public class HttpClientCustomer {
                 .build();
         return client.newCall(request).execute();
     }
+
+    public static Response createCustomer(String json)  throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        Request request = new Request.Builder()
+                .post(RequestBody.create(mediaType, json))
+                .url(PROTOCOL + HOST + PORT + "/api/customer")
+                .build();
+        return client.newCall(request).execute();
+    }
 }

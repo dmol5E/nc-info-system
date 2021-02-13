@@ -1,6 +1,7 @@
 package com.nc.unc.myDao.impl;
 
 import com.nc.unc.model.OrderItem;
+import com.nc.unc.myDao.IOrderItemDao;
 import com.nc.unc.myDao.mapper.OrderItemDaoMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Slf4j
 @PropertySource("classpath:db/sql/OrderItemSQL.properties")
 @Repository
-public class OrderItemDaoImpl extends CrudDaoImpl<OrderItem> implements com.nc.unc.myDao.OrderItemDao {
+public class OrderItemDaoImpl extends CrudDaoImpl<OrderItem> implements IOrderItemDao {
 
     @Value("${SELECT_ALL_BY_ORDER_ID}")
     private String SELECT_ALL_BY_ORDER_ID;
