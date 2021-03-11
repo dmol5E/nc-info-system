@@ -14,6 +14,6 @@ public class AddressDto {
     @JsonProperty("address")
     private String address;
     @JsonProperty("zipcode")
-    private int zipcode;
+    private String zipcode;
 
 }

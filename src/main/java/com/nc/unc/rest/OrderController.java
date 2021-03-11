@@ -4,7 +4,7 @@ import com.nc.unc.dto.AddressDto;
 import com.nc.unc.dto.CustomerDto;
 import com.nc.unc.dto.OrderDto;
 import com.nc.unc.dto.OrderItemDto;
-import com.nc.unc.myService.IOrderService;
+import com.nc.unc.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +48,7 @@ public class OrderController {
     }
 
     @PostMapping("create")
-    public void createNewOrder(AddressDto address){
+    public void createNewOrder(@RequestBody AddressDto address){
         orderService.createNewOrder(address);
     }
 

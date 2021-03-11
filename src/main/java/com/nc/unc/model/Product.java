@@ -2,9 +2,9 @@ package com.nc.unc.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.nc.unc.myDao.annotation.Attribute;
-import com.nc.unc.myDao.annotation.PrimaryKey;
-import com.nc.unc.myDao.annotation.Table;
+import com.nc.unc.dao.annotation.Attribute;
+import com.nc.unc.dao.annotation.PrimaryKey;
+import com.nc.unc.dao.annotation.Table;
 import lombok.*;
 import java.util.Objects;
 

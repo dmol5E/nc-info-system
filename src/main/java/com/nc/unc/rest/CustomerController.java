@@ -1,7 +1,7 @@
 package com.nc.unc.rest;
 
 import com.nc.unc.dto.CustomerDto;
-import com.nc.unc.myService.ICustomerService;
+import com.nc.unc.service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,7 @@
 package com.nc.unc.rest;
 
 import com.nc.unc.dto.AddressDto;
-import com.nc.unc.myService.IAddressService;
+import com.nc.unc.service.IAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,19 +29,19 @@ public class AddressController {
     }
 
     @GetMapping("/search/address")
-    public AddressDto search(@RequestParam("address") String address) {
+    public AddressDto searchAddress(@RequestParam("address") String address) {
         return addressService.getByAddress(address);
     }
 
     @GetMapping("/search/zipcode")
-    public AddressDto search(@RequestParam("zipcode") int zipcode) {
+    public AddressDto searchZipcode(@RequestParam("zipcode") String zipcode) {
         return addressService.getByZipcode(zipcode);
     }
 
     @GetMapping("/search")
-    public AddressDto search(@RequestParam("zipcode") int zipcode,
-                             @RequestParam("zipcode") String address) {
-        return addressService.getByZipcode(zipcode);
+    public AddressDto search(@RequestParam("zipcode") String zipcode,
+                             @RequestParam("address") String address) {
+        return addressService.getByAddress(address);
     }
 
 }

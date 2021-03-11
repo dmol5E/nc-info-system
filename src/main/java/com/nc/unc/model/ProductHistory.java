@@ -1,14 +1,12 @@
 package com.nc.unc.model;
 
 
-import com.nc.unc.myDao.annotation.Attribute;
-import com.nc.unc.myDao.annotation.PrimaryKey;
-import com.nc.unc.myDao.annotation.Table;
+import com.nc.unc.dao.annotation.Attribute;
+import com.nc.unc.dao.annotation.PrimaryKey;
+import com.nc.unc.dao.annotation.Table;
 import lombok.*;
 
-import java.beans.ConstructorProperties;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Getter

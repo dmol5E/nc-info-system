@@ -366,24 +366,15 @@ public class CreateOrder extends Application {
     private ComboBox<AddressDto> input_zipcode;
 
 
-    public void putOrder(ActionEvent actionEvent){
-        try {
-            HttpClientOrder.createNewOrder(
-                    JsonHelper.toJson(AddressDto.builder()
-                            .address(input_address.getValue().getAddress())
-                            .zipcode(input_zipcode.getValue().getZipcode())
-                            .build()));
-            returnBack(new ActionEvent()); returnBack(new ActionEvent());
-            or_storage_table.setItems(null);
-            or_storage_table.refresh();
-        } catch (Exception e) {
-            log.warn("Create new order exception ", e);
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setHeaderText("Input not valid");
-            errorAlert.setContentText("Create new order");
-            errorAlert.showAndWait();
-        }
-
+    public void putOrder(ActionEvent actionEvent) throws IOException {
+        HttpClientOrder.createNewOrder(
+                JsonHelper.toJson(AddressDto.builder()
+                        .address(input_address.getValue().getAddress())
+                        .zipcode(input_zipcode.getValue().getZipcode())
+                        .build()));
+        returnBack(new ActionEvent()); returnBack(new ActionEvent());
+        or_storage_table.setItems(null);
+        or_storage_table.refresh();
     }
 
 
@@ -464,7 +455,12 @@ public class CreateOrder extends Application {
             @SneakyThrows
             @Override
             public AddressDto fromString(String s) {
-                return JsonHelper.fromJson(HttpClientAddress.search(s).body().string(), AddressDto.class);
+                if(s.equals(""))
+                    return null;
+                Response response = HttpClientAddress.search(s);
+                return response.code() == 200 ?
+                        JsonHelper.fromJson(response.body().string(), AddressDto.class) :
+                        AddressDto.builder().address(s).build();
             }
         });
 
@@ -496,7 +492,7 @@ public class CreateOrder extends Application {
             @Override
             public String toString(AddressDto address) {
                 if(address != null)
-                    return Integer.toString(address.getZipcode());
+                    return address.getZipcode();
                 return null;
             }
 
@@ -508,7 +504,7 @@ public class CreateOrder extends Application {
                 Response response = HttpClientAddress.search(Integer.parseInt(s));
                 return response.code() == 200 ?
                         JsonHelper.fromJson(response.body().string(), AddressDto.class) :
-                        AddressDto.builder().zipcode(Integer.parseInt(s)).build();
+                        AddressDto.builder().zipcode(s).build();
             }
         });
         List<AddressDto> addressDtos = JsonHelper.fromJson(HttpClientAddress.getAll().body().string(), new TypeReference<>() {});

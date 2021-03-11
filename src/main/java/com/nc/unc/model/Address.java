@@ -1,8 +1,8 @@
 package com.nc.unc.model;
 
-import com.nc.unc.myDao.annotation.Attribute;
-import com.nc.unc.myDao.annotation.PrimaryKey;
-import com.nc.unc.myDao.annotation.Table;
+import com.nc.unc.dao.annotation.Attribute;
+import com.nc.unc.dao.annotation.PrimaryKey;
+import com.nc.unc.dao.annotation.Table;
 import lombok.*;
 
 @Setter
@@ -20,7 +20,7 @@ public class Address {
     private String address;
 
     @Attribute("zipcode")
-    private int zipCode;
+    private String zipCode;
 
 
     @Override

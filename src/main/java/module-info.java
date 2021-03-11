@@ -26,6 +26,8 @@ open module infosystem {
     requires modelmapper.module.jsr310;
     requires org.postgresql.jdbc;
     requires okhttp;
+    requires tomcat.embed.core;
+    requires spring.tx;
 
 }
 
