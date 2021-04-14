@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nc.unc.model.enums.StatusOrder;
 import com.nc.unc.dao.annotation.*;
 import com.nc.unc.dao.annotation.enums.EnumType;
-import client.util.json.LocalDateDeserializer;
-import client.util.json.LocalDateSerializer;
+import com.nc.unc.client.util.json.LocalDateDeserializer;
+import com.nc.unc.client.util.json.LocalDateSerializer;
 import lombok.*;
 
 import java.time.LocalDate;

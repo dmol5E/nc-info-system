@@ -1,4 +1,4 @@
-package client.https;
+package com.nc.unc.client.https;
 
 
 import com.squareup.okhttp.*;
@@ -102,6 +102,7 @@ public class HttpClientOrder {
                 .post(RequestBody.create(mediaType, json))
                 .url(PROTOCOL + HOST + PORT + "/api/order/create")
                 .build();
+        String result = request.body().toString();
         return client.newCall(request).execute();
     }
 

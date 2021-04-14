@@ -61,6 +61,15 @@ public class CustomerServiceImpl implements ICustomerService {
         ICustomerDao.insert(customerMapper.toEntity(customerDto));
     }
 
+    @Override
+    public List<CustomerDto> search(String name) {
+        log.debug("CustomerServiceImpl.search(String name)  was invoked");
+        return ICustomerDao.findByName(name)
+                .stream()
+                .map(customerMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     private boolean checkPhoneNumber(String phone){
         String regexPhoneNumber = "^((8|\\+7)[\\- ]?)?(\\(?\\d{3}\\)?[\\- ]?)?[\\d\\- ]{7,10}$";
         return phone.matches(regexPhoneNumber);

@@ -152,7 +152,7 @@
                     <launcher>info-system</launcher>
                     <jlinkImageName>infosystem</jlinkImageName>
                     <jlinkZipName>info-system</jlinkZipName>
-                    <mainClass>com.nc.unc.App</mainClass>
+                    <mainClass>com.nc.unc.client.App</mainClass>
                 </configuration>
             </plugin>
 

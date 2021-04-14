@@ -1,14 +1,15 @@
-package client.form;
+package com.nc.unc.client.form;
 
-import client.https.HttpClientAddress;
-import client.https.HttpClientCustomer;
-import client.https.HttpClientOrder;
-import client.https.HttpClientProduct;
+import com.nc.unc.client.https.HttpClientAddress;
+import com.nc.unc.client.https.HttpClientCustomer;
+import com.nc.unc.client.https.HttpClientOrder;
+import com.nc.unc.client.https.HttpClientProduct;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.nc.unc.dto.*;
 import com.nc.unc.model.enums.StatusOrder;
-import client.util.json.JsonHelper;
+import com.nc.unc.client.util.json.JsonHelper;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -39,6 +40,7 @@ import java.util.List;
 public class CreateOrder extends Application {
 
 
+
     private Logger log = LoggerFactory.getLogger(CreateOrder.class.getSimpleName());
 
 
@@ -48,6 +50,9 @@ public class CreateOrder extends Application {
      * */
     @FXML
     private TextField c_input_name;
+
+    @FXML
+    public TextField input_customer;
 
     @FXML
     private TextField c_input_lastname;
@@ -75,7 +80,17 @@ public class CreateOrder extends Application {
             errorAlert.setHeaderText("Input not valid");
             errorAlert.setContentText("Invalid date new customer");
             errorAlert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Customer added");
+            alert.setContentText("Customer successfully added");
+            alert.showAndWait();
+            c_input_date.setValue(null);
+            c_input_lastname.setText("");
+            c_input_phone.setText("");
+            c_input_name.setText("");
         }
+        response.body().close();
     }
 
 
@@ -129,6 +144,7 @@ public class CreateOrder extends Application {
                         HttpClientOrder.updateOrder(JsonHelper.toJson(order));
                         sk_table.refresh();
                     }
+                    response.body().close();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -143,6 +159,7 @@ public class CreateOrder extends Application {
                         HttpClientOrder.updateOrder(JsonHelper.toJson(order));
                         sk_table.refresh();
                     }
+                    response.body().close();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -402,7 +419,7 @@ public class CreateOrder extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/com/nc/unc/form/CreateOrder.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/CreateOrder.fxml"));
         stage.setScene(new Scene(root));
         stage.show();
         phase=0;
@@ -439,7 +456,8 @@ public class CreateOrder extends Application {
             );
             return row;
         });
-        List<CustomerDto> customerDtoList = JsonHelper.fromJson(HttpClientCustomer.getCustomers().body().string(), new TypeReference<>() {});
+        List<CustomerDto> customerDtoList = JsonHelper.fromJson(HttpClientCustomer.getCustomers().body().string(),
+                new TypeReference<>() {});
         ObservableList<CustomerDto> customers = FXCollections.observableArrayList(customerDtoList);
         or_ct_table.setItems(customers);
 
@@ -573,6 +591,7 @@ public class CreateOrder extends Application {
                 or_storage_table.setVisible(false);
                 store_table.setVisible(false);
                 label_customer.setVisible(true);
+                input_customer.setVisible(true);
                 break;
             case 2:
                 phase--;
@@ -600,6 +619,7 @@ public class CreateOrder extends Application {
                 or_storage_table.setVisible(true);
                 store_table.setVisible(true);
                 label_customer.setVisible(false);
+                input_customer.setVisible(false);
                 break;
             case 1:
                 phase++;
@@ -625,7 +645,7 @@ public class CreateOrder extends Application {
                 }
                 Text text_4 = new Text("Адрес   \n");
                 Text text_5 = new Text("Зип код   \n");
-                Text text_6 = new Text(String.format("Общая стоимость %s \n", HttpClientOrder.getSum()));
+                Text text_6 = new Text(String.format("Общая стоимость %s \n",HttpClientOrder.getSum().body().string()));
                 output_customer.getChildren().add(text_1);
                 output_customer.getChildren().add(text_2);
                 output_customer.getChildren().add(text_3);
@@ -642,7 +662,26 @@ public class CreateOrder extends Application {
         }
     }
 
-    public void search(ActionEvent actionEvent) {
+    public void search(ActionEvent actionEvent)  {
+
+            try {
+                List<CustomerDto> customerDtoList = null;
+                if(input_customer.getText().equals("")){
+                    customerDtoList = JsonHelper.fromJson(HttpClientCustomer.getCustomers().body().string(),
+                            new TypeReference<>() {});
+                } else {
+                    customerDtoList = JsonHelper.fromJson(HttpClientCustomer.searchCustomers(input_customer.getText()).body().string(),
+                            new TypeReference<>() {});
+
+                }
+                ObservableList<CustomerDto> customers = FXCollections.observableArrayList(customerDtoList);
+                or_ct_table.setItems(customers);
+            } catch (IOException e){
+                log.error("Server don't response", e);
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setHeaderText("Server don't response");
+                errorAlert.showAndWait();
+            }
 
     }
 

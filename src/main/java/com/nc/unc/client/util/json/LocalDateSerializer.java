@@ -1,4 +1,4 @@
-package client.util.json;
+package com.nc.unc.client.util.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

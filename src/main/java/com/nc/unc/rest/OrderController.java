@@ -58,12 +58,13 @@ public class OrderController {
     }
 
     @GetMapping("storage/sum")
-    public double getSum(){
+    public Double getSum(){
         return orderService.getSum();
     }
 
     @GetMapping("customer")
     public CustomerDto getCustomer(){
-        return orderService.getOrderCustomer();
+        CustomerDto customerDto = orderService.getOrderCustomer();
+        return customerDto;
     }
 }

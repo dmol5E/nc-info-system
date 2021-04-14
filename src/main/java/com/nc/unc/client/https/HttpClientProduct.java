@@ -1,6 +1,5 @@
-package client.https;
+package com.nc.unc.client.https;
 
-import com.nc.unc.dto.ProductDto;
 import com.squareup.okhttp.*;
 
 import java.io.IOException;

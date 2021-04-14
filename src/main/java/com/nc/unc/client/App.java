@@ -1,4 +1,4 @@
-package com.nc.unc;
+package com.nc.unc.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +22,7 @@ public class App extends Application
     public void start(Stage primaryStage) throws Exception {
 
 
-        Parent root = FXMLLoader.load(App.class.getResource("form/CreateOrder.fxml"));
+        Parent root = FXMLLoader.load(App.class.getResource("/CreateOrder.fxml"));
         Scene scene = new Scene(root);
 
         primaryStage.setScene(scene);

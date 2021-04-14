@@ -9,4 +9,5 @@ public interface ICustomerService {
     List<CustomerDto> getAll();
     CustomerDto findId(int id);
     void addCustomer(CustomerDto customerDto);
+    List<CustomerDto> search(String name);
 }

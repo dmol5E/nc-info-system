@@ -1,7 +1,7 @@
 package com.nc.unc.dto;
 
-import client.util.json.LocalDateDeserializer;
-import client.util.json.LocalDateSerializer;
+import com.nc.unc.client.util.json.LocalDateDeserializer;
+import com.nc.unc.client.util.json.LocalDateSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

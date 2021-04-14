@@ -1,4 +1,4 @@
-package client.https;
+package com.nc.unc.client.https;
 import com.squareup.okhttp.*;
 
 import java.io.IOException;
@@ -15,6 +15,19 @@ public class HttpClientCustomer {
                 .url(PROTOCOL + HOST + PORT + "/api/customer/all")
                 .addHeader("host", HOST + PORT)
                 .build();
+        return client.newCall(request).execute();
+    }
+
+    public static Response searchCustomers(String name) throws IOException {
+        HttpUrl.Builder httpBuilder =
+                HttpUrl.parse(PROTOCOL + HOST + PORT + "/api/customer/search")
+                        .newBuilder()
+                        .addQueryParameter("name", String.valueOf(name));
+        Request request =
+                new Request.Builder()
+                        .url(httpBuilder.build())
+                        .addHeader("host", HOST + PORT)
+                        .build();
         return client.newCall(request).execute();
     }
 

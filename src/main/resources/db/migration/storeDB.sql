@@ -114,4 +114,10 @@ select * from store.product;
 select * from store.customer;
 select * from store.address;
 
+select
+    c.id,c.first_name, c.last_name,c.phone_number, c.date
+from store.customer c
+where position(lower('Да') in lower(concat(c.first_name,' ', c.last_name))) <> 0;
+
+
 commit;

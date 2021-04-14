@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane prefHeight="423.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.form.CreateOrder">
+<AnchorPane prefHeight="423.0" prefWidth="708.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nc.unc.client.form.CreateOrder">
     <children>
         <TabPane layoutX="7.0" layoutY="8.0" prefHeight="528.0" prefWidth="914.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
@@ -114,8 +114,8 @@
                               <TableColumn fx:id="sk_lastname" prefWidth="84.0" text="Фамилия" />
                               <TableColumn fx:id="sk_address_sender" editable="true" prefWidth="136.0" text="Адрес отправителя" />
                               <TableColumn fx:id="sk_address_recipient" prefWidth="121.0" text="Адрес получателя" />
-                              <TableColumn fx:id="sk_dataSent" onEditCommit="#createDateSended" prefWidth="140.0" text="Дата создания заказа" />
-                              <TableColumn fx:id="sk_dataWhen" prefWidth="135.0" text="Дата доставки" />
+                              <TableColumn fx:id="sk_dataSent" onEditCommit="#createDateSended" prefWidth="140.0" text="Дата доставки" />
+                              <TableColumn fx:id="sk_dataWhen" prefWidth="135.0" text="Дата создания заказа" />
                               <TableColumn fx:id="sk_status" prefWidth="81.0" text="Статус" />
                           </columns>
                         </TableView>

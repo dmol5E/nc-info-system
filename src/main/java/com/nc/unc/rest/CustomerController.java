@@ -26,4 +26,10 @@ public class CustomerController {
     public List<CustomerDto> getAllCustomer(){
         return customerService.getAll();
     }
+
+
+    @GetMapping("/search")
+    public List<CustomerDto> search(@RequestParam("name") String name){
+        return customerService.search(name);
+    }
 }
